@@ -21,6 +21,7 @@ namespace Dentist.Controllers
 
         public AccountController()
         {
+            // test git hub integration
         }
 
         public AccountController(ApplicationUserManager userManager)
