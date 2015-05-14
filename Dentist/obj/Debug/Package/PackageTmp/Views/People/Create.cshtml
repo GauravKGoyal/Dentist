@@ -1,0 +1,74 @@
+﻿@model Dentist.ViewModels.PersonView
+
+@{
+    var isCreate = Model == null || Model.Id == 0;
+    ViewBag.Title = isCreate ? "Create Person" : "Edit Person- " + Model.FirstName + " " + Model.LastName;
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.AddressId)
+        @Html.HiddenFor(model => model.Address.Id)
+
+       
+        <ul class="nav nav-tabs" role="tablist" id="myTab">
+            <li role="presentation" class="active"><a href="#Detail" aria-controls="Detail" role="tab" data-toggle="tab">Detail</a></li>
+            @if (!isCreate)
+            { 
+                <li role="presentation"><a id="tabAppointments" href="#Appointments" aria-controls="Appointments" role="tab" data-toggle="tab">Appointments</a></li>
+                @*<li role="presentation"><a id="tabAvailability" href="#Availability" aria-controls="Availability" role="tab" data-toggle="tab">Availability</a></li>*@
+            }
+        </ul>
+        
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="Detail" style="margin-top: 15px">
+                @Html.Partial("_TabDetail")
+            </div>
+
+            @if (!isCreate)
+            {
+                <div role="tabpanel" class="tab-pane" id="Appointments" style="margin-top: 15px">
+                    @Html.Partial("_TabAppointment")
+                </div>
+                @*<div role="tabpanel" class="tab-pane" id="Availability" style="margin-top: 15px">
+                    @Html.Partial("_TabAvailability")
+                </div>*@
+            }
+        </div>
+
+        <div class="col-md-12" style="text-align:right">
+            <hr>
+            <button class="btn btn-primary" value="Save" type="submit" name="btnSubmit"><span class="k-icon k-update"></span> Save</button>
+            <button class="btn btn-default" value="Save and Close" type="submit" name="btnSubmit"><span class="k-icon k-update"></span> Save and Close</button>
+            <a href="@Url.Action("Index", "People")" class="btn btn-default"><span class="k-icon k-cancel"></span> Close</a>
+        </div>
+    </div>
+}
+
+<script>
+    $(function () {
+        window.grdAppointmentLoaded = false;
+        window.grdAvailabilityLoaded = false;
+    });
+
+    $("#tabAppointments").on("click", function () {       
+        if (!window.grdAppointmentLoaded) {
+            $('#grdAppointment').data('kendoGrid').dataSource.read();
+            window.grdAppointmentLoaded = true;
+        }
+    });
+
+    $("#tabAvailability").on("click", function () {
+        if (!window.grdAvailabilityLoaded) {
+            $('#grdDailyAvailability').data('kendoGrid').dataSource.read();
+            window.grdAvailabilityLoaded = true;
+        }
+    });
+
+</script>

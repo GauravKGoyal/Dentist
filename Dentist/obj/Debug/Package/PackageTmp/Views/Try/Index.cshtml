@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    ViewBag.PatientId = 20;
+}
+
+<h2>Index</h2>
+
+@*@(Html.Kendo().ComboBox()
+                  .Name("PatientId")
+                  .DataTextField("Text")
+          .DataValueField("Id")
+          .HtmlAttributes(new { style = "width:250px" })
+          .Filter("contains")
+          .AutoBind(true)
+          .MinLength(2)
+         .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "People"))
+             .ServerFiltering(false))
+             
+)*@
+
+<div class="demo-section">
+    
+    @(Html.Kendo().ComboBox()
+            .Name("PatientId")
+            .DataTextField("Text")
+            .DataValueField("Id")
+            .Placeholder("Type a patient name")
+            .HtmlAttributes(new { style = "width:250px" })
+            .Filter("contains")
+            .AutoBind(true)
+            .MinLength(3)
+            .DataSource(source =>
+            {
+                source.Read(read =>
+                {
+                    read.Action("GetAllIdTexts", "people");
+                })
+                .ServerFiltering(true);
+            })
+          )
+     
+</div>
+<script>
+
+</script>

@@ -1,0 +1,158 @@
+﻿@using Dentist.ViewModels
+@{
+    ViewBag.Title = "Scheduler";
+    List<PersonView> doctors = ViewBag.Doctors;
+}
+
+<div id="splitter">
+    <div id="left-pane" style="height:100%">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Doctors</h3>
+            </div>
+            <div class="panel-body">
+                @foreach (var doctor in doctors)
+                {
+                    var fullName = doctor.FirstName + " " + doctor.LastName;
+                    <label class="editor-label">
+                        <div class="badge-Square" style="background-color: @doctor.Color">
+                            <input class="doctorCheckBox" type="checkbox" value=@doctor.Id>
+                        </div> @fullName
+                    </label>
+                }
+            </div>
+            @*<div class="panel-footer">*@
+            <div class="alert alert-info" role="alert" style="margin-bottom: 0px">
+                All the appointments are shown for the clinic. To see the appointments of a specific doctor please select them.
+            </div>
+            @*</div>*@
+        </div>
+    </div>
+    <div id="right-pane" style="height:100%">
+        @(Html.Kendo().Scheduler<SchedulerAppointmentView>()
+            .Name("scheduler")
+            .Date(DateTime.Today)
+            .StartTime(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 8, 00, 00))
+            .EndTime(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 20, 00, 00))
+            .AllDaySlot(false)
+            .WorkDayStart(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 10, 00, 00))
+            .WorkDayEnd(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 20, 00, 00))
+            .WorkWeekStart((int)DayOfWeek.Monday)
+            .WorkWeekEnd((int)DayOfWeek.Saturday)
+            .Events(x =>
+            {
+                x.Edit("scheduler_OnEdit");
+            })
+            .Views(views =>
+            {
+                views.DayView();
+                views.WorkWeekView(workWeekView => workWeekView.Selected(true));
+                views.WeekView();
+                views.MonthView();
+                views.AgendaView();
+                //views.TimelineView();
+            })
+                //.Timezone("Etc/UTC")
+            .Editable(config => config.TemplateName("_SchedulerAppointmentEditor"))
+                .Resources(resource =>
+            {
+                resource.Add(m => m.DoctorId)
+                    .Title("Doctor")
+                    .DataTextField("FirstName")
+                    .DataValueField("Id")
+                    .DataColorField("Color")
+                    .BindTo(doctors);
+            })
+            .DataSource(d => d
+            .Model(m =>
+            {
+                m.Id(f => f.Id);
+                m.Field(f => f.Title).DefaultValue("No title");
+                m.Field(f => f.DoctorId).DefaultValue(1);
+                //m.Field(f => f.PatientId);
+                //  m.RecurrenceId();
+            })
+            .Read(read => read.Action("GetBrowserItems", "Scheduler").Data("filterSchedulerByDoctors"))
+            .Create("CreateAppointment", "Scheduler")
+            .Destroy("DeleteAppointment", "Scheduler")
+            .Update("UpdateAppointment", "Scheduler")
+
+            )
+        )
+
+    </div>
+</div>
+
+<script>
+    var selectedDoctorsId = [];
+    $(function () {
+        $('.doctorCheckBox').change(function () {
+            if ($(this).is(':checked')) {
+                selectedDoctorsId.push($(this).val());
+            } else {
+                var removeItem = $(this).val();
+                selectedDoctorsId = jQuery.grep(selectedDoctorsId, function (value) {
+                    return value != removeItem;
+                });
+            }
+
+            $('#scheduler').data('kendoScheduler').dataSource.read();
+        });
+    });
+
+    $(function () {
+
+        $("#splitter").kendoSplitter({
+            orientation: "horizontal",
+            panes: [
+                { collapsible: false, resizable: false, size: "20%" },
+                { collapsible: false, collapsed: false }
+            ]
+        });
+    });
+
+    function filterSchedulerByDoctors() {
+        return { doctorsIds: selectedDoctorsId.toString() };
+    }
+
+    function scheduler_OnEdit(e) {
+        var isNew = e.event.Id == 0;
+        if (isNew) {
+            $("#patientDiv").show();
+            e.container.kendoWindow("title", "Create Appointment");
+        } else {
+            $("#patientDiv").hide();
+            e.container.kendoWindow("title", "Edit Appointment");
+        }
+    }
+
+
+    function PatientId_OnChange() {
+
+        // fix control issue, ie updating the patientId on combobox does not update the view model
+        UpdateViewModelPaitientId();
+
+        var ddl = $("#PatientId").data('kendoComboBox');
+        var selectedPatient = ddl.dataItem(ddl.selectedIndex);
+
+        if ((selectedPatient !== undefined) && (selectedPatient !== null)) {
+            UpdateFormControls(selectedPatient);
+        }
+
+    }
+
+    function UpdateViewModelPaitientId() {
+        //$("#PatientId").change(); this statement is not working
+        if ($('#PatientId').prop('kendoBindingTarget') !== undefined && $('#PatientId').prop('kendoBindingTarget').source !== undefined) {
+            var viewModel = $('#PatientId').prop('kendoBindingTarget').source;
+            viewModel.PatientId = $('#PatientId').val();
+        }
+    }
+
+    function UpdateFormControls(patient) {
+        $("#FirstName").val(patient.FirstName).change();
+        $("#LastName").val(patient.LastName).change();
+        $("#Mobile").val(patient.Mobile).change();
+    }
+</script>

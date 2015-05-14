@@ -1,0 +1,279 @@
+﻿<div class="k-widget k-scheduler" id="scheduler"></div>
+
+<script>
+    $(function () {
+        $("#scheduler").kendoScheduler({
+            date: new Date(2013, 5, 13, 0, 0, 0, 0),
+            startTime: new Date(2013, 5, 13, 7, 0, 0, 0),
+            height: 600,
+            editable: {
+                //set the template
+                template: kendo.template($('#CustomEditorTemplate').html())
+            },
+            timezone: "Etc/UTC",
+            resources: [
+                {
+                    title: "Room",
+                    field: "RoomID",
+                    dataTextField: "Text",
+                    dataValueField: "Value",
+                    dataColorField: "Color",
+                    dataSource: [
+                        { Text: "Meeting Room 101", Value: 1, Color: "#6eb3fa" },
+                        { Text: "Meeting Room 201", Value: 2, Color: "#f58a8a" }
+                    ]
+                },{
+                    title: "Attendees",
+                    field: "Attendees",
+                    multiple: true,
+                    dataTextField: "Text",
+                    dataValueField: "Value",
+                    dataColorField: "Color",
+                    dataSource: [
+                        { Text: "Alex", Value: 1, Color: "#f8a398" },
+                        { Text: "Bob", Value: 2, Color: "#51a0ed" },
+                        { Text: "Charlie", Value: 3, Color: "#56ca85" }
+                    ]
+                }
+            ],
+            views: [
+                "day",
+                "month",
+                "agenda",
+                { type: "week", selected: true },
+            ],
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Url.Action("Meetings_Read", "Home")",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST"
+                    },
+                    update: {
+                        url: "@Url.Action("Meetings_Update", "Home")",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST"
+                    },
+                    create: {
+                        url: "@Url.Action("Meetings_Create", "Home")",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST"
+                    },
+                    destroy: {
+                        url: "@Url.Action("Meetings_Destroy", "Home")",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST"
+                    },
+                    parameterMap: function (options, operation) {
+                        if (operation === "read") {
+                            var scheduler = $("#scheduler").data("kendoScheduler");
+
+                            var result = {
+                                start: scheduler.view().startDate(),
+                                end: scheduler.view().endDate()
+                            }
+
+                            return kendo.stringify(result);
+                        }
+
+                        return kendo.stringify(options);
+                    }
+                },
+                error: error_handler,
+                schema: {
+                    model: {
+                        id: "MeetingID",
+                        fields: {
+                            MeetingID: { type: "number" },
+                            title: { from: "Title", type: "string", defaultValue: "No title", validation: { required: true } },
+                            description: { from: "Description", type: "string" },
+                            start: { from: "Start", type: "date" },
+                            startTimezone: { from: "StartTimezone", type: "string" },
+                            end: { from: "End", type: "date" },
+                            endTimezone: { from: "EndTimezone", type: "string" },
+                            recurrenceRule: { from: "RecurrenceRule", type: "string" },
+                            recurrenceId: { from: "RecurrenceID", type: "number", defaultValue: null },
+                            recurrenceException: {from: "RecurrenceException", type: "string" },
+                            isAllDay: { from: "IsAllDay", type: "boolean" },
+                            Timezone: { type: "string" },
+                            RoomID: { type: "number", defaultValue: null },
+                            Attendees: { type: "object" }
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+</script>
+
+<script type="text/javascript">
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+
+            var scheduler = $("#scheduler").data("kendoScheduler");
+            scheduler.one("dataBinding", function (e) {
+                //prevent saving if server error is thrown
+                e.preventDefault();
+            })
+        }
+    }
+</script>
+
+<script type="text/x-kendo-template" id="CustomEditorTemplate">
+    <div class="k-edit-label">
+        <label for="Title">Title</label>
+    </div>
+    <div data-container-for="title" class="k-edit-field">
+        <input class="k-textbox" data-bind="value:title" name="Title" type="text" required="required" />
+    </div>
+
+    <div class="k-edit-label">
+        <label for="Start">Start</label>
+    </div>
+    <div data-container-for="start" class="k-edit-field">
+        <input name="start" required="required" style="z-index: inherit;" type="datetime"
+               data-bind="value:start,invisible:isAllDay"
+               data-format="M/d/yyyy h:mm tt"
+               data-role="datetimepicker" />
+
+        <input name="start" required="required" type="date" style="z-index: inherit;"
+               data-bind="value:start,visible:isAllDay"
+               data-format="M/d/yyyy"
+               data-role="datepicker" />
+
+        <span data-bind="text: startTimezone"></span>
+        <span data-for="start" class="k-invalid-msg"></span>
+    </div>
+
+    <div class="k-edit-label">
+        <label for="End">End</label>
+    </div>
+    <div data-container-for="end" class="k-edit-field">
+
+        <input name="end" required="required" style="z-index: inherit;" type="datetime"
+               data-bind="value:end,invisible:isAllDay"
+               data-format="M/d/yyyy h:mm tt"
+               data-role="datetimepicker" />
+
+        <input name="end" required="required" type="date" style="z-index: inherit;"
+               data-bind="value:end,visible:isAllDay"
+               data-format="M/d/yyyy"
+               data-role="datepicker" />
+
+        <span data-bind="text: endTimezone"></span>
+        <span data-for="end" class="k-invalid-msg"></span>
+    </div>
+
+    <div class="k-edit-label">
+        <label for="IsAllDay">IsAllDay</label>
+    </div>
+    <div data-container-for="isAllDay" class="k-edit-field">
+        <input data-bind="checked:isAllDay" name="IsAllDay" type="checkbox" value="true" />
+    </div>
+
+
+    <div class="endTimezoneRow">
+        <div class="k-edit-label"></div>
+        <div class="k-edit-field">
+            <label class="k-check">
+                <input checked="checked" class="k-timezone-toggle" type="checkbox" value="true" />
+                Use separate start and end time zones
+            </label>
+        </div>
+    </div>
+    <script>
+        $(".k-timezone-toggle").on("click", function () {
+            var isVisible = $(this).is(":checked");
+            var container = $(this).closest(".k-popup-edit-form");
+
+            var endTimezoneRow = container.find("label[for='endTimezone']").parent().add(container.find("div[data-container-for='endTimezone']"));
+            endTimezoneRow.toggle(isVisible);
+
+            if (!isVisible) {
+                var uid = container.attr("data-uid");
+                var scheduler = $("\#scheduler").data("kendoScheduler");
+                var model = scheduler.dataSource.getByUid(uid);
+                model.set("endTimezone", null);
+            }
+        });
+
+        var endTimezone = '${data.endTimezone}';
+        if (!endTimezone || endTimezone == "null") {
+            $(".k-timezone-toggle").trigger('click');
+        }
+        <\/script>
+
+        <div class="k-edit-label">
+            <label for="startTimezone">Start Timezone</label>
+        </div>
+        <div data-container-for="startTimezone" class="k-edit-field">
+            <div data-bind="value:startTimezone" id="startTimezone" name="startTimezone" data-role="timezoneeditor"></div>
+        </div>
+
+        <div class="k-edit-label">
+            <label for="endTimezone">End Timezone</label>
+        </div>
+        <div data-container-for="endTimezone" class="k-edit-field">
+            <div data-bind="value:endTimezone" id="endTimezone" name="endTimezone" data-role="timezoneeditor"></div>
+        </div>
+
+        <div class="k-edit-label">
+            <label for="recurrenceRule">Recurrence Rule</label>
+        </div>
+        <div data-container-for="recurrenceRule" class="k-edit-field">
+            <div data-bind="value:recurrenceRule" id="recurrenceRule" name="recurrenceRule" data-role="recurrenceeditor"></div>
+        </div>
+
+        <div class="k-edit-label">
+            <label for="description">Description</label>
+        </div>
+        <div data-container-for="description" class="k-edit-field">
+            <textarea class="k-textbox" cols="20" data-bind="value:description" id="description" name="description" rows="2">
+        </textarea>
+        </div>
+
+        <div class="k-edit-label">
+            <label for="RoomID">RoomID</label>
+        </div>
+
+        <div data-container-for="RoomID" class="k-edit-field">
+            <input id="RoomID" name="RoomID" style="width: 200px" type="text"
+                data-bind="value:RoomID"
+                data-val="true"
+                data-val-number="The field RoomID must be a number."
+                data-source='[{"text":"Meeting Room 101","value":1},{"text":"Meeting Room 201","value":2}]'
+                data-text-field="text"
+                data-value-field="value"
+                data-value-primitive="true"
+                data-option-label="None"
+                data-role="dropdownlist" />
+        </div>
+
+        <div class="k-edit-label">
+            <label for="Attendees">Attendees</label>
+        </div>
+        <div data-container-for="Attendees" class="k-edit-field">
+            <select id="Attendees" multiple="multiple" name="Attendees"
+                data-role="multiselect"
+                data-bind="value:Attendees"
+                data-source='[{"text":"Alex","value":1},{"text":"Bob","value":2},{"text":"Charlie","value":3}]'
+                data-text-field="text"
+                data-value-field="value"
+                data-value-primitive="true"
+                ></select>
+        </div>
+    </script>

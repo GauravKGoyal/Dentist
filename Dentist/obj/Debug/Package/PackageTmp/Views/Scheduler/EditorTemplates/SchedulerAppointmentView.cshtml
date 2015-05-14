@@ -1,0 +1,155 @@
+﻿@using Dentist.Enums
+@using Dentist.Models
+@model Dentist.ViewModels.SchedulerAppointmentView
+
+<script>
+    function filterDoctorIdBy() {
+        return { personRole: 1 }
+    }
+</script>
+
+<fieldset class="form-horizontal">
+    @Html.HiddenFor(x => x.Id)
+
+    <div id="patientDiv">
+
+        <div class="alert alert-info" role="alert">
+            <ul>
+                <li>
+                    Find an existing patient using search box. <strong>OR</strong>
+                </li>
+                @*<li style="list-style: none">
+                    or
+                </li>*@
+                <li>
+                    Keep search box clear to add a new patient.
+                </li>
+            </ul>
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PatientId, new { @class = "control-label" })
+        </div>
+        <div class="editor-field">
+            @(Html.Kendo().ComboBox()
+                  .Name("PatientId")
+                  .DataTextField("Text")
+                  .DataValueField("Id")
+                  .Placeholder("Type a patient name")
+                  .Filter("contains")
+                  .AutoBind(true)
+                  .MinLength(2)
+                  .HtmlAttributes(new { style = "width: 100%" })
+                  .DataSource(source =>
+                  {
+                      source.Read(read =>
+                      {
+                          read.Action("GetAllIdTexts", "people");
+                      });
+                  })
+                  .Events(e => e.Change("PatientId_OnChange"))
+            )
+            @Html.ValidationMessageFor(model => model.PatientId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        <div>
+            @Html.Kendo().TextBoxFor(model => model.FirstName)
+        </div>
+        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+    </div>
+
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.Kendo().TextBoxFor(model => model.LastName)
+        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.Kendo().TextBoxFor(model => model.Phone)
+        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Start, htmlAttributes: new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.Kendo().DateTimePickerFor(model => model.Start).HtmlAttributes(new { data_bind = "value:start" })
+        @Html.ValidationMessageFor(model => model.Start, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.End, htmlAttributes: new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.Kendo().DateTimePickerFor(model => model.End).HtmlAttributes(new { data_bind = "value:end" })
+        @Html.ValidationMessageFor(model => model.End, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.DoctorId, new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @(Html.Kendo().DropDownListFor(model=>model.DoctorId)
+              .OptionLabel("--Select--")
+              .DataTextField("Text")
+              .DataValueField("Id")
+              .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "People")
+              .Data("filterDoctorIdBy")))
+        )
+        @Html.ValidationMessageFor(model => model.DoctorId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.PracticeId, new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @(Html.Kendo().DropDownListFor(model => model.PracticeId)
+              .HtmlAttributes(new { style = "width: 100%" })
+              .DataTextField("Text")
+              .DataValueField("Id")
+              .DataSource(source => source.Read(read => read
+                    .Action("GetPracticesIdTextsByDoctor", "Practice")
+                    .Data("filterPracticeByDoctor"))
+              .ServerFiltering(true))
+              .AutoBind(false)
+              .CascadeFrom("DoctorId")
+        )
+        @Html.ValidationMessageFor(model => model.PracticeId, "", new { @class = "text-danger" })
+    </div>
+
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.AppointmentStatus, new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @(Html.Kendo().DropDownListFor(model => model.AppointmentStatus)
+              .OptionLabel("--Select--")
+              .BindTo(EnumHelper.GetSelectList(typeof(AppointmentStatus)))
+
+        )
+        @Html.ValidationMessageFor(model => model.AppointmentStatus, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.TextAreaFor(model => model.Description)
+        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+    </div>
+
+
+
+</fieldset>
+
+

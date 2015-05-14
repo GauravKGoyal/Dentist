@@ -1,0 +1,367 @@
+﻿@*filtering data example - http://jsbin.com/eKIrusi/1/edit?html,js,output*@
+@using Dentist.ViewModels
+@{
+    ViewBag.Title = "Scheduler";
+    List<SchedulerDoctorView> doctors = ViewBag.Doctors;
+    List<SchedulerPracticeView> practices = ViewBag.Practices;
+}
+
+
+<div id="splitter">
+    <div id="left-pane">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Doctors</h3>
+            </div>
+            <div class="panel-body">
+                @(Html.Kendo().TreeView()
+                      .Name("trvDoctors")
+                      .Checkboxes(config => config.CheckChildren(true))
+                      .ExpandAll(true)
+                      .BindTo((IEnumerable<TreeViewItemModel>)ViewBag.DoctorsInTreeView))
+            </div>
+
+
+            @*<div class="panel-footer"> </div>*@
+            <div class="alert alert-info" role="alert" style="margin-bottom: 0px">
+                All the appointments are shown for the clinic. To see the appointments of a specific doctor please select them.
+            </div>
+        </div>
+    </div>
+    <div id="right-pane">
+        @(Html.Kendo().Scheduler<SchedulerAppointmentView>()
+              .Name("scheduler")
+              .Date(DateTime.Today)
+              .AllDaySlot(false)
+              .WorkDayStart(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 10, 00, 00))
+              .WorkDayEnd(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 15, 00, 00))
+              .StartTime(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 8, 00, 00))
+              .EndTime(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 20, 00, 00))
+              .WorkWeekStart((int)DayOfWeek.Monday)
+              .WorkWeekEnd((int)DayOfWeek.Saturday)
+              .EventTemplate(
+                  "<div class='appointment-template' data-isBreak=#= IsBreak # style='border-left-color: #= PracticeColor #;'>" +
+                  "<p style='padding-left:2px'>#= title #</p>" +
+                  "</div>")
+              .Events(x =>
+              {
+                  x.Navigate("scheduler_Navigate");
+                  x.Add("scheduler_OnAdd");
+                  x.Edit("scheduler_OnEdit");
+              })
+              .Views(views =>
+              {
+                  //Dropping this because How i am going to force this to reprint according to check box click
+                  //views.DayView(viewBuilder => viewBuilder.SlotTemplate("<strong>#=kendo.toString(date)#</strong>"));
+                  views.DayView(dayview => dayview.Selected(true));
+                  views.WorkWeekView();//(workWeekView => workWeekView.Selected(true));
+                  views.WeekView();
+                  views.MonthView();
+                  views.AgendaView();
+                  //views.TimelineView();
+              })
+                //.Timezone("Etc/UTC")
+              .Group(group => group.Resources("DoctorId", "PracticeId").Orientation(SchedulerGroupOrientation.Horizontal))
+              .Editable(config => config.TemplateName("SchedulerAppointmentView"))
+
+              .Resources(resource =>
+              {
+                  resource.Add(m => m.DoctorId)
+                      .Title("Doctor")
+                      .DataTextField("FirstName")
+                      .DataValueField("Id")
+                      .DataColorField("Color")
+                      .BindTo(doctors);
+
+                  resource.Add(m => m.PracticeId)
+                      .Title("Practice")
+                      .DataTextField("Name")
+                      .DataValueField("Id")
+                      .DataColorField("Color")
+                      .BindTo(practices);
+
+              })
+              .DataSource(d => d
+                  .Model(m =>
+                  {
+                      m.Id(f => f.Id);
+                      m.Field(f => f.Title).DefaultValue("No title");
+                      m.Field(f => f.RecurrenceRule);
+                      m.Field(f => f.DoctorId);
+                      m.Field(f => f.PracticeId);
+                      m.Field(f => f.IsBreak);
+                  })
+
+                  .Read(read => read.Action("GetBrowserItems", "Scheduler").Data("filterSchedulerByDoctors"))
+                  .Create("CreateAppointment", "Scheduler")
+                  .Destroy("DeleteAppointment", "Scheduler")
+                  .Update("UpdateAppointment", "Scheduler")
+
+
+              )
+        )
+
+    </div>
+</div>
+
+
+
+
+<script>
+    //function pageLoad() {
+
+    //    var height = getDocHeight();
+    //    alert(height);
+    //    var scheduler = $('');
+
+    //    scheduler.set_height("" + height + "px");
+    //}
+    //function getDocHeight() {
+    //    //utility function to find dimensions of page
+    //    var D = document;
+    //    return Math.max(
+    //    Math.max(D.body.scrollHeight, D.documentElement.scrollHeight),
+    //    Math.max(D.body.offsetHeight, D.documentElement.offsetHeight),
+    //    Math.max(D.body.clientHeight, D.documentElement.clientHeight)
+    //    );
+    //}
+
+    var doctors = '@ViewBag.Doctors';
+    function IsDoctorBreakTime(doctorId, startTime, endTime) {
+        var doctor = {};
+        for (var i = 0; i < doctors.length; i++) {
+            doctor = doctors[i];
+            if (doctor.Id == doctorId) {
+
+                break;
+            }
+        }   
+    }
+
+    function ColorSchedulerCells() {
+        var scheduler = $("#scheduler").data("kendoScheduler");
+        var view = scheduler.view();
+        var elements = view.content.find("td");
+        for (var i = 0; i < elements.length; i++) {
+            var slot = scheduler.slotByElement($(elements[i]));
+            if (slot.groupIndex == 1) { //check in which group is this slot
+                $(slot.element).css({ background: "red" }); //apply CSS styles
+            } else {
+                var resources = scheduler.resourcesBySlot(slot);
+                if (IsDoctorBreakTime(resources.DoctorId, slot.startDate, slot.endDate)) {
+                    $(slot.element).css({ background: "green" }); //apply CSS
+                
+                }
+
+                var startSlotMilliseconds = kendo.date.getMilliseconds(slot.startDate);
+                var endSlotMilliseconds = kendo.date.getMilliseconds(slot.endDate);
+                //check in which hour is current slot
+                if (startSlotMilliseconds / kendo.date.MS_PER_HOUR > 10 &&
+                    endSlotMilliseconds / kendo.date.MS_PER_HOUR < 12) {
+                    
+                }
+            }
+        }
+    }
+
+    var selectedDoctorsId = [];
+    var selectedPracticesId = [];
+    var doctorsDatasourceFilter = {};
+    var practicesDatasourceFilter = {};
+    
+
+    function isDoctorCheckedBox(element) {
+        var parent = $(element).parent().parent();
+        var treeItem = parent.find(".dentistTreeItem");
+        return treeItem.attr('data-type') == 'doctor';
+    }
+
+    function GetSeletectedDoctorsAndPracticies() {
+        selectedDoctorsId = [];
+        selectedPracticesId = [];
+
+        var checkboxes = $('#trvDoctors input[type=checkbox]');
+        for (var i = 0; i < checkboxes.length; i++) {
+            var checkbox = checkboxes[i];
+            if (isDoctorCheckedBox(checkbox)) {
+                if ($(checkbox).is(':checked')) {
+                    selectedDoctorsId.push(checkbox.value);
+                }
+                else if (checkbox.indeterminate == true) {
+                    selectedDoctorsId.push(checkbox.value);
+                }
+                //else {
+                //    var removeItem = checkbox.value;
+                //    selectedDoctorsId = jQuery.grep(selectedDoctorsId, function (value) {
+                //        return value != removeItem;
+                //    });
+                //}
+            }
+            else {
+                if ($(checkbox).is(':checked')) {
+                    selectedPracticesId.push(checkbox.value);
+                }
+                else if (checkbox.indeterminate == true) {
+                    selectedPracticesId.push(checkbox.value);
+                }
+                //else {
+                //    var removeItemValue = checkbox.value;
+                //    selectedPracticesId = jQuery.grep(selectedPracticesId, function (value) {
+                //        return value != removeItemValue;
+                //    });
+                //}
+            }
+        }
+    }
+
+    function BuildDatasourceFilters() {
+        doctorsDatasourceFilter = {};
+        practicesDatasourceFilter = {};
+
+        doctorsDatasourceFilter = {
+            logic: "or",
+            filters: $.map(selectedDoctorsId, function(value) {
+                return {
+                    operator: "eq",
+                    field: "Id",
+                    value: parseInt(value)
+                };
+            })
+        };        
+
+        practicesDatasourceFilter = {
+            logic: "or",
+            filters: $.map(selectedPracticesId, function (value) {
+                return {
+                    operator: "eq",
+                    field: "Id",
+                    value: parseInt(value)
+                };
+            })
+        };
+    };
+
+
+    $(function () {
+
+        $(window).on("resize", function () {
+            //kendo.resize($("#scheduler"));
+            ResizeSchedulerAccordingToWindown();
+        });
+
+        ResizeSchedulerAccordingToWindown();
+
+        $('#trvDoctors input[type=checkbox]').click(function () {
+            GetSeletectedDoctorsAndPracticies();
+            var scheduler = $("#scheduler").data("kendoScheduler");
+            // scheduler.dataSource.read();
+            // apply the filter to datasource if filtering works then we do not need to reload scheduler here
+            BuildDatasourceFilters();
+            scheduler.resources[0].dataSource.filter(doctorsDatasourceFilter);
+            scheduler.resources[1].dataSource.filter(practicesDatasourceFilter);
+            scheduler.view(scheduler.view().name); //refresh the currunt view
+
+        });
+
+        PlaceColorSpanNextToDoctorAndPracticeNameInTree();
+
+        $("#splitter").kendoSplitter({
+            orientation: "horizontal",
+            panes: [
+                { collapsible: false, resizable: true, size: "18%" },
+                { collapsible: false, collapsed: false }
+            ]
+        });
+
+        ColorSchedulerCells();
+
+    });
+
+    function ResizeSchedulerAccordingToWindown() {
+        var splitterHeight = window.innerHeight - 140; //($("#scheduler").offset().top + 50);
+        $("#splitter").css("height", splitterHeight);
+        $("#scheduler").css("height", splitterHeight - 2);
+    }
+
+    function PlaceColorSpanNextToDoctorAndPracticeNameInTree() {
+        for (var i = 0; i < $(".dentistTreeItem").length; i++) {
+            var treeItem = $(".dentistTreeItem")[i];
+            var color = $(treeItem).attr("data-color");
+            var isDoctor = $(treeItem).attr('data-type') == 'doctor';
+            var imageSpan = "";
+            if (isDoctor) {
+                imageSpan = '<span class="glyphicon glyphicon-user" style ="color:' + color + '"></span>';
+            } else {
+                imageSpan = '<span class="glyphicon glyphicon-home" style ="color:' + color + '"></span>';
+            }
+            treeItem.innerHTML = imageSpan + " " + treeItem.innerHTML;
+        }
+    }
+
+    function filterSchedulerByDoctors() {
+        return {
+            doctorsIds: selectedDoctorsId.toString(),
+            practiceIds: selectedPracticesId.toString()
+        };
+    }
+
+    function scheduler_OnEdit(e) {
+        var isNew = e.event.Id == 0;
+        if (isNew) {
+            $("#patientDiv").show();
+            e.container.kendoWindow("title", "Create Appointment");
+        } else {
+            $("#patientDiv").hide();
+            e.container.kendoWindow("title", "Edit Appointment");
+        }
+    }
+
+    function scheduler_OnAdd(e) {
+        // After grouping by resources this code is not required because the default doctor and practices are populated by kendo scheduler
+        //if (selectedDoctorsId.length !== 0) {
+        //    e.event.DoctorId = selectedDoctorsId[0];
+        //    if (selectedPracticesId.length > 0) {
+        //        e.event.PracticeId = selectedPracticesId[0];
+        //    }
+        //}
+
+    }
+
+    function scheduler_Navigate(e) {
+        // support for lazy loading
+        // reload the scheduler data here depending on selected date
+        // e.view
+    }
+
+    function PatientId_OnChange() {
+        // fix control issue, ie updating the patientId on combobox does not update the view model
+        UpdateViewModelPatientId();
+
+        var ddl = $("#PatientId").data('kendoComboBox');
+        var selectedPatient = ddl.dataItem(ddl.selectedIndex);
+
+        if ((selectedPatient !== undefined) && (selectedPatient !== null)) {
+            UpdateFormControls(selectedPatient);
+        }
+
+    }
+
+    function UpdateViewModelPatientId() {
+        //$("#PatientId").change(); this statement is not working
+        if ($('#PatientId').prop('kendoBindingTarget') !== undefined && $('#PatientId').prop('kendoBindingTarget').source !== undefined) {
+            var viewModel = $('#PatientId').prop('kendoBindingTarget').source;
+            viewModel.PatientId = $('#PatientId').val();
+        }
+    }
+
+    function UpdateFormControls(patient) {
+        $("#FirstName").val(patient.FirstName).change();
+        $("#LastName").val(patient.LastName).change();
+        $("#Phone").val(patient.Phone).change();
+    }
+
+    function filterPracticeByDoctor() {
+        return { doctorId: $("#DoctorId").val() }
+    }
+
+</script>

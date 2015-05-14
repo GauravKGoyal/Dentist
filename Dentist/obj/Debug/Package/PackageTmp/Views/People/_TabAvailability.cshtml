@@ -1,0 +1,50 @@
+﻿@using Dentist.ViewModels
+
+
+@(Html.Kendo().Grid<DailyAvailabilityView>().Name("grdDailyAvailability")
+          .DataSource(dataSource => dataSource.Ajax().Model(model => model.Id(x => x.Id))
+              .Sort(sort =>
+              {
+                  sort.Add(x => x.DayOfWeek);
+              })
+              .Read(read => read.Action("GetDailyAvailabilityBrowserItems", "People", new { personId = Model.Id }))
+              .Create(create => create.Action("CreateDailyAvailability", "People"))
+              .Update(update => update.Action("UpdateDailyAvailability", "People"))
+              .Destroy(destroy => destroy.Action("DeleteDailyAvailability", "People"))
+          )
+          .Columns(columns =>
+          {
+              columns.Bound(x => x.DayOfWeek);
+              columns.Bound(x => x.StartTime1).Format("{0:hh:mm}");
+              columns.Bound(x => x.EndTime1).Format("{0:hh:mm}");
+              columns.Bound(x => x.StartTime2).Format("{0:hh:mm}");
+              columns.Bound(x => x.EndTime2).Format("{0:hh:mm}");
+              columns.Command(
+                  command =>
+                  {
+                      command.Edit();
+                      command.Destroy();
+                  });
+
+          })
+          .ToolBar(toolbar => toolbar.Create())
+          .Editable(editable => editable.Mode(GridEditMode.PopUp)
+          )
+          .Events(e => e.Edit("grdDailyAvailability_OnEdit"))
+          .Resizable(resizable => resizable.Columns(true))
+          .Sortable()
+          .AutoBind(false)
+          .Scrollable(s => s.Height("auto"))
+)
+
+<script>
+    function grdDailyAvailability_OnEdit(e) {
+        if (e.model.isNew()) {
+            e.model.set("DailyAvailabilityViewPersonId", '@Model.Id');
+            e.model.set("DailyAvailabilityViewPracticeId", '@Model.Practices[0]');
+            e.container.kendoWindow("title", "Create Availability");
+        } else {
+            e.container.kendoWindow("title", "Edit Availability");
+        }
+    }
+</script>

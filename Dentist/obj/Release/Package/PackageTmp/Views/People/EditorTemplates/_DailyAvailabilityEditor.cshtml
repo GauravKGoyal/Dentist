@@ -1,0 +1,56 @@
+﻿@model Dentist.ViewModels.DailyAvailabilityView
+           
+<fieldset class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.PersonId)
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.DayOfWeek, new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @(Html.Kendo().DropDownList()
+              .Name("DayOfWeek")
+              .OptionLabel("--Select--")
+              .HtmlAttributes(new { style = "width: 100%" })
+              .BindTo(EnumHelper.GetSelectList(typeof(DayOfWeek)))
+
+        )
+        @Html.ValidationMessageFor(model => model.DayOfWeek, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="editor-label">
+        @Html.Label("Time", htmlAttributes: new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.Kendo().TimePickerFor(model => model.StartTime1).HtmlAttributes(new {style = "width: 48%"})
+        @Html.ValidationMessageFor(model => model.StartTime1, "", new { @class = "text-danger" })
+        <strong>-</strong>
+        @Html.Kendo().TimePickerFor(model => model.EndTime1).HtmlAttributes(new { style = "width: 48%;float:right" })
+        @Html.ValidationMessageFor(model => model.EndTime1, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="editor-label">
+        @Html.Label("Time2", htmlAttributes: new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.Kendo().TimePickerFor(model => model.StartTime2).HtmlAttributes(new { style = "width: 48%" })
+        @Html.ValidationMessageFor(model => model.StartTime2, "", new { @class = "text-danger" })
+        <strong>-</strong>
+        @Html.Kendo().TimePickerFor(model => model.EndTime2).HtmlAttributes(new { style = "width: 48%;float:right" })
+        @Html.ValidationMessageFor(model => model.EndTime2, "", new { @class = "text-danger" })
+    </div>
+    
+    <div class="editor-label">
+        @Html.Label("Time3", htmlAttributes: new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.Kendo().TimePickerFor(model => model.StartTime3).HtmlAttributes(new { style = "width: 48%" })
+        @Html.ValidationMessageFor(model => model.StartTime3, "", new { @class = "text-danger" })
+        <strong>-</strong>
+        @Html.Kendo().TimePickerFor(model => model.EndTime3).HtmlAttributes(new { style = "width: 48%;float:right" })
+        @Html.ValidationMessageFor(model => model.EndTime3, "", new { @class = "text-danger" })
+    </div>
+
+
+</fieldset>

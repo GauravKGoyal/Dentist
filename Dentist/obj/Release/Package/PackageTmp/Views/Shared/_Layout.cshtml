@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        @*Theam that i used http://bootswatch.com/spacelab/*@
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        @{
+            const string applicationTitle = "My Dentist";
+        } 
+        <title>@ViewBag.Title | @applicationTitle</title>
+        <link rel="shortcut icon" href="~/Content/Images/SmilyTooth.jpg" />
+        @Styles.Render("~/Content/kendo/css")
+        @Styles.Render("~/Content/css")
+
+
+        @Scripts.Render("~/bundles/modernizr")
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @Scripts.Render("~/bundles/kendo")        
+        <script src="~/content/kendo/cultures/kendo.culture.en-gb.min.js"></script>
+        @Scripts.Render("~/bundles/jqueryval")
+
+
+    </head>
+    <body>
+        <div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        @*<li>@Html.ActionLink("Home", "Index", "Home")</li>*@
+                        <li>@Html.ActionLink("People", "Index", "People")</li>
+                        <li>@Html.ActionLink("Scheduler", "Index", "Scheduler")</li>
+                        @*<li>@Html.ActionLink("Try", "Index", "Try")</li>*@
+                    </ul>
+                    @*@Html.Partial("_LoginPartial")*@
+                </div>
+            </div>
+        </div>
+
+        <div class="well well-sm">
+            <div class="container body-content">
+                <h4 style="padding-Left:15px">@ViewBag.Title</h4>
+            </div>
+        </div>
+
+        <div class="container body-content">
+            @RenderBody()
+            <div class="col-md-12">
+                <hr />
+                <footer>
+                    <p>&copy; @DateTime.Now.Year - @applicationTitle</p>
+                </footer>
+            </div>
+        </div>
+        @RenderSection("scripts", required: false)
+    </body>
+</html>
+
+<script>
+    kendo.culture("en-GB");
+
+    function ValidateDate(dtValue)
+    {
+        var dtRegex = new RegExp(/\b\d{1,2}[\/-]\d{1,2}[\/-]\d{4}\b/);
+        return dtRegex.test(dtValue);
+    }
+
+    $(function () {
+        $.validator.addMethod('date',
+            function (value, element) {
+                if (this.optional(element)) {
+                    return true;
+                }
+                var ok = true;
+                if (!ValidateDate(value)) {
+                    ok = false;
+                }
+                return ok;
+            }, "Invalid date");
+    });
+
+    //$(function () {
+    //    $.validator.addMethod('datetime',
+    //        function (value, element) {
+    //            if (this.optional(element)) {
+    //                return true;
+    //            }
+    //            var ok = true;
+    //            if (!ValidateDate(value)) {
+    //                ok = false;
+    //            }
+    //            alert("time validator");
+    //            return true;
+    //        }, "Invalid date");
+    //});
+</script>

@@ -1,0 +1,72 @@
+﻿@using Dentist.Enums
+@using Dentist.ViewModels
+
+@{
+    ViewBag.Title = "Patient Browser";
+    var pageSizeArray = new[] {20, 50, 100};
+}
+
+@(Html.Kendo().Grid<PatientListView>().Name("grdPatient")
+          .DataSource(dataSource => dataSource.Ajax().Model(model => model.Id(x => x.Id))
+              .PageSize(pageSizeArray[0])
+              .Sort(sort =>
+              {
+                  sort.Add(x => x.FirstName).Ascending();
+              })
+             .Read(read => read.Action("GetBrowserItems", "Patient"))
+          )
+          .Columns(columns =>
+          {
+              columns.Bound(x => x.Id).Width("5%");
+              columns.Bound(x => x.FirstName);
+              columns.Bound(x => x.LastName);
+              columns.Bound(x => x.Email);
+              columns.Bound(x => x.Phone);
+              columns.Command(
+                  command =>
+                  {
+                      command.Custom("Edit").Click("grdPatient_onEdit").Text("Edit");
+                      command.Custom("Delete").Click("grdPatient_onDelete").Text("Delete");
+                  }).Width("16%");
+
+          })
+          .Resizable(resizable => resizable.Columns(true))
+          .ToolBar(toolbar => { toolbar.Custom().Name("Create").Action("Create", "Patient"); })
+          .Events(e => e.DataBound("grdPatient_onDataBound"))
+          .Pageable(pager =>
+          {
+              pager.PageSizes(pageSizeArray);
+              pager.Refresh(true);
+          })     
+          .Sortable()          
+          .Scrollable(s => s.Height("auto"))
+          .Filterable()              
+)
+
+<script>
+    function grdPatient_onDataBound(args) {
+        $(".k-grid-Edit").find("span").addClass("k-icon k-edit");
+        $(".k-grid-Delete").find("span").addClass("k-icon k-delete");
+        $(".k-grid-Create").find("span").addClass("k-icon k-add");
+    }
+
+    function grdPatient_onEdit(e) {
+        e.preventDefault();
+        var id = $("#grdPatient").data("kendoGrid").dataItem($(e.currentTarget).closest("tr")).Id;
+        window.location.href = "@Url.Action("Edit", "Patient")" + "/" + id;
+    }
+
+    function grdPatient_onDelete(e) {
+        e.preventDefault();
+        if (confirm('Are you sure you want to delete this record ?')) {
+            var id = $("#grdPatient").data("kendoGrid").dataItem($(e.currentTarget).closest("tr")).Id;
+            $.post('@Url.Action("Delete", "Patient")' + '?id=' + id, function (data) {
+                if (data !== undefined && data !== null && data.Success == 1) {
+                    $('#grdPatient').data('kendoGrid').dataSource.read();
+                    $('#grdPatient').data('kendoGrid').refresh();
+                }
+            });
+        }
+    }
+
+</script>
