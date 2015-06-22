@@ -39,6 +39,14 @@
               )
         @Html.ValidationMessageFor(model => model.DayOfWeek, "", new { @class = "text-danger" })
     </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.IsWorking, new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @(Html.EditorFor(model => model.IsWorking))
+        @Html.ValidationMessageFor(model => model.IsWorking, "", new { @class = "text-danger" })
+    </div>
 
     <div class="editor-label">
         @Html.Label("Time", htmlAttributes: new { @class = "control-label" })

@@ -5,6 +5,7 @@
           .DataSource(dataSource => dataSource.Ajax().Model(model => model.Id(x => x.Id))
               .Sort(sort =>
               {
+                  sort.Add(x => x.DailyAvailabilityViewPracticeName);
                   sort.Add(x => x.DayOfWeek);
               })
               .Read(read => read.Action("GetDailyAvailabilityBrowserItems", "People", new { personId = Model.Id }))
@@ -14,6 +15,7 @@
           )
           .Columns(columns =>
           {
+              columns.Bound(x => x.DailyAvailabilityViewPracticeName);
               columns.Bound(x => x.DayOfWeek);
               columns.Bound(x => x.StartTime1).Format("{0:hh:mm}");
               columns.Bound(x => x.EndTime1).Format("{0:hh:mm}");
