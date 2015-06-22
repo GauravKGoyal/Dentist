@@ -92,7 +92,7 @@ namespace Dentist.Migrations
                     EndDateTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 9, 0, 0),
                 }
             };
-
+            //doc.SetupWeeklyAvailabilityForPractice();
 
             context.Practices.AddOrUpdate(practice);
             context.Practices.AddOrUpdate(practice2);

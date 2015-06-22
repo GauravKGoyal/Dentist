@@ -61,6 +61,13 @@ namespace Dentist.Controllers
                 doctor.Practices = new List<Practice>();
                 doctor.Practices.AddRange(practicesToAdd);
 
+                // Daily availability
+                // for each practice add availability
+                foreach (Practice practice in practicesToAdd)
+                {
+                    doctor.SetupWeeklyAvailabilityForPractice(practice.Id);
+                }
+
                 Db.SaveChanges();
                 if (Request.Form["btnSubmit"] == "Save and Close")
                     return RedirectToAction("Index");
@@ -103,12 +110,35 @@ namespace Dentist.Controllers
                 Mapper.Map(view, doctor);
 
                 // remove practices
+                var practiceIdsToRemove = doctor.Practices
+                    .Where(practice => !view.Practices.Contains(practice.Id))
+                    .Select(x =>x.Id)
+                    .ToList();
                 doctor.Practices.RemoveAll(practice => !view.Practices.Contains(practice.Id));
 
                 // add practices
-                var practiceIdsToAdd = view.Practices.Where(practiceId => doctor.Practices.All(practice => practice.Id != practiceId));
+                var practiceIdsToAdd = view.Practices
+                    .Where(practiceId => doctor.Practices.All(practice => practice.Id != practiceId))
+                    .ToList();
                 var practicesToAdd = Db.Practices.Where(practice => practiceIdsToAdd.Contains(practice.Id));
                 doctor.Practices.AddRange(practicesToAdd);
+
+                // Daily availability
+                // for each removed practice remove daily availability
+                foreach (int practiceId in practiceIdsToRemove)
+                {
+                    var tempPracticeId = practiceId;
+                    var dailyAvailabilitiesToRemove =
+                        Db.DailyAvailabilities.Where(x => x.PersonId == doctor.Id && x.PracticeId == tempPracticeId);
+                    Db.DailyAvailabilities.RemoveRange(dailyAvailabilitiesToRemove);
+                }
+
+                // for each added practice add daily availability
+                foreach (int practiceId in practiceIdsToAdd)
+                {
+                    doctor.SetupWeeklyAvailabilityForPractice(practiceId);
+                }
+
 
                 Db.SaveChanges();
 

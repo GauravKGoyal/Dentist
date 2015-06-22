@@ -130,6 +130,7 @@ namespace Dentist.Controllers
         public ActionResult GetDailyAvailabilityBrowserItems([DataSourceRequest] DataSourceRequest request, int personId)
         {
             var query = Db.DailyAvailabilities
+                        .Include(x=>x.Practice)
                         .Where(x => x.PersonId == personId)
                         .ProjectTo<DailyAvailabilityView>();
             
@@ -144,6 +145,8 @@ namespace Dentist.Controllers
                 var dailyAvailability = Mapper.Map<DailyAvailability>(view);
                 Db.DailyAvailabilities.Add(dailyAvailability);
                 Db.SaveChanges();
+                // load practice to load practice name
+                var practice = dailyAvailability.Practice;
             }
 
             // Return the inserted product. The grid needs the generated id. Also return any validation errors.
@@ -157,6 +160,8 @@ namespace Dentist.Controllers
                 var dailyAvailability = Db.DailyAvailabilities.First(x => x.Id == view.Id);
                 Mapper.Map(view, dailyAvailability);
                 Db.SaveChanges();
+                // load practice to load practice name
+                var practice = dailyAvailability.Practice;
             }
 
             // Return the updated item. Also return any validation errors.

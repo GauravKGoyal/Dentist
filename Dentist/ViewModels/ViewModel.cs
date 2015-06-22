@@ -232,10 +232,12 @@ namespace Dentist.ViewModels
         public int DailyAvailabilityViewPersonId { get; set; }
         [Display(Name = "Practice")]
         public int DailyAvailabilityViewPracticeId { get; set; }
+        [Display(Name = "Practice")]
+        public string DailyAvailabilityViewPracticeName { get; set; }
         [Display(Name = "Start1")]
-        public DateTime StartTime1 { get; set; }
+        public DateTime? StartTime1 { get; set; }
         [Display(Name = "End1")]
-        public DateTime EndTime1 { get; set; }
+        public DateTime? EndTime1 { get; set; }
         [Display(Name = "Start2")]
         public DateTime? StartTime2 { get; set; }
         [Display(Name = "End2")]
@@ -244,6 +246,7 @@ namespace Dentist.ViewModels
         public DateTime? StartTime3 { get; set; }
         [Display(Name = "End3")]
         public DateTime? EndTime3 { get; set; }
+        public bool IsWorking { get; set; }
     }
 
     public class AppointmentView

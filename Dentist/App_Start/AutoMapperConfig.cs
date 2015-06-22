@@ -54,6 +54,7 @@ namespace Dentist
 
             Mapper.CreateMap<DailyAvailability, DailyAvailabilityView>()
                 .ForMember(d => d.DailyAvailabilityViewPracticeId, opt => opt.MapFrom(s => s.PracticeId))
+                .ForMember(d => d.DailyAvailabilityViewPracticeName, opt => opt.MapFrom(s => s.Practice.Name))
                 .ForMember(d => d.DailyAvailabilityViewPersonId, opt => opt.MapFrom(s => s.PersonId));
             Mapper.CreateMap<DailyAvailabilityView, DailyAvailability>()
                 .ForMember(d => d.StartTime1, opt => opt.MapFrom(s => GetHoursMins(s.StartTime1)))
