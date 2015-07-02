@@ -17,6 +17,7 @@
           {
               columns.Bound(x => x.DailyAvailabilityViewPracticeName);
               columns.Bound(x => x.DayOfWeek);
+              columns.Bound(x => x.IsWorking).ClientTemplate("<input type='checkbox' #= IsWorking ? checked='checked' :'' # />").Title("Working").Width("5%");
               columns.Bound(x => x.StartTime1).Format("{0:hh:mm}");
               columns.Bound(x => x.EndTime1).Format("{0:hh:mm}");
               columns.Bound(x => x.StartTime2).Format("{0:hh:mm}");
@@ -26,10 +27,10 @@
                   {
                       command.Edit();
                       command.Destroy();
-                  });
+                  }).Width("16%");
 
           })
-          .ToolBar(toolbar => toolbar.Create())
+         // .ToolBar(toolbar => toolbar.Create())
           .Editable(editable => editable.Mode(GridEditMode.PopUp)
           )
           .Events(e => e.Edit("grdDailyAvailability_OnEdit"))

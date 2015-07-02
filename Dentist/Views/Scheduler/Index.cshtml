@@ -4,6 +4,9 @@
     ViewBag.Title = "Scheduler";
     List<SchedulerDoctorView> doctors = ViewBag.Doctors;
     List<SchedulerPracticeView> practices = ViewBag.Practices;
+    List<DailyAvailabilityView> dailyAvailabilityList = ViewBag.DailyAvailabilityList;
+    //var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+    //var dailyAvailabilityListJson = jss.Serialize(dailyAvailabilityList);
 }
 
 
@@ -33,12 +36,12 @@
               .Name("scheduler")
               .Date(DateTime.Today)
               .AllDaySlot(false)
-              .WorkDayStart(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 10, 00, 00))
-              .WorkDayEnd(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 15, 00, 00))
+              .WorkDayStart(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 8, 00, 00))
+              .WorkDayEnd(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 20, 00, 00))
               .StartTime(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 8, 00, 00))
               .EndTime(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 20, 00, 00))
               .WorkWeekStart((int)DayOfWeek.Monday)
-              .WorkWeekEnd((int)DayOfWeek.Saturday)
+              .WorkWeekEnd((int)DayOfWeek.Sunday)
               .EventTemplate(
                   "<div class='appointment-template' data-isBreak=#= IsBreak # style='border-left-color: #= PracticeColor #;'>" +
                   "<p style='padding-left:2px'>#= title #</p>" +
@@ -48,6 +51,7 @@
                   x.Navigate("scheduler_Navigate");
                   x.Add("scheduler_OnAdd");
                   x.Edit("scheduler_OnEdit");
+                  x.DataBound("scheduler_OnDataBound");
               })
               .Views(views =>
               {
@@ -126,39 +130,74 @@
     //    );
     //}
 
-    var doctors = '@ViewBag.Doctors';
-    function IsDoctorBreakTime(doctorId, startTime, endTime) {
-        var doctor = {};
-        for (var i = 0; i < doctors.length; i++) {
-            doctor = doctors[i];
-            if (doctor.Id == doctorId) {
+    function clearDate(dateTime) {
+        dateTime.setDate(1);
+        dateTime.setFullYear(2015);
+        dateTime.setMonth(1);
+        return dateTime;
+    }
 
-                break;
+    function ConvertStringDateToUTCDate(dateTime) {       
+        // ref -http://stackoverflow.com/questions/15517024/how-to-assume-local-time-zone-when-parsing-iso-8601-date-string
+        var dateTimeTemp = new Date(dateTime);
+        var returnDateTime = new Date( dateTimeTemp.getTime() + ( dateTimeTemp.getTimezoneOffset() * 60000 ) );
+        return returnDateTime;
+    }
+
+    var dailyAvailabilityList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(dailyAvailabilityList));   
+    function IsDoctorAvailable(doctorId, practiceId, startDateTime, endDateTime) {
+        for (var i = 0; i < dailyAvailabilityList.length; i++) {
+            var dailyAvailability = dailyAvailabilityList[i];
+            var doctorPracticeMatches = (dailyAvailability.DailyAvailabilityViewPersonId == doctorId) &&
+                                        (dailyAvailability.DailyAvailabilityViewPracticeId == practiceId);
+            if (doctorPracticeMatches) {
+                var dayNumber = startDateTime.getDay();
+                var dayMatches = dailyAvailability.DayOfWeek == dayNumber;
+                if (dayMatches) {
+                    if (!dailyAvailability.IsWorking) {
+                        return false;
+                    }
+                    var slotStartTime = startDateTime;
+                    var slotEndTime = endDateTime;
+  //  StartTime1 is treated as utc timezone and after creating a new date from it it convert teh time to nz time zone
+                    var startTime1 = ConvertStringDateToUTCDate(dailyAvailability.StartTime1);
+                    var endTime1 = ConvertStringDateToUTCDate(dailyAvailability.EndTime1);
+                    var startTime2 = ConvertStringDateToUTCDate(dailyAvailability.StartTime2);
+                    var endTime2 = ConvertStringDateToUTCDate(dailyAvailability.EndTime2);
+                    slotStartTime = clearDate(slotStartTime);
+                    slotEndTime = clearDate(slotEndTime);
+                    startTime1 = clearDate(startTime1);
+                    endTime1 = clearDate(endTime1);
+                    startTime2 = clearDate(startTime2);
+                    endTime2 = clearDate(endTime2);
+                    
+                    
+                    var timeMatches = (startTime1 <= slotStartTime && slotStartTime < endTime1) || (startTime2 <= slotStartTime && slotStartTime < endTime2);
+                    if (timeMatches) {
+                        return true;
+                    }
+                    return false;
+                }
             }
-        }   
+        }
     }
 
     function ColorSchedulerCells() {
         var scheduler = $("#scheduler").data("kendoScheduler");
         var view = scheduler.view();
+        var viewName = view.name;
+        var canColor = viewName === 'day' || viewName === 'workWeek' || viewName === 'week';
+        if (!canColor)
+        {
+            return;
+        }
         var elements = view.content.find("td");
         for (var i = 0; i < elements.length; i++) {
             var slot = scheduler.slotByElement($(elements[i]));
-            if (slot.groupIndex == 1) { //check in which group is this slot
-                $(slot.element).css({ background: "red" }); //apply CSS styles
-            } else {
+            {
                 var resources = scheduler.resourcesBySlot(slot);
-                if (IsDoctorBreakTime(resources.DoctorId, slot.startDate, slot.endDate)) {
-                    $(slot.element).css({ background: "green" }); //apply CSS
-                
-                }
-
-                var startSlotMilliseconds = kendo.date.getMilliseconds(slot.startDate);
-                var endSlotMilliseconds = kendo.date.getMilliseconds(slot.endDate);
-                //check in which hour is current slot
-                if (startSlotMilliseconds / kendo.date.MS_PER_HOUR > 10 &&
-                    endSlotMilliseconds / kendo.date.MS_PER_HOUR < 12) {
-                    
+                if (!IsDoctorAvailable(resources.DoctorId, resources.PracticeId, slot.startDate, slot.endDate)) {
+                    $(slot.element).addClass("k-nonwork-hour"); //.css({ background: "red" }); //apply CSS
                 }
             }
         }
@@ -168,7 +207,7 @@
     var selectedPracticesId = [];
     var doctorsDatasourceFilter = {};
     var practicesDatasourceFilter = {};
-    
+
 
     function isDoctorCheckedBox(element) {
         var parent = $(element).parent().parent();
@@ -220,14 +259,14 @@
 
         doctorsDatasourceFilter = {
             logic: "or",
-            filters: $.map(selectedDoctorsId, function(value) {
+            filters: $.map(selectedDoctorsId, function (value) {
                 return {
                     operator: "eq",
                     field: "Id",
                     value: parseInt(value)
                 };
             })
-        };        
+        };
 
         practicesDatasourceFilter = {
             logic: "or",
@@ -272,9 +311,6 @@
                 { collapsible: false, collapsed: false }
             ]
         });
-
-        ColorSchedulerCells();
-
     });
 
     function ResizeSchedulerAccordingToWindown() {
@@ -314,6 +350,10 @@
             $("#patientDiv").hide();
             e.container.kendoWindow("title", "Edit Appointment");
         }
+    }
+
+    function scheduler_OnDataBound(e) {
+        ColorSchedulerCells();
     }
 
     function scheduler_OnAdd(e) {
@@ -361,7 +401,7 @@
     }
 
     function filterPracticeByDoctor() {
-        return { doctorId: $("#DoctorId").val() }
+        return { doctorId: $("#DoctorId").val() };
     }
 
 </script>

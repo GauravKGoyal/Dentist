@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
@@ -23,9 +24,13 @@ namespace Dentist.Controllers
                .Where(x => x.IsDeleted != true && x.PersonRole == PersonRole.Doctor)
                .OrderBy(x => x.FirstName)
                .ToList();
+            var practices = Db.Practices.Where(x => x.IsDeleted != true).ToList();
+            var dailyAvailabilities = Db.DailyAvailabilities.ToList();
 
-            UpdateAvailableDoctorAndPracticeResources("", "");
-            ViewBag.DoctorsInTreeView = MapDoctorsToTreeViewItems(doctors);
+            ViewBag.Doctors = Mapper.Map<List<SchedulerDoctorView>>(doctors);
+            ViewBag.Practices = Mapper.Map<List<SchedulerPracticeView>>(practices);
+            ViewBag.DoctorsInTreeView = MapDoctorsToTreeViewItems(doctors);            
+            ViewBag.DailyAvailabilityList = Mapper.Map<List<DailyAvailabilityView>>(dailyAvailabilities);
             return View();
         }
 
@@ -65,26 +70,6 @@ namespace Dentist.Controllers
             return treeItems;
         }
    
-        private void UpdateAvailableDoctorAndPracticeResources(string doctorIds, string practiceIds)
-        {
-            var practices = Db.Practices.Where(x => x.IsDeleted != true).ToList();
-            var practiceIdList = practiceIds.ToInts();
-            if (practiceIdList.Any())
-            {
-                practices = practices.Where(x => practiceIdList.Contains(x.Id)).ToList();
-            }
-
-            var doctors = Db.People.Where(x => x.PersonRole == PersonRole.Doctor && x.IsDeleted != true).ToList();
-            var doctorIdList = doctorIds.ToInts();
-            if (doctorIdList.Any())
-            {
-                doctors = doctors.Where(x => doctorIdList.Contains(x.Id)).ToList();
-            }
-
-            ViewBag.Doctors = Mapper.Map<List<SchedulerDoctorView>>(doctors);
-            ViewBag.Practices = Mapper.Map<List<SchedulerPracticeView>>(practices);
-        }
-
         public ActionResult GetBrowserItems([DataSourceRequest] DataSourceRequest request, string doctorsIds = null, string practiceIds = null)
         {
             var query = Db.Appointments

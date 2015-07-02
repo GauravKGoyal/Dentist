@@ -18,7 +18,7 @@
     <div class="editor-field">
         @(Html.Kendo().DropDownListFor(model => model.DailyAvailabilityViewPracticeId)
               .OptionLabel("--Select--")
-              .HtmlAttributes(new { style = "width: 100%" })
+              .HtmlAttributes(new { style = "width: 100%", @readonly = "readonly" })
               .DataTextField("Text")
               .DataValueField("Id")
               .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "Practice"))
@@ -33,7 +33,7 @@
     <div class="editor-field">
         @(Html.Kendo().DropDownListFor(model => model.DayOfWeek)
               .OptionLabel("--Select--")
-              .HtmlAttributes(new { style = "width: 100%" })
+                      .HtmlAttributes(new { style = "width: 100%", @readonly = "readonly" })
               .BindTo(EnumHelper.GetSelectList(typeof(DayOfWeek)))
 
               )
