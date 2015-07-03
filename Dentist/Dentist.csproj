@@ -650,7 +650,6 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\People\_TabDetail.cshtml" />
     <Content Include="Views\People\_TabAppointment.cshtml" />
     <Content Include="Views\People\_TabAvailability.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DailyAvailabilityView.cshtml" />
@@ -666,7 +665,6 @@
     <Content Include="Views\Doctor\_TabDetail.cshtml" />
     <Content Include="Views\Doctor\Create.cshtml" />
     <Content Include="Views\Doctor\Index.cshtml" />
-    <Content Include="Views\Scheduler\EditorTemplates\CustomEditorTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
