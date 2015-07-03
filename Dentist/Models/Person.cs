@@ -14,12 +14,15 @@ namespace Dentist.Models
         public string Phone { get; set; }
         public string Email { get; set; }
         public string Website { get; set; }
-        public virtual List<Person> Persons { get; set; }
+        public virtual List<Paitient> Paitients { get; set; }
+        public virtual List<Doctor> Doctors { get; set; }
+
         [InverseProperty("Practice")]
         public virtual List<Appointment> PracticeAppointments { get; set; }
-        public virtual List<DailyAvailability> DailyAvailabilities{ get; set; }
+
+        public virtual List<DailyAvailability> DailyAvailabilities { get; set; }
         public bool IsDeleted { get; set; }
-        
+
         public int AddressId { get; set; }
         public Address Address { get; set; }
         public string Color { get; set; }
@@ -33,14 +36,17 @@ namespace Dentist.Models
         public DateTime EndDateTime { get; set; }
 
         public int DoctorId { get; set; }
+
         [InverseProperty("Appointments")]
-        public Person Doctor { get; set; }
+        public Doctor Doctor { get; set; }
 
         public int PatientId { get; set; }
+
         [InverseProperty("PatientAppointments")]
-        public Person Patient { get; set; }
+        public Paitient Patient { get; set; }
 
         public int PracticeId { get; set; }
+
         [InverseProperty("PracticeAppointments")]
         public Practice Practice { get; set; }
 
@@ -63,72 +69,80 @@ namespace Dentist.Models
 
         [Required]
         public string LastName { get; set; }
-        
+
         public string Email { get; set; }
-        
+
         public DateTime? DateOfBirth { get; set; }
 
         public string Phone { get; set; }
 
         public PersonRole PersonRole { get; set; }
-        
+
         public int AddressId { get; set; }
         public virtual Address Address { get; set; }
-        
+
+        public bool IsDeleted { get; set; }
+    }
+
+    public class Paitient : Person
+    {
+        [InverseProperty("Patient")]
+        public virtual List<Appointment> PatientAppointments { get; set; }
+
+        public virtual Practice Practice { get; set; }
+        public int PracticeId { get; set; }
+    }
+
+    public class Doctor : Person
+    {
         public virtual List<DailyAvailability> DailyAvailabilities { get; set; }
+
+        [InverseProperty("Doctor")]
+        public virtual List<Appointment> Appointments { get; set; }
+
+        public virtual List<Practice> Practices { get; set; }
+
+        public string Color { get; set; }
 
         public void SetupWeeklyAvailabilityForPractice(int practiceId)
         {
             //todo get start time and end time from practice availability timings
-            var startTime1 = new DateTime(DateTime.Today.Year, DateTime.Today.Month,  DateTime.Today.Day, 8,0,0,0);
-            var endTime1 = new DateTime(DateTime.Today.Year, DateTime.Today.Month,  DateTime.Today.Day, 12,0,0,0);
-            var startTime2 = new DateTime(DateTime.Today.Year, DateTime.Today.Month,  DateTime.Today.Day, 12,30,0,0);
-            var endTime2 = new DateTime(DateTime.Today.Year, DateTime.Today.Month,  DateTime.Today.Day, 17,0,0,0);
+            var startTime1 = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 8, 0, 0, 0);
+            var endTime1 = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 12, 0, 0, 0);
+            var startTime2 = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 12, 30, 0, 0);
+            var endTime2 = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 17, 0, 0, 0);
 
             if (DailyAvailabilities == null)
             {
                 DailyAvailabilities = new List<DailyAvailability>();
             }
 
-            var daysOfWeek = Enum.GetValues(typeof(DayOfWeek));
-            foreach (var dayOfWeek in daysOfWeek)
+            Array daysOfWeek = Enum.GetValues(typeof (DayOfWeek));
+            foreach (object dayOfWeek in daysOfWeek)
             {
-                DailyAvailabilities.Add(new DailyAvailability()
+                DailyAvailabilities.Add(new DailyAvailability
                 {
-                    DayOfWeek = (DayOfWeek)dayOfWeek,
+                    DayOfWeek = (DayOfWeek) dayOfWeek,
                     IsWorking = true,
                     StartTime1 = startTime1,
                     EndTime1 = endTime1,
                     StartTime2 = startTime2,
                     EndTime2 = endTime2,
-                    Person = this,
+                    Doctor = this,
                     PracticeId = practiceId
                 });
             }
         }
-
-        [InverseProperty("Doctor")]
-        public virtual List<Appointment> Appointments { get; set; }
-
-        [InverseProperty("Patient")]
-        public virtual List<Appointment> PatientAppointments { get; set; }
-
-        public virtual List<Practice> Practices { get; set; }
-
-        public bool IsDeleted { get; set; }
-
-        public string Color { get; set; }
-
     }
 
     public class DailyAvailability
     {
         public int Id { get; set; }
         public DayOfWeek DayOfWeek { get; set; }
-        
-        public int PersonId { get; set; }
-        public virtual Person Person { get; set; }
-        
+
+        public int DoctorId { get; set; }
+        public virtual Doctor Doctor { get; set; }
+
         public int PracticeId { get; set; }
         public virtual Practice Practice { get; set; }
 
@@ -151,5 +165,4 @@ namespace Dentist.Models
         public string PinCode { get; set; }
         public List<Practice> Practices { get; set; }
     }
-
 }

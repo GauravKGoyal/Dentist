@@ -32,16 +32,40 @@ namespace Dentist.Migrations
                         Website = c.String(),
                         IsDeleted = c.Boolean(nullable: false),
                         AddressId = c.Int(nullable: false),
+                        Color = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Addresses", t => t.AddressId)
                 .Index(t => t.AddressId);
             
             CreateTable(
-                "dbo.People",
+                "dbo.DailyAvailabilities",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
+                        DayOfWeek = c.Int(nullable: false),
+                        DoctorId = c.Int(nullable: false),
+                        PracticeId = c.Int(nullable: false),
+                        IsWorking = c.Boolean(nullable: false),
+                        StartTime1 = c.DateTime(),
+                        EndTime1 = c.DateTime(),
+                        StartTime2 = c.DateTime(),
+                        EndTime2 = c.DateTime(),
+                        StartTime3 = c.DateTime(),
+                        EndTime3 = c.DateTime(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Doctors", t => t.DoctorId)
+                .ForeignKey("dbo.Practices", t => t.PracticeId)
+                .Index(t => t.DoctorId)
+                .Index(t => t.PracticeId);
+            
+            CreateTable(
+                "dbo.Doctors",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Color = c.String(),
                         Title = c.Int(nullable: false),
                         FirstName = c.String(nullable: false),
                         LastName = c.String(nullable: false),
@@ -51,7 +75,6 @@ namespace Dentist.Migrations
                         PersonRole = c.Int(nullable: false),
                         AddressId = c.Int(nullable: false),
                         IsDeleted = c.Boolean(nullable: false),
-                        Color = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Addresses", t => t.AddressId)
@@ -69,32 +92,39 @@ namespace Dentist.Migrations
                         PracticeId = c.Int(nullable: false),
                         Description = c.String(),
                         AppointmentStatus = c.Int(nullable: false),
+                        RecurrenceRule = c.String(),
+                        RecurrenceException = c.String(),
+                        IsBreak = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.People", t => t.DoctorId)
-                .ForeignKey("dbo.People", t => t.PatientId)
+                .ForeignKey("dbo.Doctors", t => t.DoctorId)
+                .ForeignKey("dbo.Paitients", t => t.PatientId)
                 .ForeignKey("dbo.Practices", t => t.PracticeId)
                 .Index(t => t.DoctorId)
                 .Index(t => t.PatientId)
                 .Index(t => t.PracticeId);
             
             CreateTable(
-                "dbo.DailyAvailabilities",
+                "dbo.Paitients",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        DayOfWeek = c.Int(nullable: false),
-                        PersonId = c.Int(nullable: false),
-                        StartTime1 = c.DateTime(nullable: false),
-                        EndTime1 = c.DateTime(nullable: false),
-                        StartTime2 = c.DateTime(),
-                        EndTime2 = c.DateTime(),
-                        StartTime3 = c.DateTime(),
-                        EndTime3 = c.DateTime(),
+                        PracticeId = c.Int(nullable: false),
+                        Title = c.Int(nullable: false),
+                        FirstName = c.String(nullable: false),
+                        LastName = c.String(nullable: false),
+                        Email = c.String(),
+                        DateOfBirth = c.DateTime(),
+                        Phone = c.String(),
+                        PersonRole = c.Int(nullable: false),
+                        AddressId = c.Int(nullable: false),
+                        IsDeleted = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.People", t => t.PersonId)
-                .Index(t => t.PersonId);
+                .ForeignKey("dbo.Addresses", t => t.AddressId)
+                .ForeignKey("dbo.Practices", t => t.PracticeId)
+                .Index(t => t.PracticeId)
+                .Index(t => t.AddressId);
             
             CreateTable(
                 "dbo.AspNetRoles",
@@ -165,16 +195,16 @@ namespace Dentist.Migrations
                 .Index(t => t.UserId);
             
             CreateTable(
-                "dbo.PersonPractices",
+                "dbo.DoctorPractices",
                 c => new
                     {
-                        Person_Id = c.Int(nullable: false),
+                        Doctor_Id = c.Int(nullable: false),
                         Practice_Id = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => new { t.Person_Id, t.Practice_Id })
-                .ForeignKey("dbo.People", t => t.Person_Id, cascadeDelete: true)
+                .PrimaryKey(t => new { t.Doctor_Id, t.Practice_Id })
+                .ForeignKey("dbo.Doctors", t => t.Doctor_Id, cascadeDelete: true)
                 .ForeignKey("dbo.Practices", t => t.Practice_Id, cascadeDelete: true)
-                .Index(t => t.Person_Id)
+                .Index(t => t.Doctor_Id)
                 .Index(t => t.Practice_Id);
             
         }
@@ -185,37 +215,44 @@ namespace Dentist.Migrations
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.PersonPractices", "Practice_Id", "dbo.Practices");
-            DropForeignKey("dbo.PersonPractices", "Person_Id", "dbo.People");
-            DropForeignKey("dbo.DailyAvailabilities", "PersonId", "dbo.People");
+            DropForeignKey("dbo.DailyAvailabilities", "PracticeId", "dbo.Practices");
+            DropForeignKey("dbo.DoctorPractices", "Practice_Id", "dbo.Practices");
+            DropForeignKey("dbo.DoctorPractices", "Doctor_Id", "dbo.Doctors");
+            DropForeignKey("dbo.DailyAvailabilities", "DoctorId", "dbo.Doctors");
             DropForeignKey("dbo.Appointments", "PracticeId", "dbo.Practices");
-            DropForeignKey("dbo.Appointments", "PatientId", "dbo.People");
-            DropForeignKey("dbo.Appointments", "DoctorId", "dbo.People");
-            DropForeignKey("dbo.People", "AddressId", "dbo.Addresses");
+            DropForeignKey("dbo.Appointments", "PatientId", "dbo.Paitients");
+            DropForeignKey("dbo.Paitients", "PracticeId", "dbo.Practices");
+            DropForeignKey("dbo.Paitients", "AddressId", "dbo.Addresses");
+            DropForeignKey("dbo.Appointments", "DoctorId", "dbo.Doctors");
+            DropForeignKey("dbo.Doctors", "AddressId", "dbo.Addresses");
             DropForeignKey("dbo.Practices", "AddressId", "dbo.Addresses");
-            DropIndex("dbo.PersonPractices", new[] { "Practice_Id" });
-            DropIndex("dbo.PersonPractices", new[] { "Person_Id" });
+            DropIndex("dbo.DoctorPractices", new[] { "Practice_Id" });
+            DropIndex("dbo.DoctorPractices", new[] { "Doctor_Id" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
-            DropIndex("dbo.DailyAvailabilities", new[] { "PersonId" });
+            DropIndex("dbo.Paitients", new[] { "AddressId" });
+            DropIndex("dbo.Paitients", new[] { "PracticeId" });
             DropIndex("dbo.Appointments", new[] { "PracticeId" });
             DropIndex("dbo.Appointments", new[] { "PatientId" });
             DropIndex("dbo.Appointments", new[] { "DoctorId" });
-            DropIndex("dbo.People", new[] { "AddressId" });
+            DropIndex("dbo.Doctors", new[] { "AddressId" });
+            DropIndex("dbo.DailyAvailabilities", new[] { "PracticeId" });
+            DropIndex("dbo.DailyAvailabilities", new[] { "DoctorId" });
             DropIndex("dbo.Practices", new[] { "AddressId" });
-            DropTable("dbo.PersonPractices");
+            DropTable("dbo.DoctorPractices");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetRoles");
-            DropTable("dbo.DailyAvailabilities");
+            DropTable("dbo.Paitients");
             DropTable("dbo.Appointments");
-            DropTable("dbo.People");
+            DropTable("dbo.Doctors");
+            DropTable("dbo.DailyAvailabilities");
             DropTable("dbo.Practices");
             DropTable("dbo.Addresses");
         }

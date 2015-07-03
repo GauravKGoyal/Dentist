@@ -13,7 +13,7 @@ namespace Dentist.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201504182309445_InitialCreate"; }
+            get { return "201507030844338_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

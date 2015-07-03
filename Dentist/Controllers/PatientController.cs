@@ -16,6 +16,29 @@ namespace Dentist.Controllers
 {
     public class PatientController : BaseController
     {
+        public JsonResult GetAllIdTexts(string text = null)
+        {
+            var query = Db.Paitients.Where(x => x.IsDeleted != true)
+           .Select(x => new
+           {
+               x.Id,
+               Text = x.FirstName + " " + x.LastName,
+               FirstName = x.FirstName,
+               LastName = x.LastName,
+               Phone = x.Phone,
+           })
+           .OrderBy(x => x.Text);
+
+
+            if (!string.IsNullOrEmpty(text))
+            {
+                var patient = query.Where(p => p.Text.Contains(text));
+                return Json(patient, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(query, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult Index()
         {
             return View();
@@ -25,7 +48,7 @@ namespace Dentist.Controllers
         public ActionResult GetBrowserItems([DataSourceRequest] DataSourceRequest request)
         {
             var query = Db
-                .People
+                .Paitients
                 .Where(x=>x.IsDeleted != true);
             query = query.Where(x => x.PersonRole == PersonRole.Patient);
             var projectedQuery = query.ProjectTo<PatientListView>();
@@ -51,14 +74,13 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var patient = Mapper.Map<Person>(view);
+                var patient = Mapper.Map<Paitient>(view);
                 patient.PersonRole = PersonRole.Patient;
-                Db.People.Add(patient);
+                Db.Paitients.Add(patient);
 
                 // add practice
                 var practiceToAdd = Db.Practices.Find(view.PatientViewPracticeId);
-                patient.Practices = new List<Practice>();
-                patient.Practices.Add(practiceToAdd);
+                patient.Practice = practiceToAdd;
 
                 Db.SaveChanges();
                 if (Request.Form["btnSubmit"] == "Save and Close")
@@ -76,9 +98,9 @@ namespace Dentist.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             
-            Person patient = Db.People
+            var patient = Db.Paitients
                             .Include(x =>x.Address)
-                            .Include(x => x.Practices)
+                            .Include(x => x.Practice)
                             .First(x => x.Id == id);
 
             if (patient.PersonRole != PersonRole.Patient)
@@ -97,18 +119,15 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var patient = Db.People
-                    .Include(x => x.Practices)
+                var patient = Db.Paitients
+                    .Include(x => x.Practice)
                     .Include(x => x.Address)
                     .First(x => x.Id == view.Id);
                 Mapper.Map(view, patient);
-                
-                // remove practice
-                patient.Practices.Clear();
-
+                               
                 // add practice
                 var practiceToAdd = Db.Practices.Find(view.PatientViewPracticeId);
-                patient.Practices.Add(practiceToAdd);
+                patient.Practice = practiceToAdd;
 
                 Db.SaveChanges();
 
@@ -122,7 +141,7 @@ namespace Dentist.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            var patient = Db.People.Find(id);
+            var patient = Db.Paitients.Find(id);
             patient.IsDeleted = true;
             Db.SaveChanges();
             return Json(new {Success=true});

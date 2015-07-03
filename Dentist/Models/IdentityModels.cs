@@ -42,7 +42,8 @@ namespace Dentist.Models
 
         public System.Data.Entity.DbSet<Dentist.Models.Practice> Practices { get; set; }
 
-        public System.Data.Entity.DbSet<Dentist.Models.Person> People { get; set; }
+        public System.Data.Entity.DbSet<Dentist.Models.Paitient> Paitients { get; set; }
+        public System.Data.Entity.DbSet<Dentist.Models.Doctor> Doctors { get; set; }
 
         public System.Data.Entity.DbSet<Dentist.Models.Address> Addresses { get; set; }
 

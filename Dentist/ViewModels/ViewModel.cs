@@ -38,67 +38,24 @@ namespace Dentist.ViewModels
         [Required]
         public string LastName { get; set; }
 
+
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
         [Display(Name = "DOB")]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? DateOfBirth { get; set; }
-
         [DataType(DataType.PhoneNumber)]
         public string Phone { get; set; }
-
-        [Display(Name = "Role")]
-        public PersonRole PersonRole { get; set; }
 
         public int AddressId { get; set; }
 
         public AddressView Address { get; set; }
-
         public bool IsDeleted { get; set; }
-
-        public bool IsDoctor
-        {
-            get { return PersonRole == PersonRole.Doctor; }
-        }
-
-        public string Color { get; set; }
-
-        [RequiredListItem]
-        public List<int> Practices { get; set; }
-
     }
-
-    public class DoctorView
+    
+    public class DoctorView : PersonView
     {
-        public int Id { get; set; }
-
-        public Title Title { get; set; }
-
-        [Display(Name = "Frist Name")]
-        [Required]
-        public string FirstName { get; set; }
-
-        [Display(Name = "Last Name")]
-        [Required]
-        public string LastName { get; set; }
-
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
-
-        [Display(Name = "DOB")]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime? DateOfBirth { get; set; }
-
-        [DataType(DataType.PhoneNumber)]
-        public string Phone { get; set; }
-
-        public int AddressId { get; set; }
-
-        public AddressView Address { get; set; }
-
-        public bool IsDeleted { get; set; }
-
         public bool IsDoctor
         {
             get { return true; }
@@ -111,36 +68,8 @@ namespace Dentist.ViewModels
 
     }
 
-    public class PatientView
+    public class PatientView : PersonView
     {
-        public int Id { get; set; }
-
-        public Title Title { get; set; }
-
-        [Display(Name = "Frist Name")]
-        [Required]
-        public string FirstName { get; set; }
-
-        [Display(Name = "Last Name")]
-        [Required]
-        public string LastName { get; set; }
-
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
-
-        [Display(Name = "DOB")]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime? DateOfBirth { get; set; }
-
-        [DataType(DataType.PhoneNumber)]
-        public string Phone { get; set; }
-
-        public int AddressId { get; set; }
-
-        public AddressView Address { get; set; }
-
-        public bool IsDeleted { get; set; }
-
         [Display(Name="Practice")]
         public int PatientViewPracticeId { get; set; }
 
@@ -151,50 +80,19 @@ namespace Dentist.ViewModels
 
     }
 
-    public class DoctorListView
+    public class DoctorListView : PersonListView
     {
-        public int Id { get; set; }
-
-        [Display(Name = "Frist Name")]
-        [Required]
-        public string FirstName { get; set; }
-
-        [Display(Name = "Last Name")]
-        [Required]
-        public string LastName { get; set; }
-
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
-
-        [DataType(DataType.PhoneNumber)]
-        public string Phone { get; set; }
+        
     }
 
-    public class PatientListView
+    public class PatientListView : PersonListView
     {
-        public int Id { get; set; }
-
-        [Display(Name = "Frist Name")]
-        [Required]
-        public string FirstName { get; set; }
-
-        [Display(Name = "Last Name")]
-        [Required]
-        public string LastName { get; set; }
-
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
-
-        [DataType(DataType.PhoneNumber)]
-        public string Phone { get; set; }
+        
     }
 
     public class PersonListView
     {
-
         public int Id { get; set; }
-
-        public Title Title { get; set; }
 
         [Display(Name = "Frist Name")]
         [Required]
@@ -207,21 +105,8 @@ namespace Dentist.ViewModels
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
-        [Display(Name = "DOB")]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime? DateOfBirth { get; set; }
-
         [DataType(DataType.PhoneNumber)]
         public string Phone { get; set; }
-
-        [Display(Name = "Role")]
-        public PersonRole PersonRole { get; set; }
-
-        public int AddressId { get; set; }
-
-        public virtual AddressView Address { get; set; }
-
-        public string Color { get; set; }
     }
 
     public class DailyAvailabilityView

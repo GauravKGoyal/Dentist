@@ -52,7 +52,7 @@ namespace Dentist.Controllers
             }
             var query = Db.Practices
                 .Where(x => x.IsDeleted != true)
-                .Where(x => x.Persons.Any(person => person.Id == doctorId))
+                .Where(x => x.Doctors.Any(doctor => doctor.Id == doctorId))
                 .Select(x => new
                 {
                     x.Id,

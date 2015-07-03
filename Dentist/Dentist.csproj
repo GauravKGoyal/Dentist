@@ -186,9 +186,9 @@
     </Compile>
     <Compile Include="Helpers\ConvertHelper.cs" />
     <Compile Include="Helpers\RequiredListItemAttribute.cs" />
-    <Compile Include="Migrations\201504182309445_InitialCreate.cs" />
-    <Compile Include="Migrations\201504182309445_InitialCreate.Designer.cs">
-      <DependentUpon>201504182309445_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201507030844338_InitialCreate.cs" />
+    <Compile Include="Migrations\201507030844338_InitialCreate.Designer.cs">
+      <DependentUpon>201507030844338_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -650,8 +650,6 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\People\Create.cshtml" />
-    <Content Include="Views\People\Index.cshtml" />
     <Content Include="Views\People\_TabDetail.cshtml" />
     <Content Include="Views\People\_TabAppointment.cshtml" />
     <Content Include="Views\People\_TabAvailability.cshtml" />
@@ -669,7 +667,6 @@
     <Content Include="Views\Doctor\Create.cshtml" />
     <Content Include="Views\Doctor\Index.cshtml" />
     <Content Include="Views\Scheduler\EditorTemplates\CustomEditorTemplate.cshtml" />
-    <Content Include="Views\Scheduler\EditorTemplates\SchedulerAppointmentView - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -683,8 +680,8 @@
     <Folder Include="Views\People\EditorTemplates\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201504182309445_InitialCreate.resx">
-      <DependentUpon>201504182309445_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201507030844338_InitialCreate.resx">
+      <DependentUpon>201507030844338_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

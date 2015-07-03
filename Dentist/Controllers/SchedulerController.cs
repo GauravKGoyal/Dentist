@@ -19,7 +19,7 @@ namespace Dentist.Controllers
         // GET: People
         public ActionResult Index()
         {
-            var doctors = Db.People
+            var doctors = Db.Doctors
                .Include(x => x.Practices)
                .Where(x => x.IsDeleted != true && x.PersonRole == PersonRole.Doctor)
                .OrderBy(x => x.FirstName)
@@ -34,7 +34,7 @@ namespace Dentist.Controllers
             return View();
         }
 
-        private IEnumerable<TreeViewItemModel> MapDoctorsToTreeViewItems(IEnumerable<Person> doctors)
+        private IEnumerable<TreeViewItemModel> MapDoctorsToTreeViewItems(IEnumerable<Doctor> doctors)
         {
             var treeItems = new List<TreeViewItemModel>();
             foreach (var doctor in doctors)
@@ -103,13 +103,13 @@ namespace Dentist.Controllers
                 var isNewPatientFortheAppointment = appointment.PatientId == 0;
                 if (isNewPatientFortheAppointment)
                 {
-                    var patient = new Person()
+                    var patient = new Paitient()
                     {
                         FirstName = view.FirstName,
                         LastName = view.LastName,
                         Phone = view.Phone,
                         Address = new Address(),
-                        Practices = new List<Practice>() { practice }
+                        Practice = practice 
                     };
                     //if (appointment.IsBreak)
                     //{
@@ -119,7 +119,7 @@ namespace Dentist.Controllers
                 }
                 else
                 {
-                    var patient = Db.People.Find(appointment.PatientId);
+                    var patient = Db.Paitients.Find(appointment.PatientId);
                     patient.FirstName = view.FirstName;
                     patient.LastName = view.LastName;
                     patient.Phone = view.Phone;
@@ -143,7 +143,7 @@ namespace Dentist.Controllers
                 // do not load patient before mapping view to the appointment 
                 // because during update process view patient may have been replaced 
                 // with new patient therefore mapping view to the appointment may have updated the appointment's paitient link
-                Db.People.Find(appointment.PatientId);
+                Db.Paitients.Find(appointment.PatientId);
                 appointment.Patient.FirstName = view.FirstName;
                 appointment.Patient.LastName = view.LastName;
                 appointment.Patient.Phone = view.Phone;

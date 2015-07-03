@@ -2,12 +2,6 @@
 @using Dentist.Models
 @model Dentist.ViewModels.SchedulerAppointmentView
 
-<script>
-    function filterDoctorIdBy() {
-        return { personRole: 1 }
-    }
-</script>
-
     @Html.HiddenFor(x => x.Id)
 
 
@@ -44,7 +38,7 @@
                   {
                       source.Read(read =>
                       {
-                          read.Action("GetAllIdTexts", "people");
+                          read.Action("GetAllIdTexts", "patient");
                       });
                   })
                   .Events(e => e.Change("PatientId_OnChange"))
@@ -106,8 +100,8 @@
               .DataValueField("Id")
               .ValueTemplate("<span class='glyphicon glyphicon-user' style='color:\\#= data.Color?Color:'' \\#'></span> \\#=Text\\#")
               .Template("<span class='glyphicon glyphicon-user' style='color:\\#= data.Color?Color:'' \\#'></span> \\#=Text\\#")
-              .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "People")
-              .Data("filterDoctorIdBy")))
+              .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "Doctor")
+               ))
         )
         @Html.ValidationMessageFor(model => model.DoctorId, "", new { @class = "text-danger" })
     </div>

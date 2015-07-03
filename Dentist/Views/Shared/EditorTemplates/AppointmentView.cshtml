@@ -3,10 +3,6 @@
 @model Dentist.ViewModels.AppointmentView
 
 <script>
-    function filterDoctorIdBy() {
-        return { personRole: 1 }
-    }
-
     function filterPracticeByDoctor() {
         return { doctorId : $("#DoctorId").val()}
     }
@@ -25,7 +21,7 @@
               .HtmlAttributes(new { style = "width: 100%" })
               .DataTextField("Text")
               .DataValueField("Id")
-              .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "People").Data("filterDoctorIdBy")))
+              .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "Doctor")))
         )
         @Html.ValidationMessageFor(model => model.PatientId, "", new { @class = "text-danger" })
     </div>
@@ -57,7 +53,7 @@
               .HtmlAttributes(new { style = "width: 100%" })
               .DataTextField("Text")
               .DataValueField("Id")
-              .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "People")))
+              .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "Patient")))
               )
         @Html.ValidationMessageFor(model => model.PatientId, "", new { @class = "text-danger" })
     </div>
