@@ -99,6 +99,7 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var appointment = Mapper.Map<Appointment>(view);
+                var practice = Db.Practices.Find(appointment.PracticeId);
                 var isNewPatientFortheAppointment = appointment.PatientId == 0;
                 if (isNewPatientFortheAppointment)
                 {
@@ -107,7 +108,8 @@ namespace Dentist.Controllers
                         FirstName = view.FirstName,
                         LastName = view.LastName,
                         Phone = view.Phone,
-                        Address = new Address()
+                        Address = new Address(),
+                        Practices = new List<Practice>() { practice }
                     };
                     //if (appointment.IsBreak)
                     //{
@@ -122,8 +124,6 @@ namespace Dentist.Controllers
                     patient.LastName = view.LastName;
                     patient.Phone = view.Phone;
                 }
-                // load practice to update the practice color
-                appointment.Practice = Db.Practices.Find(appointment.PracticeId);
                 
                 Db.Appointments.Add(appointment);
                 Db.SaveChanges();

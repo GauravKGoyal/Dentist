@@ -152,6 +152,4 @@ namespace Dentist.Models
         public List<Practice> Practices { get; set; }
     }
 
-
-
 }
