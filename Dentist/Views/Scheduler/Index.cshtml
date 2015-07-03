@@ -1,5 +1,6 @@
 ﻿@*filtering data example - http://jsbin.com/eKIrusi/1/edit?html,js,output*@
 @using Dentist.ViewModels
+@using Newtonsoft.Json.Converters
 @{
     ViewBag.Title = "Scheduler";
     List<SchedulerDoctorView> doctors = ViewBag.Doctors;
@@ -112,39 +113,18 @@
 
 
 <script>
-    //function pageLoad() {
-
-    //    var height = getDocHeight();
-    //    alert(height);
-    //    var scheduler = $('');
-
-    //    scheduler.set_height("" + height + "px");
-    //}
-    //function getDocHeight() {
-    //    //utility function to find dimensions of page
-    //    var D = document;
-    //    return Math.max(
-    //    Math.max(D.body.scrollHeight, D.documentElement.scrollHeight),
-    //    Math.max(D.body.offsetHeight, D.documentElement.offsetHeight),
-    //    Math.max(D.body.clientHeight, D.documentElement.clientHeight)
-    //    );
-    //}
 
     function clearDate(dateTime) {
+        if (dateTime == null) {
+            return dateTime;
+        }
         dateTime.setDate(1);
         dateTime.setFullYear(2015);
         dateTime.setMonth(1);
         return dateTime;
     }
 
-    function ConvertStringDateToUTCDate(dateTime) {       
-        // ref -http://stackoverflow.com/questions/15517024/how-to-assume-local-time-zone-when-parsing-iso-8601-date-string
-        var dateTimeTemp = new Date(dateTime);
-        var returnDateTime = new Date( dateTimeTemp.getTime() + ( dateTimeTemp.getTimezoneOffset() * 60000 ) );
-        return returnDateTime;
-    }
-
-    var dailyAvailabilityList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(dailyAvailabilityList));   
+    var dailyAvailabilityList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(dailyAvailabilityList, new JavaScriptDateTimeConverter()));   
     function IsDoctorAvailable(doctorId, practiceId, startDateTime, endDateTime) {
         for (var i = 0; i < dailyAvailabilityList.length; i++) {
             var dailyAvailability = dailyAvailabilityList[i];
@@ -159,24 +139,17 @@
                     }
                     var slotStartTime = startDateTime;
                     var slotEndTime = endDateTime;
-  //  StartTime1 is treated as utc timezone and after creating a new date from it it convert teh time to nz time zone
-                    var startTime1 = ConvertStringDateToUTCDate(dailyAvailability.StartTime1);
-                    var endTime1 = ConvertStringDateToUTCDate(dailyAvailability.EndTime1);
-                    var startTime2 = ConvertStringDateToUTCDate(dailyAvailability.StartTime2);
-                    var endTime2 = ConvertStringDateToUTCDate(dailyAvailability.EndTime2);
                     slotStartTime = clearDate(slotStartTime);
                     slotEndTime = clearDate(slotEndTime);
-                    startTime1 = clearDate(startTime1);
-                    endTime1 = clearDate(endTime1);
-                    startTime2 = clearDate(startTime2);
-                    endTime2 = clearDate(endTime2);
-                    
-                    
-                    var timeMatches = (startTime1 <= slotStartTime && slotStartTime < endTime1) || (startTime2 <= slotStartTime && slotStartTime < endTime2);
-                    if (timeMatches) {
-                        return true;
-                    }
-                    return false;
+                    var startTime1 = clearDate(dailyAvailability.StartTime1);
+                    var endTime1 = clearDate(dailyAvailability.EndTime1);
+                    var startTime2 = clearDate(dailyAvailability.StartTime2);
+                    var endTime2 = clearDate(dailyAvailability.EndTime2);
+
+                    var timeMatches = false;
+                    timeMatches = (startTime1 != null && endTime1 != null && startTime1 <= slotStartTime && slotStartTime < endTime1) || 
+                                  (startTime2 != null && endTime2 != null && startTime2 <= slotStartTime && slotStartTime < endTime2);                    
+                    return timeMatches;
                 }
             }
         }

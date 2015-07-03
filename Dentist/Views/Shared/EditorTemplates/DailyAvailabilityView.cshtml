@@ -70,7 +70,7 @@
         @Html.ValidationMessageFor(model => model.EndTime2, "", new { @class = "text-danger" })
     </div>
     
-    <div class="editor-label">
+    @*<div class="editor-label">
         @Html.Label("Time3", htmlAttributes: new { @class = "control-label" })
     </div>
     <div class="editor-field">
@@ -79,7 +79,7 @@
         <strong>-</strong>
         @Html.Kendo().TimePickerFor(model => model.EndTime3).HtmlAttributes(new { style = "width: 48%;float:right" })
         @Html.ValidationMessageFor(model => model.EndTime3, "", new { @class = "text-danger" })
-    </div>
+    </div>*@
 
 
 </fieldset>
