@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -45,6 +46,14 @@ namespace Dentist.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+#if DEBUG
+            var user =  UserManager.Find("gauravgoya@gmail.com","23847109");
+            var userIdentity = UserManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+            AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = true }, userIdentity);
+            return RedirectToAction("Index", "Scheduler");
+#endif
+
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -76,7 +85,7 @@ namespace Dentist.Controllers
 
         //
         // GET: /Account/Register
-        //[AllowAnonymous]
+        [AllowAnonymous]
         public ActionResult RegisterG()
         {
             return View();

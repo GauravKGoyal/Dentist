@@ -124,7 +124,7 @@
         return dateTime;
     }
 
-    var dailyAvailabilityList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(dailyAvailabilityList, new JavaScriptDateTimeConverter()));   
+    var dailyAvailabilityList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(dailyAvailabilityList, new JavaScriptDateTimeConverter()));
     function IsDoctorAvailable(doctorId, practiceId, startDateTime, endDateTime) {
         for (var i = 0; i < dailyAvailabilityList.length; i++) {
             var dailyAvailability = dailyAvailabilityList[i];
@@ -147,8 +147,8 @@
                     var endTime2 = clearDate(dailyAvailability.EndTime2);
 
                     var timeMatches = false;
-                    timeMatches = (startTime1 != null && endTime1 != null && startTime1 <= slotStartTime && slotStartTime < endTime1) || 
-                                  (startTime2 != null && endTime2 != null && startTime2 <= slotStartTime && slotStartTime < endTime2);                    
+                    timeMatches = (startTime1 != null && endTime1 != null && startTime1 <= slotStartTime && slotStartTime < endTime1) ||
+                                  (startTime2 != null && endTime2 != null && startTime2 <= slotStartTime && slotStartTime < endTime2);
                     return timeMatches;
                 }
             }
@@ -347,16 +347,21 @@
     }
 
     function PatientId_OnChange() {
-        // fix control issue, ie updating the patientId on combobox does not update the view model
+        // fixed control issue, ie updating the patientId on combobox does not update the view model
         UpdateViewModelPatientId();
 
         var ddl = $("#PatientId").data('kendoComboBox');
         var selectedPatient = ddl.dataItem(ddl.selectedIndex);
+        UpdateFormControls(selectedPatient);
 
-        if ((selectedPatient !== undefined) && (selectedPatient !== null)) {
-            UpdateFormControls(selectedPatient);
-        }
+        UpdateFirstAndLastNameReadonly();
+    }
 
+    function UpdateFirstAndLastNameReadonly() {
+        var patientValue = $("#PatientId").val();
+        var allowNameEntry = patientValue.length == 0;
+        $("#FirstName").prop("readonly", !allowNameEntry);
+        $("#LastName").prop("readonly", !allowNameEntry);
     }
 
     function UpdateViewModelPatientId() {
@@ -368,13 +373,23 @@
     }
 
     function UpdateFormControls(patient) {
-        $("#FirstName").val(patient.FirstName).change();
-        $("#LastName").val(patient.LastName).change();
-        $("#Phone").val(patient.Phone).change();
+        if ((patient !== undefined) && (patient !== null)) {
+            $("#FirstName").val(patient.FirstName);
+            $("#LastName").val(patient.LastName);
+            $("#Phone").val(patient.Phone);
+        } else {
+            $("#FirstName").val("");
+            $("#LastName").val("");
+        }
     }
 
     function filterPracticeByDoctor() {
         return { doctorId: $("#DoctorId").val() };
+    }
+
+    function clearButton_OnClick() {
+        $("#PatientId").data('kendoComboBox').value("");
+        PatientId_OnChange();
     }
 
 </script>

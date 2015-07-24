@@ -6,21 +6,6 @@
 
 
     <div id="patientDiv">
-
-        <div class="alert alert-info" style="margin-bottom:1px" role="alert">
-            <ul>
-                <li>
-                    Find an existing patient using search box. <strong>OR</strong>
-                </li>
-                @*<li style="list-style: none">
-                        or
-                    </li>*@
-                <li>
-                    Keep search box clear to add a new patient.
-                </li>
-            </ul>
-        </div>
-
         <div class="k-edit-label">
             @Html.LabelFor(model => model.PatientId)
         </div>
@@ -29,11 +14,11 @@
                   .Name("PatientId")
                   .DataTextField("Text")
                   .DataValueField("Id")
-                  .Placeholder("Type a patient name")
+                  .Placeholder("Search existing patient")
                   .Filter("contains")
                   .AutoBind(true)
                   .MinLength(2)
-                  .HtmlAttributes(new { style = "width: 100%" })
+                  .HtmlAttributes(new { style = "width: 91%" })
                   .DataSource(source =>
                   {
                       source.Read(read =>
@@ -44,6 +29,7 @@
                   .Events(e => e.Change("PatientId_OnChange"))
             )
             @Html.ValidationMessageFor(model => model.PatientId, "", new { @class = "text-danger" })
+            <button title="Clear search" class="k-button" onclick="clearButton_OnClick()">X</button>
         </div>
     </div>
 
@@ -52,7 +38,7 @@
     </div>
     <div class="k-edit-field">
         <div>
-            @Html.Kendo().TextBoxFor(model => model.FirstName)
+            @Html.Kendo().TextBoxFor(model => model.FirstName ).HtmlAttributes(new {@placeholder="Enter to add a new patient"})
         </div>
         @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
     </div>
