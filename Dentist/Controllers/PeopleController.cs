@@ -11,6 +11,7 @@ using Kendo.Mvc.UI;
 
 namespace Dentist.Controllers
 {
+    [Authorize]
     public class PeopleController : BaseController
     {
         public ActionResult GetAppointmentBrowserItems([DataSourceRequest] DataSourceRequest request, int personId)

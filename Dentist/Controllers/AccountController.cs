@@ -76,8 +76,8 @@ namespace Dentist.Controllers
 
         //
         // GET: /Account/Register
-        [AllowAnonymous]
-        public ActionResult Register()
+        //[AllowAnonymous]
+        public ActionResult RegisterG()
         {
             return View();
         }
@@ -87,7 +87,7 @@ namespace Dentist.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> RegisterG(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {

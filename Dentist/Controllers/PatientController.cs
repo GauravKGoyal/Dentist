@@ -14,6 +14,7 @@ using Kendo.Mvc.UI;
 
 namespace Dentist.Controllers
 {
+    [Authorize]
     public class PatientController : BaseController
     {
         public JsonResult GetAllIdTexts(string text = null)

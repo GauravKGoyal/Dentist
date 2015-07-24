@@ -14,6 +14,7 @@ using Kendo.Mvc.UI;
 
 namespace Dentist.Controllers
 {
+    [Authorize]
     public class SchedulerController : BaseController
     {
         // GET: People

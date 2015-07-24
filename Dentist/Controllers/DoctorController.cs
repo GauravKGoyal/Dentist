@@ -18,6 +18,7 @@ using WebGrease.Css.Extensions;
 
 namespace Dentist.Controllers
 {
+    [Authorize]
     public class DoctorController : BaseController
     {
         public JsonResult GetAllIdTexts(string text = null)

@@ -32,7 +32,7 @@ namespace Dentist.ViewModels
 
         [Display(Name = "Doctor")]
         public int DoctorId { get; set; }
-        [Display(Name = "Search Patient")]
+        [Display(Name = "Search")]
         public int? PatientId { get; set; }
 
         [Display(Name = "First Name")]
@@ -74,7 +74,7 @@ namespace Dentist.ViewModels
         }
 
         //Inherited
-        [Display(Name = "Recurrence Rule")]
+        [Display(Name = "Recurrence")]
         public string RecurrenceRule { get; set; }
         //Inherited
         public string RecurrenceException { get; set; }

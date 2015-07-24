@@ -15,6 +15,7 @@ using Kendo.Mvc.UI;
 
 namespace Dentist.Controllers
 {
+    [Authorize]
     public class PracticeController : BaseController
     {
         public ActionResult Index()
