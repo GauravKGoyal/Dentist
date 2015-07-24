@@ -16,7 +16,7 @@ namespace Dentist.Controllers
     {
         public ActionResult GetAppointmentBrowserItems([DataSourceRequest] DataSourceRequest request, int personId)
         {
-            var query = Db.Appointments
+            var query = Context.Appointments
                         .Include(x=>x.Patient)
                         .Include(x=>x.Practice)
                         .Where(x => x.DoctorId == personId || x.PatientId == personId)
@@ -31,10 +31,10 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var appointment = Mapper.Map<Appointment>(view);
-                Db.Appointments.Add(appointment);
-                Db.SaveChanges();
+                Context.Appointments.Add(appointment);
+                Context.SaveChanges();
                 // load second person before updating the view
-                Db.Appointments
+                Context.Appointments
                     .Include(x => x.Patient)
                     .Include(x => x.Practice)
                     .First(x => x.Id == appointment.Id);
@@ -49,11 +49,11 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var appointment = Db.Appointments.First(x => x.Id == view.Id);
+                var appointment = Context.Appointments.First(x => x.Id == view.Id);
                 Mapper.Map(view, appointment);
-                Db.SaveChanges();
+                Context.SaveChanges();
                 // load second person before updating the view
-                Db.Appointments
+                Context.Appointments
                     .Include(x => x.Patient)
                     .Include(x => x.Practice)
                     .First(x => x.Id == appointment.Id);
@@ -68,9 +68,9 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var appointment = Db.Appointments.First(x => x.Id == view.Id);
-                Db.Appointments.Remove(appointment);
-                Db.SaveChanges();
+                var appointment = Context.Appointments.First(x => x.Id == view.Id);
+                Context.Appointments.Remove(appointment);
+                Context.SaveChanges();
             }
 
             // Return the removed item. Also return any validation errors.
@@ -79,7 +79,7 @@ namespace Dentist.Controllers
 
         public ActionResult GetDailyAvailabilityBrowserItems([DataSourceRequest] DataSourceRequest request, int personId)
         {
-            var query = Db.DailyAvailabilities
+            var query = Context.DailyAvailabilities
                         .Include(x=>x.Practice)
                         .Where(x => x.DoctorId == personId)
                         .ProjectTo<DailyAvailabilityView>();
@@ -93,8 +93,8 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var dailyAvailability = Mapper.Map<DailyAvailability>(view);
-                Db.DailyAvailabilities.Add(dailyAvailability);
-                Db.SaveChanges();
+                Context.DailyAvailabilities.Add(dailyAvailability);
+                Context.SaveChanges();
                 // load practice to load practice name
                 var practice = dailyAvailability.Practice;
             }
@@ -107,9 +107,9 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var dailyAvailability = Db.DailyAvailabilities.First(x => x.Id == view.Id);
+                var dailyAvailability = Context.DailyAvailabilities.First(x => x.Id == view.Id);
                 Mapper.Map(view, dailyAvailability);
-                Db.SaveChanges();
+                Context.SaveChanges();
                 // load practice to load practice name
                 var practice = dailyAvailability.Practice;
             }
@@ -122,9 +122,9 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var dailyAvailability = Db.DailyAvailabilities.First(x => x.Id == view.Id);
-                Db.DailyAvailabilities.Remove(dailyAvailability);
-                Db.SaveChanges();
+                var dailyAvailability = Context.DailyAvailabilities.First(x => x.Id == view.Id);
+                Context.DailyAvailabilities.Remove(dailyAvailability);
+                Context.SaveChanges();
             }
 
             // Return the removed item. Also return any validation errors.

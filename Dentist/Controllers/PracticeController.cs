@@ -25,7 +25,7 @@ namespace Dentist.Controllers
 
         public ActionResult GetBrowserItems([DataSourceRequest] DataSourceRequest request)
         {
-            var query = Db.Practices.Where(x => x.IsDeleted != true);
+            var query = Context.Practices.Where(x => x.IsDeleted != true);
             var projectedQuery = query.ProjectTo<PracticeView>();
             var result = projectedQuery.ToDataSourceResult(request);
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -33,7 +33,7 @@ namespace Dentist.Controllers
 
         public JsonResult GetAllIdTexts()
         {
-            var query = Db.Practices.Where(x => x.IsDeleted != true)
+            var query = Context.Practices.Where(x => x.IsDeleted != true)
                                 .Select(x => new
                                 {
                                     x.Id,
@@ -51,7 +51,7 @@ namespace Dentist.Controllers
             {
                 return null;
             }
-            var query = Db.Practices
+            var query = Context.Practices
                 .Where(x => x.IsDeleted != true)
                 .Where(x => x.Doctors.Any(doctor => doctor.Id == doctorId))
                 .Select(x => new
@@ -83,8 +83,8 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var practice = Mapper.Map<Practice>(view);
-                Db.Practices.Add(practice);
-                Db.SaveChanges();
+                Context.Practices.Add(practice);
+                Context.SaveChanges();
                 if (Request.Form["btnSubmit"] == "Save and Close")
                     return RedirectToAction("Index");
                 return RedirectToAction("Edit", new { @id = practice.Id });
@@ -100,7 +100,7 @@ namespace Dentist.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Practice practice = Db.Practices
+            Practice practice = Context.Practices
                             .Include(x => x.Address)
                             .First(x => x.Id == id);
             var practiceView = Mapper.Map<PracticeView>(practice);
@@ -115,10 +115,10 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var practice = Mapper.Map<Practice>(view);
-                Db.Entry(practice).State = EntityState.Modified;
-                Db.Entry(practice.Address).State = EntityState.Modified;
+                Context.Entry(practice).State = EntityState.Modified;
+                Context.Entry(practice.Address).State = EntityState.Modified;
 
-                Db.SaveChanges();
+                Context.SaveChanges();
 
                 if (Request.Form["btnSubmit"] == "Save and Close")
                     return RedirectToAction("Index");
@@ -130,9 +130,9 @@ namespace Dentist.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            Practice practice = Db.Practices.Find(id);
+            Practice practice = Context.Practices.Find(id);
             practice.IsDeleted = true;
-            Db.SaveChanges();
+            Context.SaveChanges();
             return Json(new { Success = true });
         }
     }

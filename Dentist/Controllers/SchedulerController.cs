@@ -20,13 +20,13 @@ namespace Dentist.Controllers
         // GET: People
         public ActionResult Index()
         {
-            var doctors = Db.Doctors
+            var doctors = Context.Doctors
                .Include(x => x.Practices)
                .Where(x => x.IsDeleted != true && x.PersonRole == PersonRole.Doctor)
                .OrderBy(x => x.FirstName)
                .ToList();
-            var practices = Db.Practices.Where(x => x.IsDeleted != true).ToList();
-            var dailyAvailabilities = Db.DailyAvailabilities.ToList();
+            var practices = Context.Practices.Where(x => x.IsDeleted != true).ToList();
+            var dailyAvailabilities = Context.DailyAvailabilities.ToList();
 
             ViewBag.Doctors = Mapper.Map<List<SchedulerDoctorView>>(doctors);
             ViewBag.Practices = Mapper.Map<List<SchedulerPracticeView>>(practices);
@@ -73,7 +73,7 @@ namespace Dentist.Controllers
    
         public ActionResult GetBrowserItems([DataSourceRequest] DataSourceRequest request, string doctorsIds = null, string practiceIds = null)
         {
-            var query = Db.Appointments
+            var query = Context.Appointments
                         .Include(x => x.Patient)
                         .Include(x => x.Practice)
                         .Where(x => x.Patient.IsDeleted != true);
@@ -100,7 +100,7 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var appointment = Mapper.Map<Appointment>(view);
-                var practice = Db.Practices.Find(appointment.PracticeId);
+                var practice = Context.Practices.Find(appointment.PracticeId);
                 var isNewPatientFortheAppointment = appointment.PatientId == 0;
                 if (isNewPatientFortheAppointment)
                 {
@@ -120,14 +120,14 @@ namespace Dentist.Controllers
                 }
                 else
                 {
-                    var patient = Db.Paitients.Find(appointment.PatientId);
+                    var patient = Context.Paitients.Find(appointment.PatientId);
                     patient.FirstName = view.FirstName;
                     patient.LastName = view.LastName;
                     patient.Phone = view.Phone;
                 }
                 
-                Db.Appointments.Add(appointment);
-                Db.SaveChanges();
+                Context.Appointments.Add(appointment);
+                Context.SaveChanges();
                 Mapper.Map(appointment, view);
             }
 
@@ -139,18 +139,18 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var appointment = Db.Appointments.First(x => x.Id == view.Id);
+                var appointment = Context.Appointments.First(x => x.Id == view.Id);
                 Mapper.Map(view, appointment);
                 // do not load patient before mapping view to the appointment 
                 // because during update process view patient may have been replaced 
                 // with new patient therefore mapping view to the appointment may have updated the appointment's paitient link
-                Db.Paitients.Find(appointment.PatientId);
+                Context.Paitients.Find(appointment.PatientId);
                 appointment.Patient.FirstName = view.FirstName;
                 appointment.Patient.LastName = view.LastName;
                 appointment.Patient.Phone = view.Phone;
-                Db.SaveChanges();
+                Context.SaveChanges();
                 // load practice to update the practice color
-                appointment.Practice = Db.Practices.Find(appointment.PracticeId);
+                appointment.Practice = Context.Practices.Find(appointment.PracticeId);
                 Mapper.Map(appointment, view);
             }
 
@@ -162,9 +162,9 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var appointment = Db.Appointments.First(x => x.Id == view.Id);
-                Db.Appointments.Remove(appointment);
-                Db.SaveChanges();
+                var appointment = Context.Appointments.First(x => x.Id == view.Id);
+                Context.Appointments.Remove(appointment);
+                Context.SaveChanges();
             }
 
             // Return the removed item. Also return any validation errors.

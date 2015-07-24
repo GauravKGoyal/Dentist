@@ -23,7 +23,7 @@ namespace Dentist.Controllers
     {
         public JsonResult GetAllIdTexts(string text = null)
         {
-            var query = Db.Doctors.Where(x => x.IsDeleted != true)
+            var query = Context.Doctors.Where(x => x.IsDeleted != true)
            .Select(x => new
            {
                x.Id,
@@ -53,7 +53,7 @@ namespace Dentist.Controllers
 
         public ActionResult GetBrowserItems([DataSourceRequest] DataSourceRequest request)
         {
-            var query = Db.Doctors.Where(x => x.IsDeleted != true);
+            var query = Context.Doctors.Where(x => x.IsDeleted != true);
             query = query.Where(x => x.PersonRole == PersonRole.Doctor);
             var projectedQuery = query.ProjectTo<DoctorListView>();
             var result = projectedQuery.ToDataSourceResult(request);
@@ -79,10 +79,10 @@ namespace Dentist.Controllers
                 var doctor = Mapper.Map<Doctor>(view);
                 doctor.PersonRole = PersonRole.Doctor;
 
-                Db.Doctors.Add(doctor);
+                Context.Doctors.Add(doctor);
 
                 // add practices
-                var practicesToAdd = Db.Practices.Where(practice => view.Practices.Contains(practice.Id));
+                var practicesToAdd = Context.Practices.Where(practice => view.Practices.Contains(practice.Id));
                 doctor.Practices = new List<Practice>();
                 doctor.Practices.AddRange(practicesToAdd);
 
@@ -93,7 +93,7 @@ namespace Dentist.Controllers
                     doctor.SetupWeeklyAvailabilityForPractice(practice.Id);
                 }
 
-                Db.SaveChanges();
+                Context.SaveChanges();
                 if (Request.Form["btnSubmit"] == "Save and Close")
                     return RedirectToAction("Index");
                 return RedirectToAction("Edit", new { @id = doctor.Id });
@@ -109,7 +109,7 @@ namespace Dentist.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var doctor = Db.Doctors
+            var doctor = Context.Doctors
                             .Include(x => x.Address)
                             .Include(x => x.Practices)
                             .First(x => x.Id == id);
@@ -128,7 +128,7 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var doctor = Db.Doctors
+                var doctor = Context.Doctors
                     .Include(x => x.Practices)
                     .Include(x => x.Address)
                     .First(x => x.Id == view.Id);
@@ -145,7 +145,7 @@ namespace Dentist.Controllers
                 var practiceIdsToAdd = view.Practices
                     .Where(practiceId => doctor.Practices.All(practice => practice.Id != practiceId))
                     .ToList();
-                var practicesToAdd = Db.Practices.Where(practice => practiceIdsToAdd.Contains(practice.Id));
+                var practicesToAdd = Context.Practices.Where(practice => practiceIdsToAdd.Contains(practice.Id));
                 doctor.Practices.AddRange(practicesToAdd);
 
                 // Daily availability
@@ -154,8 +154,8 @@ namespace Dentist.Controllers
                 {
                     var tempPracticeId = practiceId;
                     var dailyAvailabilitiesToRemove =
-                        Db.DailyAvailabilities.Where(x => x.DoctorId == doctor.Id && x.PracticeId == tempPracticeId);
-                    Db.DailyAvailabilities.RemoveRange(dailyAvailabilitiesToRemove);
+                        Context.DailyAvailabilities.Where(x => x.DoctorId == doctor.Id && x.PracticeId == tempPracticeId);
+                    Context.DailyAvailabilities.RemoveRange(dailyAvailabilitiesToRemove);
                 }
 
                 // for each added practice add daily availability
@@ -165,7 +165,7 @@ namespace Dentist.Controllers
                 }
 
 
-                Db.SaveChanges();
+                Context.SaveChanges();
 
                 if (Request.Form["btnSubmit"] == "Save and Close")
                     return RedirectToAction("Index");
@@ -177,9 +177,9 @@ namespace Dentist.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            var doctor = Db.Doctors.Find(id);
+            var doctor = Context.Doctors.Find(id);
             doctor.IsDeleted = true;
-            Db.SaveChanges();
+            Context.SaveChanges();
             return Json(new { Success = true });
         }
 

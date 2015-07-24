@@ -5,13 +5,13 @@ namespace Dentist.Controllers
 {
     public class BaseController : Controller
     {
-        protected ApplicationDbContext Db = new ApplicationDbContext();
+        protected ApplicationDbContext Context = new ApplicationDbContext();
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                Db.Dispose();
+                Context.Dispose();
             }
             base.Dispose(disposing);
         }
