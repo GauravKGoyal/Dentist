@@ -10,7 +10,7 @@ using Dentist.Models;
 
 namespace Dentist.ViewModels
 {
-    public class PracticeView
+    public class PracticeViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -24,7 +24,7 @@ namespace Dentist.ViewModels
         public string Color { get; set; }
     }
 
-    public class PersonView
+    public class PersonViewModel
     {
         public int Id { get; set; }
 
@@ -54,7 +54,7 @@ namespace Dentist.ViewModels
         public bool IsDeleted { get; set; }
     }
     
-    public class DoctorView : PersonView
+    public class DoctorViewModel : PersonViewModel
     {
         public bool IsDoctor
         {
@@ -68,7 +68,7 @@ namespace Dentist.ViewModels
 
     }
 
-    public class PatientView : PersonView
+    public class PatientViewModel : PersonViewModel
     {
         [Display(Name="Practice")]
         public int PatientViewPracticeId { get; set; }
@@ -80,17 +80,17 @@ namespace Dentist.ViewModels
 
     }
 
-    public class DoctorListView : PersonListView
+    public class DoctorListViewModelModel : PersonListViewModel
     {
         
     }
 
-    public class PatientListView : PersonListView
+    public class PatientListViewModelModel : PersonListViewModel
     {
         
     }
 
-    public class PersonListView
+    public class PersonListViewModel
     {
         public int Id { get; set; }
 
@@ -109,7 +109,7 @@ namespace Dentist.ViewModels
         public string Phone { get; set; }
     }
 
-    public class DailyAvailabilityView
+    public class DailyAvailabilityViewModel
     {
         private DateTime? _startTime1;
         private DateTime? _endTime1;
@@ -122,11 +122,11 @@ namespace Dentist.ViewModels
         [Display(Name = "Day")]
         public DayOfWeek DayOfWeek { get; set; }
         [Display(Name = "Person")]
-        public int DailyAvailabilityViewPersonId { get; set; }
+        public int DailyAvailabilityViewModelPersonId { get; set; }
         [Display(Name = "Practice")]
-        public int DailyAvailabilityViewPracticeId { get; set; }
+        public int DailyAvailabilityViewModelPracticeId { get; set; }
         [Display(Name = "Practice")]
-        public string DailyAvailabilityViewPracticeName { get; set; }
+        public string DailyAvailabilityViewModelPracticeName { get; set; }
 
         [Display(Name = "Start1")]
         public DateTime? StartTime1
@@ -209,7 +209,7 @@ namespace Dentist.ViewModels
         public bool IsWorking { get; set; }
     }
 
-    public class AppointmentView
+    public class AppointmentViewModel
     {
         public int Id { get; set; }
 

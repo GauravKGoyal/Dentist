@@ -194,7 +194,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Person.cs" />
-    <Compile Include="ViewModels\SchedulerAppointmentView.cs" />
+    <Compile Include="ViewModels\SchedulerAppointmentViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
@@ -652,7 +652,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\People\_TabAppointment.cshtml" />
     <Content Include="Views\People\_TabAvailability.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\DailyAvailabilityView.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DailyAvailabilityViewModel.cshtml" />
     <Content Include="Views\Scheduler\Index.cshtml" />
     <Content Include="Views\Scheduler\EditorTemplates\SchedulerAppointmentView.cshtml" />
     <Content Include="Views\Try\Index.cshtml" />
@@ -661,7 +661,7 @@
     <Content Include="Views\Patient\Index.cshtml" />
     <Content Include="Views\Patient\Create.cshtml" />
     <Content Include="Views\Patient\_TabDetail.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\AppointmentView.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\AppointmentViewModel.cshtml" />
     <Content Include="Views\Doctor\_TabDetail.cshtml" />
     <Content Include="Views\Doctor\Create.cshtml" />
     <Content Include="Views\Doctor\Index.cshtml" />
@@ -674,7 +674,6 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\Base\" />
     <Folder Include="Views\People\EditorTemplates\" />
   </ItemGroup>
   <ItemGroup>

@@ -52,7 +52,7 @@ namespace Dentist.Controllers
                 .Paitients
                 .Where(x=>x.IsDeleted != true);
             query = query.Where(x => x.PersonRole == PersonRole.Patient);
-            var projectedQuery = query.ProjectTo<PatientListView>();
+            var projectedQuery = query.ProjectTo<PatientListViewModelModel>();
 
             var result = projectedQuery.ToDataSourceResult(request);
 
@@ -61,7 +61,7 @@ namespace Dentist.Controllers
 
         public ActionResult Create()
         {
-            var view = new PatientView()
+            var view = new PatientViewModel()
             {
                 Address = new AddressView(),
                 DateOfBirth = DateTime.Today.AddYears(-50)
@@ -71,16 +71,16 @@ namespace Dentist.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(PatientView view)
+        public ActionResult Create(PatientViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                var patient = Mapper.Map<Paitient>(view);
+                var patient = Mapper.Map<Paitient>(viewModel);
                 patient.PersonRole = PersonRole.Patient;
                 Context.Paitients.Add(patient);
 
                 // add practice
-                var practiceToAdd = Context.Practices.Find(view.PatientViewPracticeId);
+                var practiceToAdd = Context.Practices.Find(viewModel.PatientViewPracticeId);
                 patient.Practice = practiceToAdd;
 
                 Context.SaveChanges();
@@ -89,7 +89,7 @@ namespace Dentist.Controllers
                 return RedirectToAction("Edit", new { @id = patient.Id });
             }
 
-            return View(view);
+            return View(viewModel);
         }
 
         public ActionResult Edit(int? id)
@@ -109,25 +109,25 @@ namespace Dentist.Controllers
                 throw new Exception(string.Format("Person with id {0} is not a patient", id));
             }
 
-            var view = Mapper.Map<PatientView>(patient);
+            var view = Mapper.Map<PatientViewModel>(patient);
 
             return View("Create", view);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(PatientView view)
+        public ActionResult Edit(PatientViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 var patient = Context.Paitients
                     .Include(x => x.Practice)
                     .Include(x => x.Address)
-                    .First(x => x.Id == view.Id);
-                Mapper.Map(view, patient);
+                    .First(x => x.Id == viewModel.Id);
+                Mapper.Map(viewModel, patient);
                                
                 // add practice
-                var practiceToAdd = Context.Practices.Find(view.PatientViewPracticeId);
+                var practiceToAdd = Context.Practices.Find(viewModel.PatientViewPracticeId);
                 patient.Practice = practiceToAdd;
 
                 Context.SaveChanges();
@@ -136,7 +136,7 @@ namespace Dentist.Controllers
                     return RedirectToAction("Index");
                 return RedirectToAction("Edit", new { @id = patient.Id });
             }
-            return View("Create", view);
+            return View("Create", viewModel);
         }
 
         [HttpPost]

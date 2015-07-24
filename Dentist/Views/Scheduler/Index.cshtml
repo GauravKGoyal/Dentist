@@ -3,9 +3,9 @@
 @using Newtonsoft.Json.Converters
 @{
     ViewBag.Title = "Scheduler";
-    List<SchedulerDoctorView> doctors = ViewBag.Doctors;
-    List<SchedulerPracticeView> practices = ViewBag.Practices;
-    List<DailyAvailabilityView> dailyAvailabilityList = ViewBag.DailyAvailabilityList;
+    List<SchedulerDoctorViewModel> doctors = ViewBag.Doctors;
+    List<SchedulerPracticeViewModel> practices = ViewBag.Practices;
+    List<DailyAvailabilityViewModel> dailyAvailabilityList = ViewBag.DailyAvailabilityList;
     //var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
     //var dailyAvailabilityListJson = jss.Serialize(dailyAvailabilityList);
 }
@@ -27,13 +27,13 @@
 
 
             @*<div class="panel-footer"> </div>*@
-            <div class="alert alert-info" role="alert" style="margin-bottom: 0px">
+            <div class="alert alert-info" role="alert" style="margin-bottom: 0">
                 All the appointments are shown for the clinic. To see the appointments of a specific doctor please select them.
             </div>
         </div>
     </div>
     <div id="right-pane">
-        @(Html.Kendo().Scheduler<SchedulerAppointmentView>()
+        @(Html.Kendo().Scheduler<SchedulerAppointmentViewModel>()
               .Name("scheduler")
               .Date(DateTime.Today)
               .AllDaySlot(false)
@@ -53,6 +53,7 @@
                   x.Add("scheduler_OnAdd");
                   x.Edit("scheduler_OnEdit");
                   x.DataBound("scheduler_OnDataBound");
+                  x.Save("scheduler_OnSave");
               })
               .Views(views =>
               {
@@ -125,7 +126,7 @@
     }
 
     var dailyAvailabilityList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(dailyAvailabilityList, new JavaScriptDateTimeConverter()));
-    function IsDoctorAvailable(doctorId, practiceId, startDateTime, endDateTime) {
+    function IsDoctorAvailable(doctorId, practiceId, startDateTime) {
         for (var i = 0; i < dailyAvailabilityList.length; i++) {
             var dailyAvailability = dailyAvailabilityList[i];
             var doctorPracticeMatches = (dailyAvailability.DailyAvailabilityViewPersonId == doctorId) &&
@@ -138,21 +139,21 @@
                         return false;
                     }
                     var slotStartTime = startDateTime;
-                    var slotEndTime = endDateTime;
+                    //var slotEndTime = endDateTime;
                     slotStartTime = clearDate(slotStartTime);
-                    slotEndTime = clearDate(slotEndTime);
+                    //slotEndTime = clearDate(slotEndTime);
                     var startTime1 = clearDate(dailyAvailability.StartTime1);
                     var endTime1 = clearDate(dailyAvailability.EndTime1);
                     var startTime2 = clearDate(dailyAvailability.StartTime2);
                     var endTime2 = clearDate(dailyAvailability.EndTime2);
 
-                    var timeMatches = false;
-                    timeMatches = (startTime1 != null && endTime1 != null && startTime1 <= slotStartTime && slotStartTime < endTime1) ||
+                    var timeMatches = (startTime1 != null && endTime1 != null && startTime1 <= slotStartTime && slotStartTime < endTime1) ||
                                   (startTime2 != null && endTime2 != null && startTime2 <= slotStartTime && slotStartTime < endTime2);
                     return timeMatches;
                 }
             }
         }
+        return false;
     }
 
     function ColorSchedulerCells() {
@@ -297,7 +298,7 @@
             var treeItem = $(".dentistTreeItem")[i];
             var color = $(treeItem).attr("data-color");
             var isDoctor = $(treeItem).attr('data-type') == 'doctor';
-            var imageSpan = "";
+            var imageSpan;
             if (isDoctor) {
                 imageSpan = '<span class="glyphicon glyphicon-user" style ="color:' + color + '"></span>';
             } else {
@@ -325,11 +326,11 @@
         }
     }
 
-    function scheduler_OnDataBound(e) {
+    function scheduler_OnDataBound() {
         ColorSchedulerCells();
     }
 
-    function scheduler_OnAdd(e) {
+    function scheduler_OnAdd() {
         // After grouping by resources this code is not required because the default doctor and practices are populated by kendo scheduler
         //if (selectedDoctorsId.length !== 0) {
         //    e.event.DoctorId = selectedDoctorsId[0];
@@ -340,7 +341,7 @@
 
     }
 
-    function scheduler_Navigate(e) {
+    function scheduler_Navigate() {
         // support for lazy loading
         // reload the scheduler data here depending on selected date
         // e.view
@@ -380,6 +381,19 @@
         } else {
             $("#FirstName").val("");
             $("#LastName").val("");
+        }
+        
+        window.schedulerControlsUpdatedByCode = true;
+    }
+
+    function scheduler_OnSave() {
+        // When FirstName value is updated by javascript but from the UI 
+        // we have to call change manually so that cotrol values are reflected on telerik viewModel
+        if (window.schedulerControlsUpdatedByCode) {
+            $("#FirstName").change();
+            $("#LastName").change();
+            $("#Phone").change();  
+            
         }
     }
 

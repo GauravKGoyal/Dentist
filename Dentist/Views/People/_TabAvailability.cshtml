@@ -1,11 +1,11 @@
 ﻿@using Dentist.ViewModels
 
 
-@(Html.Kendo().Grid<DailyAvailabilityView>().Name("grdDailyAvailability")
+@(Html.Kendo().Grid<DailyAvailabilityViewModel>().Name("grdDailyAvailability")
           .DataSource(dataSource => dataSource.Ajax().Model(model => model.Id(x => x.Id))
               .Sort(sort =>
               {
-                  sort.Add(x => x.DailyAvailabilityViewPracticeName);
+                  sort.Add(x => x.DailyAvailabilityViewModelPracticeName);
                   sort.Add(x => x.DayOfWeek);
               })
               .Read(read => read.Action("GetDailyAvailabilityBrowserItems", "People", new { personId = Model.Id }))
@@ -15,7 +15,7 @@
           )
           .Columns(columns =>
           {
-              columns.Bound(x => x.DailyAvailabilityViewPracticeName);
+              columns.Bound(x => x.DailyAvailabilityViewModelPracticeName);
               columns.Bound(x => x.DayOfWeek);
               columns.Bound(x => x.IsWorking).ClientTemplate("<input disabled type='checkbox' #= IsWorking ? checked='checked' :'' # />").Title("Working").Width("5%");
               columns.Bound(x => x.StartTime1).Format("{0:hh:mm}");
@@ -26,8 +26,8 @@
                   command =>
                   {
                       command.Edit();
-                      command.Destroy();
-                  }).Width("16%");
+                      //command.Destroy();
+                  }).Width("8%");
 
           })
          // .ToolBar(toolbar => toolbar.Create())
@@ -43,8 +43,8 @@
 <script>
     function grdDailyAvailability_OnEdit(e) {
         if (e.model.isNew()) {
-            e.model.set("DailyAvailabilityViewPersonId", '@Model.Id');
-            e.model.set("DailyAvailabilityViewPracticeId", '@Model.Practices[0]');
+            e.model.set("DailyAvailabilityViewModelPersonId", '@Model.Id');
+            e.model.set("DailyAvailabilityViewModelPracticeId", '@Model.Practices[0]');
             e.container.kendoWindow("title", "Create Availability");
         } else {
             e.container.kendoWindow("title", "Edit Availability");

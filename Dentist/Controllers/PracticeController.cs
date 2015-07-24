@@ -26,7 +26,7 @@ namespace Dentist.Controllers
         public ActionResult GetBrowserItems([DataSourceRequest] DataSourceRequest request)
         {
             var query = Context.Practices.Where(x => x.IsDeleted != true);
-            var projectedQuery = query.ProjectTo<PracticeView>();
+            var projectedQuery = query.ProjectTo<PracticeViewModel>();
             var result = projectedQuery.ToDataSourceResult(request);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -69,7 +69,7 @@ namespace Dentist.Controllers
 
         public ActionResult Create()
         {
-            var view = new PracticeView()
+            var view = new PracticeViewModel()
             {
                 Address = new AddressView()
             };
@@ -78,11 +78,11 @@ namespace Dentist.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(PracticeView view)
+        public ActionResult Create(PracticeViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                var practice = Mapper.Map<Practice>(view);
+                var practice = Mapper.Map<Practice>(viewModel);
                 Context.Practices.Add(practice);
                 Context.SaveChanges();
                 if (Request.Form["btnSubmit"] == "Save and Close")
@@ -90,7 +90,7 @@ namespace Dentist.Controllers
                 return RedirectToAction("Edit", new { @id = practice.Id });
             }
 
-            return View(view);
+            return View(viewModel);
         }
 
         public ActionResult Edit(int? id)
@@ -103,18 +103,18 @@ namespace Dentist.Controllers
             Practice practice = Context.Practices
                             .Include(x => x.Address)
                             .First(x => x.Id == id);
-            var practiceView = Mapper.Map<PracticeView>(practice);
+            var practiceView = Mapper.Map<PracticeViewModel>(practice);
 
             return View("Create", practiceView);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(PracticeView view)
+        public ActionResult Edit(PracticeViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                var practice = Mapper.Map<Practice>(view);
+                var practice = Mapper.Map<Practice>(viewModel);
                 Context.Entry(practice).State = EntityState.Modified;
                 Context.Entry(practice.Address).State = EntityState.Modified;
 
@@ -124,7 +124,7 @@ namespace Dentist.Controllers
                     return RedirectToAction("Index");
                 return RedirectToAction("Edit", new { @id = practice.Id });
             }
-            return View("Create", view);
+            return View("Create", viewModel);
         }
 
         [HttpPost]

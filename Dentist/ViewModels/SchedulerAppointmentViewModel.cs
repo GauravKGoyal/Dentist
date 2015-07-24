@@ -10,23 +10,23 @@ using Microsoft.Owin.Security.Google;
 namespace Dentist.ViewModels
 {
 
-    public class SchedulerPracticeView
+    public class SchedulerPracticeViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Color { get; set; }
     }
 
-    public class SchedulerDoctorView
+    public class SchedulerDoctorViewModel
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Color { get; set; }
-        //public List<SchedulerPracticeView> Practices { get; set; }
+        //public List<SchedulerPracticeViewModel> Practices { get; set; }
     }
 
-    public class SchedulerAppointmentView : ISchedulerEvent
+    public class SchedulerAppointmentViewModel : ISchedulerEvent
     {
         public int Id { get; set; }
 

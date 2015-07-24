@@ -28,10 +28,10 @@ namespace Dentist.Controllers
             var practices = Context.Practices.Where(x => x.IsDeleted != true).ToList();
             var dailyAvailabilities = Context.DailyAvailabilities.ToList();
 
-            ViewBag.Doctors = Mapper.Map<List<SchedulerDoctorView>>(doctors);
-            ViewBag.Practices = Mapper.Map<List<SchedulerPracticeView>>(practices);
+            ViewBag.Doctors = Mapper.Map<List<SchedulerDoctorViewModel>>(doctors);
+            ViewBag.Practices = Mapper.Map<List<SchedulerPracticeViewModel>>(practices);
             ViewBag.DoctorsInTreeView = MapDoctorsToTreeViewItems(doctors);            
-            ViewBag.DailyAvailabilityList = Mapper.Map<List<DailyAvailabilityView>>(dailyAvailabilities);
+            ViewBag.DailyAvailabilityList = Mapper.Map<List<DailyAvailabilityViewModel>>(dailyAvailabilities);
             return View();
         }
 
@@ -90,12 +90,12 @@ namespace Dentist.Controllers
                 query = query.Where(x => practiceIdList.Contains(x.PracticeId));
             }
 
-            var queryable = query.ProjectTo<SchedulerAppointmentView>();
+            var queryable = query.ProjectTo<SchedulerAppointmentViewModel>();
             var result = queryable.ToDataSourceResult(request);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult CreateAppointment([DataSourceRequest] DataSourceRequest request, SchedulerAppointmentView view)
+        public ActionResult CreateAppointment([DataSourceRequest] DataSourceRequest request, SchedulerAppointmentViewModel view)
         {
             if (ModelState.IsValid)
             {
@@ -135,7 +135,7 @@ namespace Dentist.Controllers
             return Json(new[] { view }.ToDataSourceResult(request, ModelState));
         }
 
-        public ActionResult UpdateAppointment([DataSourceRequest] DataSourceRequest request, SchedulerAppointmentView view)
+        public ActionResult UpdateAppointment([DataSourceRequest] DataSourceRequest request, SchedulerAppointmentViewModel view)
         {
             if (ModelState.IsValid)
             {
@@ -158,7 +158,7 @@ namespace Dentist.Controllers
             return Json(new[] { view }.ToDataSourceResult(request, ModelState));
         }
 
-        public ActionResult DeleteAppointment([DataSourceRequest] DataSourceRequest request, SchedulerAppointmentView view)
+        public ActionResult DeleteAppointment([DataSourceRequest] DataSourceRequest request, SchedulerAppointmentViewModel view)
         {
             if (ModelState.IsValid)
             {

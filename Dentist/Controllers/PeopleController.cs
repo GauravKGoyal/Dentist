@@ -20,61 +20,61 @@ namespace Dentist.Controllers
                         .Include(x=>x.Patient)
                         .Include(x=>x.Practice)
                         .Where(x => x.DoctorId == personId || x.PatientId == personId)
-                        .ProjectTo<AppointmentView>();
+                        .ProjectTo<AppointmentViewModel>();
 
             var result = query.ToDataSourceResult(request);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult CreateAppointment([DataSourceRequest] DataSourceRequest request, AppointmentView view)
+        public ActionResult CreateAppointment([DataSourceRequest] DataSourceRequest request, AppointmentViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                var appointment = Mapper.Map<Appointment>(view);
+                var appointment = Mapper.Map<Appointment>(viewModel);
                 Context.Appointments.Add(appointment);
                 Context.SaveChanges();
-                // load second person before updating the view
+                // load second person before updating the viewModel
                 Context.Appointments
                     .Include(x => x.Patient)
                     .Include(x => x.Practice)
                     .First(x => x.Id == appointment.Id);
-                Mapper.Map(appointment, view);
+                Mapper.Map(appointment, viewModel);
             }
 
             // Return the inserted product. The grid needs the generated id. Also return any validation errors.
-            return Json(new[] { view }.ToDataSourceResult(request, ModelState));
+            return Json(new[] { viewModel }.ToDataSourceResult(request, ModelState));
         }
 
-        public ActionResult UpdateAppointment([DataSourceRequest] DataSourceRequest request, AppointmentView view)
+        public ActionResult UpdateAppointment([DataSourceRequest] DataSourceRequest request, AppointmentViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                var appointment = Context.Appointments.First(x => x.Id == view.Id);
-                Mapper.Map(view, appointment);
+                var appointment = Context.Appointments.First(x => x.Id == viewModel.Id);
+                Mapper.Map(viewModel, appointment);
                 Context.SaveChanges();
-                // load second person before updating the view
+                // load second person before updating the viewModel
                 Context.Appointments
                     .Include(x => x.Patient)
                     .Include(x => x.Practice)
                     .First(x => x.Id == appointment.Id);
-                Mapper.Map(appointment, view);
+                Mapper.Map(appointment, viewModel);
             }
 
             // Return the updated item. Also return any validation errors.
-            return Json(new[] { view }.ToDataSourceResult(request, ModelState));
+            return Json(new[] { viewModel }.ToDataSourceResult(request, ModelState));
         }
 
-        public ActionResult DeleteAppointment([DataSourceRequest] DataSourceRequest request, AppointmentView view)
+        public ActionResult DeleteAppointment([DataSourceRequest] DataSourceRequest request, AppointmentViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                var appointment = Context.Appointments.First(x => x.Id == view.Id);
+                var appointment = Context.Appointments.First(x => x.Id == viewModel.Id);
                 Context.Appointments.Remove(appointment);
                 Context.SaveChanges();
             }
 
             // Return the removed item. Also return any validation errors.
-            return Json(new[] { view }.ToDataSourceResult(request, ModelState));
+            return Json(new[] { viewModel }.ToDataSourceResult(request, ModelState));
         }
 
         public ActionResult GetDailyAvailabilityBrowserItems([DataSourceRequest] DataSourceRequest request, int personId)
@@ -82,17 +82,17 @@ namespace Dentist.Controllers
             var query = Context.DailyAvailabilities
                         .Include(x=>x.Practice)
                         .Where(x => x.DoctorId == personId)
-                        .ProjectTo<DailyAvailabilityView>();
+                        .ProjectTo<DailyAvailabilityViewModel>();
             
             var result = query.ToDataSourceResult(request);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult CreateDailyAvailability([DataSourceRequest] DataSourceRequest request, DailyAvailabilityView view)
+        public ActionResult CreateDailyAvailability([DataSourceRequest] DataSourceRequest request, DailyAvailabilityViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                var dailyAvailability = Mapper.Map<DailyAvailability>(view);
+                var dailyAvailability = Mapper.Map<DailyAvailability>(viewModel);
                 Context.DailyAvailabilities.Add(dailyAvailability);
                 Context.SaveChanges();
                 // load practice to load practice name
@@ -100,35 +100,35 @@ namespace Dentist.Controllers
             }
 
             // Return the inserted product. The grid needs the generated id. Also return any validation errors.
-            return Json(new[] { view }.ToDataSourceResult(request, ModelState));
+            return Json(new[] { viewModel }.ToDataSourceResult(request, ModelState));
         }
 
-        public ActionResult UpdateDailyAvailability([DataSourceRequest] DataSourceRequest request, DailyAvailabilityView view)
+        public ActionResult UpdateDailyAvailability([DataSourceRequest] DataSourceRequest request, DailyAvailabilityViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                var dailyAvailability = Context.DailyAvailabilities.First(x => x.Id == view.Id);
-                Mapper.Map(view, dailyAvailability);
+                var dailyAvailability = Context.DailyAvailabilities.First(x => x.Id == viewModel.Id);
+                Mapper.Map(viewModel, dailyAvailability);
                 Context.SaveChanges();
                 // load practice to load practice name
                 var practice = dailyAvailability.Practice;
             }
 
             // Return the updated item. Also return any validation errors.
-            return Json(new[] { view }.ToDataSourceResult(request, ModelState));
+            return Json(new[] { viewModel }.ToDataSourceResult(request, ModelState));
         }
 
-        public ActionResult DeleteDailyAvailability([DataSourceRequest] DataSourceRequest request, DailyAvailabilityView view)
+        public ActionResult DeleteDailyAvailability([DataSourceRequest] DataSourceRequest request, DailyAvailabilityViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                var dailyAvailability = Context.DailyAvailabilities.First(x => x.Id == view.Id);
+                var dailyAvailability = Context.DailyAvailabilities.First(x => x.Id == viewModel.Id);
                 Context.DailyAvailabilities.Remove(dailyAvailability);
                 Context.SaveChanges();
             }
 
             // Return the removed item. Also return any validation errors.
-            return Json(new[] { view }.ToDataSourceResult(request, ModelState));
+            return Json(new[] { viewModel }.ToDataSourceResult(request, ModelState));
         }
 
     }

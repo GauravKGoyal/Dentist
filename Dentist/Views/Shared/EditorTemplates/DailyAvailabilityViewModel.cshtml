@@ -1,22 +1,51 @@
-﻿@model Dentist.ViewModels.DailyAvailabilityView
+﻿@model Dentist.ViewModels.DailyAvailabilityViewModel
            
+<script>
+    function filterPracticeByDoctorInDialyAvailability() {
+        return { doctorId: '@Model.Id' }
+    }
+
+</script>
+
 <fieldset class="form-horizontal">
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.Id)
-    @Html.HiddenFor(model => model.PersonId)
+    @Html.HiddenFor(model => model.DailyAvailabilityViewModelPersonId)
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.DailyAvailabilityViewModelPracticeId, new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @(Html.Kendo().DropDownListFor(model => model.DailyAvailabilityViewModelPracticeId)
+              .OptionLabel("--Select--")
+              .HtmlAttributes(new { style = "width: 100%", @readonly = "readonly" })
+              .DataTextField("Text")
+              .DataValueField("Id")
+              .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "Practice"))
+              )
+              )
+        @Html.ValidationMessageFor(model => model.DailyAvailabilityViewModelPracticeId, "", new { @class = "text-danger" })
+    </div>
 
     <div class="editor-label">
         @Html.LabelFor(model => model.DayOfWeek, new { @class = "control-label" })
     </div>
     <div class="editor-field">
-        @(Html.Kendo().DropDownList()
-              .Name("DayOfWeek")
+        @(Html.Kendo().DropDownListFor(model => model.DayOfWeek)
               .OptionLabel("--Select--")
-              .HtmlAttributes(new { style = "width: 100%" })
+                      .HtmlAttributes(new { style = "width: 100%", @readonly = "readonly" })
               .BindTo(EnumHelper.GetSelectList(typeof(DayOfWeek)))
 
-        )
+              )
         @Html.ValidationMessageFor(model => model.DayOfWeek, "", new { @class = "text-danger" })
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.IsWorking, new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @(Html.EditorFor(model => model.IsWorking))
+        @Html.ValidationMessageFor(model => model.IsWorking, "", new { @class = "text-danger" })
     </div>
 
     <div class="editor-label">
@@ -41,7 +70,7 @@
         @Html.ValidationMessageFor(model => model.EndTime2, "", new { @class = "text-danger" })
     </div>
     
-    <div class="editor-label">
+    @*<div class="editor-label">
         @Html.Label("Time3", htmlAttributes: new { @class = "control-label" })
     </div>
     <div class="editor-field">
@@ -50,7 +79,7 @@
         <strong>-</strong>
         @Html.Kendo().TimePickerFor(model => model.EndTime3).HtmlAttributes(new { style = "width: 48%;float:right" })
         @Html.ValidationMessageFor(model => model.EndTime3, "", new { @class = "text-danger" })
-    </div>
+    </div>*@
 
 
 </fieldset>

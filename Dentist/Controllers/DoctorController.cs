@@ -55,14 +55,14 @@ namespace Dentist.Controllers
         {
             var query = Context.Doctors.Where(x => x.IsDeleted != true);
             query = query.Where(x => x.PersonRole == PersonRole.Doctor);
-            var projectedQuery = query.ProjectTo<DoctorListView>();
+            var projectedQuery = query.ProjectTo<DoctorListViewModelModel>();
             var result = projectedQuery.ToDataSourceResult(request);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Create()
         {
-            var view = new DoctorView()
+            var view = new DoctorViewModel()
             {
                 Address = new AddressView(),
                 DateOfBirth = DateTime.Today.AddYears(-50)
@@ -72,17 +72,17 @@ namespace Dentist.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(DoctorView view)
+        public ActionResult Create(DoctorViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                var doctor = Mapper.Map<Doctor>(view);
+                var doctor = Mapper.Map<Doctor>(viewModel);
                 doctor.PersonRole = PersonRole.Doctor;
 
                 Context.Doctors.Add(doctor);
 
                 // add practices
-                var practicesToAdd = Context.Practices.Where(practice => view.Practices.Contains(practice.Id));
+                var practicesToAdd = Context.Practices.Where(practice => viewModel.Practices.Contains(practice.Id));
                 doctor.Practices = new List<Practice>();
                 doctor.Practices.AddRange(practicesToAdd);
 
@@ -99,7 +99,7 @@ namespace Dentist.Controllers
                 return RedirectToAction("Edit", new { @id = doctor.Id });
             }
 
-            return View(view);
+            return View(viewModel);
         }
 
         public ActionResult Edit(int? id)
@@ -117,32 +117,32 @@ namespace Dentist.Controllers
             {
                 throw new Exception(string.Format("Person with id {0} is not a doctor", id));
             }
-            var doctorView = Mapper.Map<DoctorView>(doctor);
+            var doctorView = Mapper.Map<DoctorViewModel>(doctor);
 
             return View("Create", doctorView);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(DoctorView view)
+        public ActionResult Edit(DoctorViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 var doctor = Context.Doctors
                     .Include(x => x.Practices)
                     .Include(x => x.Address)
-                    .First(x => x.Id == view.Id);
-                Mapper.Map(view, doctor);
+                    .First(x => x.Id == viewModel.Id);
+                Mapper.Map(viewModel, doctor);
 
                 // remove practices
                 var practiceIdsToRemove = doctor.Practices
-                    .Where(practice => !view.Practices.Contains(practice.Id))
+                    .Where(practice => !viewModel.Practices.Contains(practice.Id))
                     .Select(x =>x.Id)
                     .ToList();
-                doctor.Practices.RemoveAll(practice => !view.Practices.Contains(practice.Id));
+                doctor.Practices.RemoveAll(practice => !viewModel.Practices.Contains(practice.Id));
 
                 // add practices
-                var practiceIdsToAdd = view.Practices
+                var practiceIdsToAdd = viewModel.Practices
                     .Where(practiceId => doctor.Practices.All(practice => practice.Id != practiceId))
                     .ToList();
                 var practicesToAdd = Context.Practices.Where(practice => practiceIdsToAdd.Contains(practice.Id));
@@ -171,7 +171,7 @@ namespace Dentist.Controllers
                     return RedirectToAction("Index");
                 return RedirectToAction("Edit", new { @id = doctor.Id });
             }
-            return View("Create", view);
+            return View("Create", viewModel);
         }
 
         [HttpPost]
