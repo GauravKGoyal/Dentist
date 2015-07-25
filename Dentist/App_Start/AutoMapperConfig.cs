@@ -12,8 +12,8 @@ namespace Dentist
         public static void RegisterMappings()
         {
         
-            Mapper.CreateMap<Paitient, PatientListViewModelModel>();
-            Mapper.CreateMap<Doctor, DoctorListViewModelModel>();
+            Mapper.CreateMap<Paitient, PatientListViewModel>();
+            Mapper.CreateMap<Doctor, DoctorListViewModel>();
 
             Mapper.CreateMap<Practice, SchedulerPracticeViewModel>();
             Mapper.CreateMap<Doctor, SchedulerDoctorViewModel>();
@@ -34,8 +34,8 @@ namespace Dentist
             Mapper.CreateMap<Practice, PracticeViewModel>();
             Mapper.CreateMap<PracticeViewModel, Practice>();
 
-            Mapper.CreateMap<Address, AddressView>();
-            Mapper.CreateMap<AddressView, Address>();
+            Mapper.CreateMap<Address, AddressViewModel>();
+            Mapper.CreateMap<AddressViewModel, Address>();
 
             Mapper.CreateMap<Appointment, AppointmentViewModel>()
                 .ForMember(d => d.PatientFirstName, opt => opt.MapFrom(s => s.Patient.FirstName))

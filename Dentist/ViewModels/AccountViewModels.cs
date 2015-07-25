@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Dentist.Models
+namespace Dentist.ViewModels
 {
     public class ExternalLoginConfirmationViewModel
     {

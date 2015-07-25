@@ -6,7 +6,7 @@
     var pageSizeArray = new[] {20, 50, 100};
 }
 
-@(Html.Kendo().Grid<DoctorListViewModelModel>().Name("grdDoctor")
+@(Html.Kendo().Grid<DoctorListViewModel>().Name("grdDoctor")
           .DataSource(dataSource => dataSource.Ajax().Model(model => model.Id(x => x.Id))
               .PageSize(pageSizeArray[0])
               .Sort(sort =>

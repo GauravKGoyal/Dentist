@@ -52,7 +52,7 @@ namespace Dentist.Controllers
                 .Paitients
                 .Where(x=>x.IsDeleted != true);
             query = query.Where(x => x.PersonRole == PersonRole.Patient);
-            var projectedQuery = query.ProjectTo<PatientListViewModelModel>();
+            var projectedQuery = query.ProjectTo<PatientListViewModel>();
 
             var result = projectedQuery.ToDataSourceResult(request);
 
@@ -63,7 +63,7 @@ namespace Dentist.Controllers
         {
             var view = new PatientViewModel()
             {
-                Address = new AddressView(),
+                Address = new AddressViewModel(),
                 DateOfBirth = DateTime.Today.AddYears(-50)
             };
             return View(view);

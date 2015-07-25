@@ -71,7 +71,7 @@ namespace Dentist.Controllers
         {
             var view = new PracticeViewModel()
             {
-                Address = new AddressView()
+                Address = new AddressViewModel()
             };
             return View(view);
         }
