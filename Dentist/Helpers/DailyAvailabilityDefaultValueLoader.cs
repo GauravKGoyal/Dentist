@@ -4,6 +4,7 @@ using Dentist.Models;
 
 namespace Dentist.Helpers
 {
+    [Obsolete ("This is not required anymore because the default values will come from registered user's availability")]
     public class DailyAvailabilityDefaultValueLoader : IDailyAvailabilityLoader
     {
         private bool _Success;

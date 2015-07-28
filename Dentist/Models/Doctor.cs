@@ -18,11 +18,7 @@ namespace Dentist.Models
         public void SetDefaultWeeklyAvailabilityForPractice(int practiceId)
         {                    
             DailyAvailabilities = new List<DailyAvailability>();
-            IDailyAvailabilityLoader loader = new DailyAvailabilityDatabaseLoader(DailyAvailabilities, this, practiceId);
-            if (!loader.Success())
-            {
-                loader = new DailyAvailabilityDefaultValueLoader(DailyAvailabilities, this, practiceId);
-            }
+            IDailyAvailabilityLoader loader = new DailyAvailabilityDatabaseLoader(DailyAvailabilities, this, practiceId);            
         }
     }
 }

@@ -17,7 +17,7 @@ using Dentist.Models;
 namespace Dentist.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private ApplicationUserManager _userManager;
 
@@ -106,7 +106,8 @@ namespace Dentist.Controllers
                 if (result.Succeeded)
                 {
                     await SignInAsync(user, isPersistent: false);
-
+                    CreateDefaultCalenderSettings();
+                    CreateDefaultDailyAvailabilitySettings();
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -123,6 +124,43 @@ namespace Dentist.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        private void CreateDefaultDailyAvailabilitySettings()
+        {
+            var startTime1 = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 8, 0, 0, 0);
+            var endTime1 = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 12, 0, 0, 0);
+            var startTime2 = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 12, 30, 0, 0);
+            var endTime2 = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 17, 0, 0, 0);
+            Array daysOfWeek = Enum.GetValues(typeof(DayOfWeek));
+            foreach (object dayOfWeek in daysOfWeek)
+            {
+                Context.DailyAvailabilitySettings.Add(new DailyAvailabilitySetting()
+                {
+                    DayOfWeek = (DayOfWeek)dayOfWeek,
+                    IsWorking = true,
+                    StartTime1 = startTime1,
+                    EndTime1 = endTime1,
+                    StartTime2 = startTime2,
+                    EndTime2 = endTime2
+                });
+            }
+            Context.SaveChanges();
+        }
+
+        private void CreateDefaultCalenderSettings()
+        {
+            Context.CalenderSettings.Add(new CalenderSetting()
+            {
+                DayStartTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 8, 0, 0, 0),
+                DayEndTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 17, 0, 0, 0),
+                WorkWeekStartTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 8, 0, 0, 0),
+                WorkWeekEndTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 17, 0, 0, 0),
+                WorkWeekStartDay = DayOfWeek.Monday,
+                WorkWeekEndDay = DayOfWeek.Friday
+            });
+
+            Context.SaveChanges();
         }
 
         //

@@ -27,13 +27,7 @@ namespace Dentist.Controllers
         }
 
         public ActionResult GetDailyAvailabilitySetting([DataSourceRequest] DataSourceRequest request)
-        {
-            // Create settings if they don't exist
-            if (!Context.DailyAvailabilitySettings.Any())
-            {
-                CreateDefaultDailyAvailabilitySettings();
-            }
-
+        {            
             var dailyAvailabilitySettings = Context.DailyAvailabilitySettings.ToList();
             var viewModels = Mapper.Map<List<DailyAvailabilitySettingViewModel>>(dailyAvailabilitySettings);
             return Json(viewModels.ToDataSourceResult(request));
@@ -60,32 +54,11 @@ namespace Dentist.Controllers
         }
 
         public ActionResult EditCalenderSetting()
-        {
-            // Create settings if it doesn't exist
-            if (!Context.CalenderSettings.Any())
-            {
-                CreateDefaultCalenderSettings();
-            }
-
+        {            
             var calenderSetting = Context.CalenderSettings.First();
             var viewModel = Mapper.Map<CalenderSettingViewModel>(calenderSetting);
             return View(viewModel);
-        }
-
-        private void CreateDefaultCalenderSettings()
-        {
-            Context.CalenderSettings.Add(new CalenderSetting()
-            {
-                DayStartTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 8, 0, 0, 0),
-                DayEndTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 17, 0, 0, 0),
-                WorkWeekStartTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 8, 0, 0, 0),
-                WorkWeekEndTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 17, 0, 0, 0),
-                WorkWeekStartDay = DayOfWeek.Monday,
-                WorkWeekEndDay = DayOfWeek.Friday
-            });
-
-            Context.SaveChanges();
-        }
+        } 
 
         [HttpPost]
         public ActionResult EditCalenderSetting(CalenderSettingViewModel calenderSettingViewModel)
@@ -98,26 +71,6 @@ namespace Dentist.Controllers
             }
             return View(calenderSettingViewModel);
         }
-        private void CreateDefaultDailyAvailabilitySettings()
-        {
-            var startTime1 = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 8, 0, 0, 0);
-            var endTime1 = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 12, 0, 0, 0);
-            var startTime2 = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 12, 30, 0, 0);
-            var endTime2 = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 17, 0, 0, 0);
-            Array daysOfWeek = Enum.GetValues(typeof (DayOfWeek));
-            foreach (object dayOfWeek in daysOfWeek)
-            {
-                Context.DailyAvailabilitySettings.Add(new DailyAvailabilitySetting()
-                {
-                    DayOfWeek = (DayOfWeek) dayOfWeek,
-                    IsWorking = true,
-                    StartTime1 = startTime1,
-                    EndTime1 = endTime1,
-                    StartTime2 = startTime2,
-                    EndTime2 = endTime2
-                });
-            }
-            Context.SaveChanges();
-        }
+        
     }
 }
