@@ -49,5 +49,8 @@ namespace Dentist.Models
 
         public System.Data.Entity.DbSet<Dentist.Models.Appointment> Appointments { get; set; }
         public System.Data.Entity.DbSet<Dentist.Models.DailyAvailability> DailyAvailabilities { get; set; }
+
+        public System.Data.Entity.DbSet<Dentist.Models.DailyAvailabilitySetting> DailyAvailabilitySettings { get; set; }
+        public System.Data.Entity.DbSet<Dentist.Models.CalenderSetting> CalenderSettings { get; set; }
     }
 }

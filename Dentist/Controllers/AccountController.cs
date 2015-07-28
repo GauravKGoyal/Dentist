@@ -47,12 +47,12 @@ namespace Dentist.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-#if DEBUG
+        #if DEBUG
             var user =  UserManager.Find("gauravgoya@gmail.com","23847109");
             var userIdentity = UserManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
             AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = true }, userIdentity);
             return RedirectToAction("Index", "Scheduler");
-#endif
+        #endif
 
 
             ViewBag.ReturnUrl = returnUrl;

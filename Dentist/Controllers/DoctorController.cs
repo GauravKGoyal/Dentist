@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using System.Web.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -13,8 +11,6 @@ using Dentist.Models;
 using Dentist.ViewModels;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
-using System.Data.Entity;
-using WebGrease.Css.Extensions;
 
 namespace Dentist.Controllers
 {
@@ -90,7 +86,7 @@ namespace Dentist.Controllers
                 // for each practice add availability
                 foreach (Practice practice in practicesToAdd)
                 {
-                    doctor.SetupWeeklyAvailabilityForPractice(practice.Id);
+                    doctor.SetDefaultWeeklyAvailabilityForPractice(practice.Id);
                 }
 
                 Context.SaveChanges();
@@ -161,7 +157,7 @@ namespace Dentist.Controllers
                 // for each added practice add daily availability
                 foreach (int practiceId in practiceIdsToAdd)
                 {
-                    doctor.SetupWeeklyAvailabilityForPractice(practiceId);
+                    doctor.SetDefaultWeeklyAvailabilityForPractice(practiceId);
                 }
 
 

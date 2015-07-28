@@ -1,0 +1,49 @@
+﻿@using Dentist.ViewModels
+@{
+    ViewBag.Title = "Settings";
+}
+
+
+@(Html.Kendo().Grid<DailyAvailabilitySettingViewModel>().Name("grdDailyAvailabilitySetting")
+          .DataSource(dataSource => dataSource
+              .Ajax()
+              .Model(model => model.Id(x => x.Id))
+              .Sort(sort => sort.Add(x => x.DayOfWeek))
+              .Batch(true)
+              .Read("GetDailyAvailabilitySetting", "Settings")
+              .Update("UpdateDailyAvailabilitySetting", "Settings"))
+                  .Columns(columns =>
+                  {
+                      columns.Bound(x => x.Id);
+                      columns.Bound(x => x.DayOfWeek).Width("30%");
+                      columns.Bound(x => x.IsWorking).ClientTemplate("<input disabled type='checkbox' #= IsWorking ? checked='checked' :'' # />").Title("Working").Width("5%");
+                      //columns.Bound(x => x.IsWorking);
+                      columns.Bound(x => x.StartTime1).Format("{0:hh:mm}").Width("15%");
+                      columns.Bound(x => x.EndTime1).Format("{0:hh:mm}").Width("15%");
+                      columns.Bound(x => x.StartTime2).Format("{0:hh:mm}").Width("15%");
+                      columns.Bound(x => x.EndTime2).Format("{0:hh:mm}").Width("15%");
+
+                  }
+              )
+            .Editable(editable => editable.Mode(GridEditMode.InCell))
+            .ToolBar(toolbar => toolbar.Save())
+)
+         
+
+
+<script type="text/javascript">
+    function grdDailyAvailabilitySetting_OnError(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>
+

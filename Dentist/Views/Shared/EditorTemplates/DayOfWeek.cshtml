@@ -1,0 +1,9 @@
+﻿@model DayOfWeek
+
+
+@(Html.Kendo().DropDownListFor(model => model)       
+              .Value(((int)Model).ToString())         
+              .HtmlAttributes(new { style = "width: 100%"})
+              .BindTo(EnumHelper.GetSelectList(typeof(DayOfWeek)))
+
+)

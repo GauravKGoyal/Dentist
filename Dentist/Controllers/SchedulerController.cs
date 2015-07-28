@@ -27,10 +27,12 @@ namespace Dentist.Controllers
                .ToList();
             var practices = Context.Practices.Where(x => x.IsDeleted != true).ToList();
             var dailyAvailabilities = Context.DailyAvailabilities.ToList();
+            var calenderSetting = Context.CalenderSettings.First();
 
             ViewBag.Doctors = Mapper.Map<List<SchedulerDoctorViewModel>>(doctors);
             ViewBag.Practices = Mapper.Map<List<SchedulerPracticeViewModel>>(practices);
-            ViewBag.DoctorsInTreeView = MapDoctorsToTreeViewItems(doctors);            
+            ViewBag.DoctorsInTreeView = MapDoctorsToTreeViewItems(doctors);
+            ViewBag.CalenderSettings = Mapper.Map<CalenderSettingViewModel>(calenderSetting);
             ViewBag.DailyAvailabilityList = Mapper.Map<List<DailyAvailabilityViewModel>>(dailyAvailabilities);
             return View();
         }

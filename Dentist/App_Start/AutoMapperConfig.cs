@@ -11,7 +11,10 @@ namespace Dentist
     {
         public static void RegisterMappings()
         {
-        
+            Mapper.CreateMap<CalenderSetting, CalenderSettingViewModel>();
+            Mapper.CreateMap<CalenderSettingViewModel, CalenderSetting>();
+
+
             Mapper.CreateMap<Paitient, PatientListViewModel>();
             Mapper.CreateMap<Doctor, DoctorListViewModel>();
 
@@ -62,6 +65,13 @@ namespace Dentist
                 .ForMember(d => d.EndTime3, opt => opt.MapFrom(s => GetHoursMins(s.EndTime3)))
                 .ForMember(d => d.PracticeId, opt => opt.MapFrom(s => s.DailyAvailabilityViewModelPracticeId))
                 .ForMember(d => d.DoctorId, opt => opt.MapFrom(s => s.DailyAvailabilityViewModelPersonId));
+
+            Mapper.CreateMap<DailyAvailabilitySetting, DailyAvailabilitySettingViewModel>();
+            Mapper.CreateMap<DailyAvailabilitySettingViewModel, DailyAvailabilitySetting>()
+                .ForMember(d => d.StartTime1, opt => opt.MapFrom(s => GetHoursMins(s.StartTime1)))
+                .ForMember(d => d.StartTime2, opt => opt.MapFrom(s => GetHoursMins(s.StartTime2)))
+                .ForMember(d => d.EndTime1, opt => opt.MapFrom(s => GetHoursMins(s.EndTime1)))
+                .ForMember(d => d.EndTime2, opt => opt.MapFrom(s => GetHoursMins(s.EndTime2)));
 
             Mapper.CreateMap<Appointment, SchedulerAppointmentViewModel>()
                 .ForMember(d => d.Start, opt => opt.MapFrom(s => s.StartDateTime))

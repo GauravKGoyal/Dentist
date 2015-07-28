@@ -179,22 +179,37 @@
     <Compile Include="Controllers\PracticeController.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
+    <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\TryController.cs" />
     <Compile Include="Enums\Enums.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ConvertHelper.cs" />
+    <Compile Include="Helpers\GreaterThanAttribute.cs" />
     <Compile Include="Helpers\RequiredListItemAttribute.cs" />
     <Compile Include="Migrations\201507030844338_InitialCreate.cs" />
     <Compile Include="Migrations\201507030844338_InitialCreate.Designer.cs">
       <DependentUpon>201507030844338_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507250211367_settings daily availability.cs" />
+    <Compile Include="Migrations\201507250211367_settings daily availability.Designer.cs">
+      <DependentUpon>201507250211367_settings daily availability.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507260825510_Calernder Settings.cs" />
+    <Compile Include="Migrations\201507260825510_Calernder Settings.Designer.cs">
+      <DependentUpon>201507260825510_Calernder Settings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Appointment.cs" />
+    <Compile Include="ViewModels\CalenderSettingViewModel.cs" />
     <Compile Include="Models\DailyAvailability.cs" />
+    <Compile Include="Helpers\DailyAvailabilityDatabaseLoader.cs" />
+    <Compile Include="Helpers\DailyAvailabilityDefaultValueLoader.cs" />
+    <Compile Include="Models\DailyAvailabilitySetting.cs" />
     <Compile Include="Models\Doctor.cs" />
+    <Compile Include="Helpers\IDailyAvailabilityLoader.cs" />
     <Compile Include="Models\Paitient.cs" />
     <Compile Include="Models\Practice.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
@@ -202,6 +217,8 @@
     <Compile Include="Models\Person.cs" />
     <Compile Include="ViewModels\AddressViewModel.cs" />
     <Compile Include="ViewModels\AppointmentViewModel.cs" />
+    <Compile Include="Models\CalenderSetting.cs" />
+    <Compile Include="ViewModels\DailyAvailabilitySettingViewModel.cs" />
     <Compile Include="ViewModels\DailyAvailabilityViewModel.cs" />
     <Compile Include="ViewModels\DoctorListViewModel.cs" />
     <Compile Include="ViewModels\DoctorViewModel.cs" />
@@ -681,6 +698,18 @@
     <Content Include="Views\Doctor\_TabDetail.cshtml" />
     <Content Include="Views\Doctor\Create.cshtml" />
     <Content Include="Views\Doctor\Index.cshtml" />
+    <Content Include="Views\Settings\DailyAvailabilitySetting.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DayOfWeek.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Currency.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\GridForeignKey.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Integer.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Number.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Time.cshtml" />
+    <Content Include="Views\Settings\EditCalenderSetting.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -695,6 +724,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201507030844338_InitialCreate.resx">
       <DependentUpon>201507030844338_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507250211367_settings daily availability.resx">
+      <DependentUpon>201507250211367_settings daily availability.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507260825510_Calernder Settings.resx">
+      <DependentUpon>201507260825510_Calernder Settings.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

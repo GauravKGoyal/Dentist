@@ -6,6 +6,7 @@
     List<SchedulerDoctorViewModel> doctors = ViewBag.Doctors;
     List<SchedulerPracticeViewModel> practices = ViewBag.Practices;
     List<DailyAvailabilityViewModel> dailyAvailabilityList = ViewBag.DailyAvailabilityList;
+    CalenderSettingViewModel calenderSetting = ViewBag.CalenderSettings;
     //var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
     //var dailyAvailabilityListJson = jss.Serialize(dailyAvailabilityList);
 }
@@ -37,12 +38,12 @@
               .Name("scheduler")
               .Date(DateTime.Today)
               .AllDaySlot(false)
-              .WorkDayStart(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 8, 00, 00))
-              .WorkDayEnd(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 20, 00, 00))
-              .StartTime(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 8, 00, 00))
-              .EndTime(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 20, 00, 00))
-              .WorkWeekStart((int)DayOfWeek.Monday)
-              .WorkWeekEnd((int)DayOfWeek.Sunday)
+              .WorkDayStart(calenderSetting.WorkWeekStartTime)
+              .WorkDayEnd(calenderSetting.WorkWeekEndTime)
+              .StartTime(calenderSetting.DayStartTime)
+              .EndTime(calenderSetting.DayEndTime)
+              .WorkWeekStart((int)calenderSetting.WorkWeekStartDay)
+              .WorkWeekEnd((int)calenderSetting.WorkWeekEndDay)
               .EventTemplate(
                   "<div class='appointment-template' data-isBreak=#= IsBreak # style='border-left-color: #= PracticeColor #;'>" +
                   "<p style='padding-left:2px'>#= title #</p>" +
@@ -129,8 +130,8 @@
     function IsDoctorAvailable(doctorId, practiceId, startDateTime) {
         for (var i = 0; i < dailyAvailabilityList.length; i++) {
             var dailyAvailability = dailyAvailabilityList[i];
-            var doctorPracticeMatches = (dailyAvailability.DailyAvailabilityViewPersonId == doctorId) &&
-                                        (dailyAvailability.DailyAvailabilityViewPracticeId == practiceId);
+            var doctorPracticeMatches = (dailyAvailability.DailyAvailabilityViewModelPersonId == doctorId) &&
+                                        (dailyAvailability.DailyAvailabilityViewModelPracticeId == practiceId);
             if (doctorPracticeMatches) {
                 var dayNumber = startDateTime.getDay();
                 var dayMatches = dailyAvailability.DayOfWeek == dayNumber;
@@ -172,6 +173,7 @@
                 var resources = scheduler.resourcesBySlot(slot);
                 if (!IsDoctorAvailable(resources.DoctorId, resources.PracticeId, slot.startDate, slot.endDate)) {
                     $(slot.element).addClass("k-nonwork-hour"); //.css({ background: "red" }); //apply CSS
+                    //$(slot.element).css({ background: "red" });
                 }
             }
         }

@@ -1,0 +1,72 @@
+﻿@model Dentist.ViewModels.CalenderSettingViewModel
+
+@{
+    ViewBag.Title = "Calender Settings";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+    
+        <div class="col-md-6">            
+            <div class="form-group">
+                @Html.LabelFor(model => model.WorkWeekStartDay, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.WorkWeekStartDay)
+                    @Html.ValidationMessageFor(model => model.WorkWeekStartDay, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.WorkWeekEndDay, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.WorkWeekEndDay)
+                    @Html.ValidationMessageFor(model => model.WorkWeekEndDay, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.WorkWeekStartTime, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.WorkWeekStartTime)
+                    @Html.ValidationMessageFor(model => model.WorkWeekStartTime, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.WorkWeekEndTime, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.WorkWeekEndTime)
+                    @Html.ValidationMessageFor(model => model.WorkWeekEndTime, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.DayStartTime, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.DayStartTime)
+                    @Html.ValidationMessageFor(model => model.DayStartTime, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DayEndTime, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.DayEndTime)
+                    @Html.ValidationMessageFor(model => model.DayEndTime, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-12" style="text-align:right">
+            <hr>
+            <button class="btn btn-primary" value="Save" type="submit" name="btnSubmit"><span class="k-icon k-update"></span> Save</button>
+        </div>
+    </div>
+}

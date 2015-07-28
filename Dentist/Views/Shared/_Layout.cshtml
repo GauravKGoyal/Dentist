@@ -49,7 +49,14 @@
                         <li>@Html.ActionLink("Patient", "Index", "Patient")</li>
                         <li>@Html.ActionLink("Doctor", "Index", "Doctor")</li>
                         <li>@Html.ActionLink("Scheduler", "Index", "Scheduler")</li>
-                        @*<li>@Html.ActionLink("Try", "Index", "Try")</li>*@
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">User Settings<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Daily Availabilities", "DailyAvailabilitySetting", "Settings")</li>
+                                <li>@Html.ActionLink("Calender", "EditCalenderSetting", "Settings")</li>
+                            </ul>
+                        </li>
+
                     </ul>
                     @*@Html.Partial("_LoginPartial")*@
                 </div>
