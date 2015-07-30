@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using Dentist.Models;
 
 namespace Dentist.Helpers
@@ -21,7 +22,7 @@ namespace Dentist.Helpers
 
         private void Load()
         {
-            var context = new ApplicationDbContext();
+            var context = DependencyResolver.Current.GetService<ApplicationDbContext>();
             var dailyAvailabilitySettings = context.DailyAvailabilitySettings.ToList();
             if (dailyAvailabilitySettings.Count == 0)
             {

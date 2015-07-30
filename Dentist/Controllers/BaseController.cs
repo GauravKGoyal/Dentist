@@ -1,19 +1,15 @@
 ﻿using System.Web.Mvc;
+using Autofac;
 using Dentist.Models;
 
 namespace Dentist.Controllers
 {
     public class BaseController : Controller
     {
-        protected ApplicationDbContext Context = new ApplicationDbContext();
-
-        protected override void Dispose(bool disposing)
+        protected ApplicationDbContext Context;
+        public BaseController()
         {
-            if (disposing)
-            {
-                Context.Dispose();
-            }
-            base.Dispose(disposing);
+            Context = DependencyResolver.Current.GetService<ApplicationDbContext>();
         }
     }
 }
