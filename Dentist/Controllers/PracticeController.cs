@@ -83,8 +83,8 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var practice = Mapper.Map<Practice>(viewModel);
-                ReadContext.Practices.Add(practice);
-                ReadContext.SaveChanges();
+                WriteContext.Practices.Add(practice);
+                WriteContext.SaveChanges();
                 if (Request.Form["btnSubmit"] == "Save and Close")
                     return RedirectToAction("Index");
                 return RedirectToAction("Edit", new { @id = practice.Id });
@@ -115,10 +115,10 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var practice = Mapper.Map<Practice>(viewModel);
-                ReadContext.Entry(practice).State = EntityState.Modified;
-                ReadContext.Entry(practice.Address).State = EntityState.Modified;
+                WriteContext.Entry(practice).State = EntityState.Modified;
+                WriteContext.Entry(practice.Address).State = EntityState.Modified;
 
-                ReadContext.SaveChanges();
+                WriteContext.SaveChanges();
 
                 if (Request.Form["btnSubmit"] == "Save and Close")
                     return RedirectToAction("Index");
