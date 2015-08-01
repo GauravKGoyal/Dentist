@@ -102,7 +102,7 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var appointment = Mapper.Map<Appointment>(view);
-                var practice = ReadContext.Practices.Find(appointment.PracticeId);
+                var practice = WriteContext.Practices.Find(appointment.PracticeId);
                 var isNewPatientFortheAppointment = appointment.PatientId == 0;
                 if (isNewPatientFortheAppointment)
                 {
@@ -111,25 +111,20 @@ namespace Dentist.Controllers
                         FirstName = view.FirstName,
                         LastName = view.LastName,
                         Phone = view.Phone,
-                        Address = new Address(),
                         Practice = practice 
-                    };
-                    //if (appointment.IsBreak)
-                    //{
-                    //    patient.PersonRole = PersonRole.Break;
-                    //}
+                    };                    
                     appointment.Patient = patient;
                 }
                 else
                 {
-                    var patient = ReadContext.Paitients.Find(appointment.PatientId);
+                    var patient = WriteContext.Paitients.Find(appointment.PatientId);
                     patient.FirstName = view.FirstName;
                     patient.LastName = view.LastName;
                     patient.Phone = view.Phone;
                 }
-                
-                ReadContext.Appointments.Add(appointment);
-                ReadContext.SaveChanges();
+
+                WriteContext.Appointments.Add(appointment);
+                WriteContext.SaveChanges();
                 Mapper.Map(appointment, view);
             }
 

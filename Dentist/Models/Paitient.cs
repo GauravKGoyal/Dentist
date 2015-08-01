@@ -1,16 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using Dentist.Enums;
 
 namespace Dentist.Models
 {
     public class Paitient : Person
     {
-        public Paitient()
+        public Paitient() : base()
         {
             PersonRole = PersonRole.Patient;
         }
 
+        [NotMapped]
         public ApplicationDbContext Context { get; set; }
 
         [InverseProperty("Patient")]
@@ -18,6 +21,17 @@ namespace Dentist.Models
 
         public virtual Practice Practice { get; set; }
         public int PracticeId { get; set; }
+
+        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = base.Validate(validationContext).ToList();
+
+            if (Practice == null && PracticeId == 0)
+            {
+                results.Add(new ValidationResult("Paitient has to be registered with a practice"));
+            }
+            return results;
+        }
 
         public static Paitient New(ApplicationDbContext context)
         {

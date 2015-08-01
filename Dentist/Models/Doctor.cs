@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.Contracts;
 using System.Web.Mvc;
@@ -11,7 +12,7 @@ namespace Dentist.Models
 {
     public class Doctor : Person
     {
-        public Doctor()
+        public Doctor() : base()
         {
             PersonRole = Enums.PersonRole.Doctor;
             Practices = new List<Practice>();
@@ -19,6 +20,7 @@ namespace Dentist.Models
             Appointments = new List<Appointment>();
         }
 
+        [NotMapped]
         public ApplicationDbContext Context { get; set; }
 
         public virtual List<DailyAvailability> DailyAvailabilities { get; set; }
@@ -95,6 +97,18 @@ namespace Dentist.Models
         private List<DailyAvailabilitySetting> GetDailyAvailabilitySetting()
         {
             return Context.DailyAvailabilitySettings.ToList();
+        }
+
+        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = base.Validate(validationContext).ToList();
+
+            if (Practices.Count == 0)
+            {
+                results.Add(new ValidationResult("Doctor can not be registered without a practice"));
+            }
+
+            return results;
         }
 
         public static Doctor New(ApplicationDbContext context)

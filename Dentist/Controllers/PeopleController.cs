@@ -31,10 +31,10 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var appointment = Mapper.Map<Appointment>(viewModel);
-                ReadContext.Appointments.Add(appointment);
-                ReadContext.SaveChanges();
+                WriteContext.Appointments.Add(appointment);
+                WriteContext.SaveChanges();
                 // load second person before updating the viewModel
-                ReadContext.Appointments
+                WriteContext.Appointments
                     .Include(x => x.Patient)
                     .Include(x => x.Practice)
                     .First(x => x.Id == appointment.Id);
