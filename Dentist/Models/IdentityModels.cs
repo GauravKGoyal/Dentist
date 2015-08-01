@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -24,9 +25,7 @@ namespace Dentist.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
-            this.Configuration.ProxyCreationEnabled = false;
-            this.Configuration.LazyLoadingEnabled = false;
-        }
+        }     
 
         public static ApplicationDbContext Create()
         {
@@ -38,8 +37,17 @@ namespace Dentist.Models
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
         }
-
-
+        
+        public override int SaveChanges()
+        {
+            bool isReadOnlyContext = (this.Configuration.ProxyCreationEnabled == false);
+            if (isReadOnlyContext)
+            {
+                throw new Exception("Please use write context");
+            }
+            return base.SaveChanges();
+        }
+       
         public System.Data.Entity.DbSet<Dentist.Models.Practice> Practices { get; set; }
 
         public System.Data.Entity.DbSet<Dentist.Models.Paitient> Paitients { get; set; }
@@ -53,4 +61,6 @@ namespace Dentist.Models
         public System.Data.Entity.DbSet<Dentist.Models.DailyAvailabilitySetting> DailyAvailabilitySettings { get; set; }
         public System.Data.Entity.DbSet<Dentist.Models.CalenderSetting> CalenderSettings { get; set; }
     }
+
+   
 }

@@ -11,9 +11,10 @@ namespace Dentist
     {
         public static void RegisterMappings()
         {
+            Mapper.CreateMap<DailyAvailabilitySetting, DailyAvailability>();
+
             Mapper.CreateMap<CalenderSetting, CalenderSettingViewModel>();
             Mapper.CreateMap<CalenderSettingViewModel, CalenderSetting>();
-
 
             Mapper.CreateMap<Paitient, PatientListViewModel>();
             Mapper.CreateMap<Doctor, DoctorListViewModel>();

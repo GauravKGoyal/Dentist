@@ -207,9 +207,42 @@
     <Compile Include="Migrations\201507260825510_Calernder Settings.Designer.cs">
       <DependentUpon>201507260825510_Calernder Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507301049376_Moving controller logic to Domain model.cs" />
+    <Compile Include="Migrations\201507301049376_Moving controller logic to Domain model.Designer.cs">
+      <DependentUpon>201507301049376_Moving controller logic to Domain model.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507301058237_R.cs" />
+    <Compile Include="Migrations\201507301058237_R.Designer.cs">
+      <DependentUpon>201507301058237_R.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507311122107_Made property virtual.cs" />
+    <Compile Include="Migrations\201507311122107_Made property virtual.Designer.cs">
+      <DependentUpon>201507311122107_Made property virtual.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508010100054_1.cs" />
+    <Compile Include="Migrations\201508010100054_1.Designer.cs">
+      <DependentUpon>201508010100054_1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508010104188_2.cs" />
+    <Compile Include="Migrations\201508010104188_2.Designer.cs">
+      <DependentUpon>201508010104188_2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508010106541_3.cs" />
+    <Compile Include="Migrations\201508010106541_3.Designer.cs">
+      <DependentUpon>201508010106541_3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508010138277_4.cs" />
+    <Compile Include="Migrations\201508010138277_4.Designer.cs">
+      <DependentUpon>201508010138277_4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508010258565_5.cs" />
+    <Compile Include="Migrations\201508010258565_5.Designer.cs">
+      <DependentUpon>201508010258565_5.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Appointment.cs" />
+    <Compile Include="Models\ISoftDelete.cs" />
     <Compile Include="ViewModels\CalenderSettingViewModel.cs" />
     <Compile Include="Models\DailyAvailability.cs" />
     <Compile Include="Helpers\DailyAvailabilityDatabaseLoader.cs" />
@@ -737,6 +770,30 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507260825510_Calernder Settings.resx">
       <DependentUpon>201507260825510_Calernder Settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507301049376_Moving controller logic to Domain model.resx">
+      <DependentUpon>201507301049376_Moving controller logic to Domain model.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507301058237_R.resx">
+      <DependentUpon>201507301058237_R.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507311122107_Made property virtual.resx">
+      <DependentUpon>201507311122107_Made property virtual.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508010100054_1.resx">
+      <DependentUpon>201508010100054_1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508010104188_2.resx">
+      <DependentUpon>201508010104188_2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508010106541_3.resx">
+      <DependentUpon>201508010106541_3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508010138277_4.resx">
+      <DependentUpon>201508010138277_4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508010258565_5.resx">
+      <DependentUpon>201508010258565_5.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

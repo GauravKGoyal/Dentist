@@ -41,7 +41,13 @@ namespace Dentist
             Builder.RegisterControllers(typeof(MvcApplication).Assembly);
 
             // Register context
-            Builder.Register(c => new ApplicationDbContext()).InstancePerRequest();            
+            //Builder.Register(c => new ApplicationDbContext())
+            //    .InstancePerLifetimeScope()
+            //    .Named<ApplicationDbContext>("ReadContext");
+
+            //Builder.Register(c => new ApplicationDbContext(true))
+            //    .InstancePerLifetimeScope()
+            //    .Named<ApplicationDbContext>("WriteContext");  
         }
     }
 }

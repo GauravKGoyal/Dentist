@@ -1235,7 +1235,7 @@ function Sizzle( selector, context, results, seed ) {
 						return results;
 					}
 				} else {
-					// Context is not a document
+					// ReadContext is not a document
 					if ( context.ownerDocument && (elem = context.ownerDocument.getElementById( m )) &&
 						contains( context, elem ) && elem.id === m ) {
 						results.push( elem );
@@ -7917,7 +7917,7 @@ jQuery.extend({
 			s = jQuery.ajaxSetup( {}, options ),
 			// Callbacks context
 			callbackContext = s.context || s,
-			// Context for global events is callbackContext if it is a DOM node or jQuery collection
+			// ReadContext for global events is callbackContext if it is a DOM node or jQuery collection
 			globalEventContext = s.context && ( callbackContext.nodeType || callbackContext.jquery ) ?
 				jQuery( callbackContext ) :
 				jQuery.event,

@@ -28,7 +28,7 @@ namespace Dentist.Controllers
 
         public ActionResult GetDailyAvailabilitySetting([DataSourceRequest] DataSourceRequest request)
         {            
-            var dailyAvailabilitySettings = Context.DailyAvailabilitySettings.ToList();
+            var dailyAvailabilitySettings = ReadContext.DailyAvailabilitySettings.ToList();
             var viewModels = Mapper.Map<List<DailyAvailabilitySettingViewModel>>(dailyAvailabilitySettings);
             return Json(viewModels.ToDataSourceResult(request));
         }
@@ -40,14 +40,14 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var idsToLoad = dailyAvailabilitySettingViewModels.Select(x => x.Id);
-                var loadedDailyAvailabilitySettings = Context.DailyAvailabilitySettings.Where(x => idsToLoad.Contains(x.Id));
+                var loadedDailyAvailabilitySettings = ReadContext.DailyAvailabilitySettings.Where(x => idsToLoad.Contains(x.Id));
                 foreach (var dailyAvailabilitySetting in loadedDailyAvailabilitySettings)
                 {
                     var id = dailyAvailabilitySetting.Id;
                     var viewModel = dailyAvailabilitySettingViewModels.Single(x => x.Id == id);
                     Mapper.Map(viewModel, dailyAvailabilitySetting);
                 }
-                Context.SaveChanges();
+                ReadContext.SaveChanges();
             }
 
             return Json(dailyAvailabilitySettingViewModels.ToDataSourceResult(request, ModelState));
@@ -55,7 +55,7 @@ namespace Dentist.Controllers
 
         public ActionResult EditCalenderSetting()
         {            
-            var calenderSetting = Context.CalenderSettings.First();
+            var calenderSetting = ReadContext.CalenderSettings.First();
             var viewModel = Mapper.Map<CalenderSettingViewModel>(calenderSetting);
             return View(viewModel);
         } 
@@ -65,9 +65,9 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var calenderSetting = Context.CalenderSettings.FirstOrDefault();
+                var calenderSetting = ReadContext.CalenderSettings.FirstOrDefault();
                 Mapper.Map(calenderSettingViewModel, calenderSetting);
-                Context.SaveChanges();
+                ReadContext.SaveChanges();
             }
             return View(calenderSettingViewModel);
         }

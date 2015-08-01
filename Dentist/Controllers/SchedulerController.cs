@@ -20,14 +20,14 @@ namespace Dentist.Controllers
         // GET: People
         public ActionResult Index()
         {
-            var doctors = Context.Doctors
-               .Include(x => x.Practices)
+            var doctors = ReadContext.Doctors
+               .Include(x=>x.Practices)
                .Where(x => x.IsDeleted != true && x.PersonRole == PersonRole.Doctor)
                .OrderBy(x => x.FirstName)
                .ToList();
-            var practices = Context.Practices.Where(x => x.IsDeleted != true).ToList();
-            var dailyAvailabilities = Context.DailyAvailabilities.ToList();
-            var calenderSetting = Context.CalenderSettings.First();
+            var practices = ReadContext.Practices.Where(x => x.IsDeleted != true).ToList();
+            var dailyAvailabilities = ReadContext.DailyAvailabilities.ToList();
+            var calenderSetting = ReadContext.CalenderSettings.First();
 
             ViewBag.Doctors = Mapper.Map<List<SchedulerDoctorViewModel>>(doctors);
             ViewBag.Practices = Mapper.Map<List<SchedulerPracticeViewModel>>(practices);
@@ -75,7 +75,7 @@ namespace Dentist.Controllers
    
         public ActionResult GetBrowserItems([DataSourceRequest] DataSourceRequest request, string doctorsIds = null, string practiceIds = null)
         {
-            var query = Context.Appointments
+            var query = ReadContext.Appointments
                         .Include(x => x.Patient)
                         .Include(x => x.Practice)
                         .Where(x => x.Patient.IsDeleted != true);
@@ -102,7 +102,7 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var appointment = Mapper.Map<Appointment>(view);
-                var practice = Context.Practices.Find(appointment.PracticeId);
+                var practice = ReadContext.Practices.Find(appointment.PracticeId);
                 var isNewPatientFortheAppointment = appointment.PatientId == 0;
                 if (isNewPatientFortheAppointment)
                 {
@@ -122,14 +122,14 @@ namespace Dentist.Controllers
                 }
                 else
                 {
-                    var patient = Context.Paitients.Find(appointment.PatientId);
+                    var patient = ReadContext.Paitients.Find(appointment.PatientId);
                     patient.FirstName = view.FirstName;
                     patient.LastName = view.LastName;
                     patient.Phone = view.Phone;
                 }
                 
-                Context.Appointments.Add(appointment);
-                Context.SaveChanges();
+                ReadContext.Appointments.Add(appointment);
+                ReadContext.SaveChanges();
                 Mapper.Map(appointment, view);
             }
 
@@ -141,18 +141,18 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var appointment = Context.Appointments.First(x => x.Id == view.Id);
+                var appointment = ReadContext.Appointments.First(x => x.Id == view.Id);
                 Mapper.Map(view, appointment);
                 // do not load patient before mapping view to the appointment 
                 // because during update process view patient may have been replaced 
                 // with new patient therefore mapping view to the appointment may have updated the appointment's paitient link
-                Context.Paitients.Find(appointment.PatientId);
+                ReadContext.Paitients.Find(appointment.PatientId);
                 appointment.Patient.FirstName = view.FirstName;
                 appointment.Patient.LastName = view.LastName;
                 appointment.Patient.Phone = view.Phone;
-                Context.SaveChanges();
+                ReadContext.SaveChanges();
                 // load practice to update the practice color
-                appointment.Practice = Context.Practices.Find(appointment.PracticeId);
+                appointment.Practice = ReadContext.Practices.Find(appointment.PracticeId);
                 Mapper.Map(appointment, view);
             }
 
@@ -164,9 +164,9 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var appointment = Context.Appointments.First(x => x.Id == view.Id);
-                Context.Appointments.Remove(appointment);
-                Context.SaveChanges();
+                var appointment = ReadContext.Appointments.First(x => x.Id == view.Id);
+                ReadContext.Appointments.Remove(appointment);
+                ReadContext.SaveChanges();
             }
 
             // Return the removed item. Also return any validation errors.

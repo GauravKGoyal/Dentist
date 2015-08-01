@@ -16,7 +16,7 @@ namespace Dentist.Controllers
     {
         public ActionResult GetAppointmentBrowserItems([DataSourceRequest] DataSourceRequest request, int personId)
         {
-            var query = Context.Appointments
+            var query = ReadContext.Appointments
                         .Include(x=>x.Patient)
                         .Include(x=>x.Practice)
                         .Where(x => x.DoctorId == personId || x.PatientId == personId)
@@ -31,10 +31,10 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var appointment = Mapper.Map<Appointment>(viewModel);
-                Context.Appointments.Add(appointment);
-                Context.SaveChanges();
+                ReadContext.Appointments.Add(appointment);
+                ReadContext.SaveChanges();
                 // load second person before updating the viewModel
-                Context.Appointments
+                ReadContext.Appointments
                     .Include(x => x.Patient)
                     .Include(x => x.Practice)
                     .First(x => x.Id == appointment.Id);
@@ -49,11 +49,11 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var appointment = Context.Appointments.First(x => x.Id == viewModel.Id);
+                var appointment = ReadContext.Appointments.First(x => x.Id == viewModel.Id);
                 Mapper.Map(viewModel, appointment);
-                Context.SaveChanges();
+                ReadContext.SaveChanges();
                 // load second person before updating the viewModel
-                Context.Appointments
+                ReadContext.Appointments
                     .Include(x => x.Patient)
                     .Include(x => x.Practice)
                     .First(x => x.Id == appointment.Id);
@@ -68,9 +68,9 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var appointment = Context.Appointments.First(x => x.Id == viewModel.Id);
-                Context.Appointments.Remove(appointment);
-                Context.SaveChanges();
+                var appointment = ReadContext.Appointments.First(x => x.Id == viewModel.Id);
+                ReadContext.Appointments.Remove(appointment);
+                ReadContext.SaveChanges();
             }
 
             // Return the removed item. Also return any validation errors.
@@ -79,7 +79,7 @@ namespace Dentist.Controllers
 
         public ActionResult GetDailyAvailabilityBrowserItems([DataSourceRequest] DataSourceRequest request, int personId)
         {
-            var query = Context.DailyAvailabilities
+            var query = ReadContext.DailyAvailabilities
                         .Include(x=>x.Practice)
                         .Where(x => x.DoctorId == personId)
                         .ProjectTo<DailyAvailabilityViewModel>();
@@ -93,8 +93,8 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var dailyAvailability = Mapper.Map<DailyAvailability>(viewModel);
-                Context.DailyAvailabilities.Add(dailyAvailability);
-                Context.SaveChanges();
+                ReadContext.DailyAvailabilities.Add(dailyAvailability);
+                ReadContext.SaveChanges();
                 // load practice to load practice name
                 var practice = dailyAvailability.Practice;
             }
@@ -107,9 +107,9 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var dailyAvailability = Context.DailyAvailabilities.First(x => x.Id == viewModel.Id);
+                var dailyAvailability = ReadContext.DailyAvailabilities.First(x => x.Id == viewModel.Id);
                 Mapper.Map(viewModel, dailyAvailability);
-                Context.SaveChanges();
+                ReadContext.SaveChanges();
                 // load practice to load practice name
                 var practice = dailyAvailability.Practice;
             }
@@ -122,9 +122,9 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var dailyAvailability = Context.DailyAvailabilities.First(x => x.Id == viewModel.Id);
-                Context.DailyAvailabilities.Remove(dailyAvailability);
-                Context.SaveChanges();
+                var dailyAvailability = ReadContext.DailyAvailabilities.First(x => x.Id == viewModel.Id);
+                ReadContext.DailyAvailabilities.Remove(dailyAvailability);
+                ReadContext.SaveChanges();
             }
 
             // Return the removed item. Also return any validation errors.

@@ -19,7 +19,7 @@ namespace Dentist.Controllers
     {
         public JsonResult GetAllIdTexts(string text = null)
         {
-            var query = Context.Paitients.Where(x => x.IsDeleted != true)
+            var query = ReadContext.Paitients.Where(x => x.IsDeleted != true)
            .Select(x => new
            {
                x.Id,
@@ -48,7 +48,7 @@ namespace Dentist.Controllers
         // can be inherited
         public ActionResult GetBrowserItems([DataSourceRequest] DataSourceRequest request)
         {
-            var query = Context
+            var query = ReadContext
                 .Paitients
                 .Where(x=>x.IsDeleted != true);
             query = query.Where(x => x.PersonRole == PersonRole.Patient);
@@ -75,15 +75,11 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var patient = Mapper.Map<Paitient>(viewModel);
-                patient.PersonRole = PersonRole.Patient;
-                Context.Paitients.Add(patient);
+                var patient = Paitient.New(WriteContext);
+                Mapper.Map(viewModel, patient);
+                patient.Practice = WriteContext.Practices.Find(viewModel.PatientViewPracticeId);
+                WriteContext.SaveChanges();
 
-                // add practice
-                var practiceToAdd = Context.Practices.Find(viewModel.PatientViewPracticeId);
-                patient.Practice = practiceToAdd;
-
-                Context.SaveChanges();
                 if (Request.Form["btnSubmit"] == "Save and Close")
                     return RedirectToAction("Index");
                 return RedirectToAction("Edit", new { @id = patient.Id });
@@ -99,7 +95,7 @@ namespace Dentist.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             
-            var patient = Context.Paitients
+            var patient = ReadContext.Paitients
                             .Include(x =>x.Address)
                             .Include(x => x.Practice)
                             .First(x => x.Id == id);
@@ -119,18 +115,11 @@ namespace Dentist.Controllers
         public ActionResult Edit(PatientViewModel viewModel)
         {
             if (ModelState.IsValid)
-            {
-                var patient = Context.Paitients
-                    .Include(x => x.Practice)
-                    .Include(x => x.Address)
-                    .First(x => x.Id == viewModel.Id);
+            {                
+                var patient = Paitient.Find(WriteContext, viewModel.Id);
                 Mapper.Map(viewModel, patient);
-                               
-                // add practice
-                var practiceToAdd = Context.Practices.Find(viewModel.PatientViewPracticeId);
-                patient.Practice = practiceToAdd;
-
-                Context.SaveChanges();
+                patient.Practice = WriteContext.Practices.Find(viewModel.PatientViewPracticeId);
+                WriteContext.SaveChanges();
 
                 if (Request.Form["btnSubmit"] == "Save and Close")
                     return RedirectToAction("Index");
@@ -142,9 +131,8 @@ namespace Dentist.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            var patient = Context.Paitients.Find(id);
-            patient.IsDeleted = true;
-            Context.SaveChanges();
+            Paitient.Delete(WriteContext,id);
+            WriteContext.SaveChanges();
             return Json(new {Success=true});
         }
 

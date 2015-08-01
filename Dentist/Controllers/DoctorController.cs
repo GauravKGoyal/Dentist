@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Web.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -11,6 +12,7 @@ using Dentist.Models;
 using Dentist.ViewModels;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
+using WebGrease.Css.Extensions;
 
 namespace Dentist.Controllers
 {
@@ -19,7 +21,7 @@ namespace Dentist.Controllers
     {
         public JsonResult GetAllIdTexts(string text = null)
         {
-            var query = Context.Doctors.Where(x => x.IsDeleted != true)
+            var query = ReadContext.Doctors.Where(x => x.IsDeleted != true)
            .Select(x => new
            {
                x.Id,
@@ -49,7 +51,8 @@ namespace Dentist.Controllers
 
         public ActionResult GetBrowserItems([DataSourceRequest] DataSourceRequest request)
         {
-            var query = Context.Doctors.Where(x => x.IsDeleted != true);
+            var context = ReadContext;
+            var query = context.Doctors.Where(x => x.IsDeleted != true);
             query = query.Where(x => x.PersonRole == PersonRole.Doctor);
             var projectedQuery = query.ProjectTo<DoctorListViewModel>();
             var result = projectedQuery.ToDataSourceResult(request);
@@ -72,24 +75,11 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var doctor = Mapper.Map<Doctor>(viewModel);
-                doctor.PersonRole = PersonRole.Doctor;
+                var doctor = Doctor.New(WriteContext);
+                Mapper.Map(viewModel, doctor);
+                doctor.AddPractices(viewModel.Practices);
+                WriteContext.SaveChanges();
 
-                Context.Doctors.Add(doctor);
-
-                // add practices
-                var practicesToAdd = Context.Practices.Where(practice => viewModel.Practices.Contains(practice.Id));
-                doctor.Practices = new List<Practice>();
-                doctor.Practices.AddRange(practicesToAdd);
-
-                // Daily availability
-                // for each practice add availability
-                foreach (Practice practice in practicesToAdd)
-                {
-                    doctor.SetDefaultWeeklyAvailabilityForPractice(practice.Id);
-                }
-
-                Context.SaveChanges();
                 if (Request.Form["btnSubmit"] == "Save and Close")
                     return RedirectToAction("Index");
                 return RedirectToAction("Edit", new { @id = doctor.Id });
@@ -105,9 +95,9 @@ namespace Dentist.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var doctor = Context.Doctors
+            var doctor = ReadContext.Doctors
                             .Include(x => x.Address)
-                            .Include(x => x.Practices)
+                            .Include(x=> x.Practices)
                             .First(x => x.Id == id);
             if (doctor.PersonRole != PersonRole.Doctor)
             {
@@ -124,44 +114,11 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var doctor = Context.Doctors
-                    .Include(x => x.Practices)
-                    .Include(x => x.Address)
-                    .First(x => x.Id == viewModel.Id);
+                var doctor = Doctor.Find(WriteContext, viewModel.Id);
                 Mapper.Map(viewModel, doctor);
-
-                // remove practices
-                var practiceIdsToRemove = doctor.Practices
-                    .Where(practice => !viewModel.Practices.Contains(practice.Id))
-                    .Select(x =>x.Id)
-                    .ToList();
-                doctor.Practices.RemoveAll(practice => !viewModel.Practices.Contains(practice.Id));
-
-                // add practices
-                var practiceIdsToAdd = viewModel.Practices
-                    .Where(practiceId => doctor.Practices.All(practice => practice.Id != practiceId))
-                    .ToList();
-                var practicesToAdd = Context.Practices.Where(practice => practiceIdsToAdd.Contains(practice.Id));
-                doctor.Practices.AddRange(practicesToAdd);
-
-                // Daily availability
-                // for each removed practice remove daily availability
-                foreach (int practiceId in practiceIdsToRemove)
-                {
-                    var tempPracticeId = practiceId;
-                    var dailyAvailabilitiesToRemove =
-                        Context.DailyAvailabilities.Where(x => x.DoctorId == doctor.Id && x.PracticeId == tempPracticeId);
-                    Context.DailyAvailabilities.RemoveRange(dailyAvailabilitiesToRemove);
-                }
-
-                // for each added practice add daily availability
-                foreach (int practiceId in practiceIdsToAdd)
-                {
-                    doctor.SetDefaultWeeklyAvailabilityForPractice(practiceId);
-                }
-
-
-                Context.SaveChanges();
+                doctor.RemovePractices(viewModel.PracticeIdsToRemove(doctor));
+                doctor.AddPractices(viewModel.PracticeIdsToAdd(doctor));
+                WriteContext.SaveChanges();
 
                 if (Request.Form["btnSubmit"] == "Save and Close")
                     return RedirectToAction("Index");
@@ -173,9 +130,8 @@ namespace Dentist.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            var doctor = Context.Doctors.Find(id);
-            doctor.IsDeleted = true;
-            Context.SaveChanges();
+            Doctor.Delete(WriteContext, id);
+            WriteContext.SaveChanges();
             return Json(new { Success = true });
         }
 

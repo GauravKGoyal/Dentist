@@ -18,6 +18,8 @@ namespace Dentist.Models
         public virtual List<Appointment> PracticeAppointments { get; set; }
 
         public virtual List<DailyAvailability> DailyAvailabilities { get; set; }
+
+
         public bool IsDeleted { get; set; }
 
         public int AddressId { get; set; }

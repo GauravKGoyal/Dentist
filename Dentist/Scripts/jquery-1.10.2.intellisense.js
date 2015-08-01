@@ -543,7 +543,7 @@ intellisense.annotate(_object, {
   'notifyWith': function() {
     /// <signature>
     ///   <summary>Call the progressCallbacks on a Deferred object with the given context and args.</summary>
-    ///   <param name="context" type="Object">Context passed to the progressCallbacks as the this object.</param>
+    ///   <param name="context" type="Object">ReadContext passed to the progressCallbacks as the this object.</param>
     ///   <param name="args" type="Object">Optional arguments that are passed to the progressCallbacks.</param>
     ///   <returns type="Deferred" />
     /// </signature>
@@ -587,7 +587,7 @@ intellisense.annotate(_object, {
   'rejectWith': function() {
     /// <signature>
     ///   <summary>Reject a Deferred object and call any failCallbacks with the given context and args.</summary>
-    ///   <param name="context" type="Object">Context passed to the failCallbacks as the this object.</param>
+    ///   <param name="context" type="Object">ReadContext passed to the failCallbacks as the this object.</param>
     ///   <param name="args" type="Array">An optional array of arguments that are passed to the failCallbacks.</param>
     ///   <returns type="Deferred" />
     /// </signature>
@@ -602,7 +602,7 @@ intellisense.annotate(_object, {
   'resolveWith': function() {
     /// <signature>
     ///   <summary>Resolve a Deferred object and call any doneCallbacks with the given context and args.</summary>
-    ///   <param name="context" type="Object">Context passed to the doneCallbacks as the this object.</param>
+    ///   <param name="context" type="Object">ReadContext passed to the doneCallbacks as the this object.</param>
     ///   <param name="args" type="Array">An optional array of arguments that are passed to the doneCallbacks.</param>
     ///   <returns type="Deferred" />
     /// </signature>
