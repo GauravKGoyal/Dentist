@@ -10,7 +10,6 @@ namespace Dentist.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "Dentist.Models.ApplicationDbContext";
         }
 
         protected override void Seed(Dentist.Models.ApplicationDbContext context)

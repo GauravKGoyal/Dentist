@@ -1,12 +1,45 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Web;
+using System.Xml.Linq;
 using Dentist.Enums;
+using Dentist.Models;
+using Kendo.Mvc.Infrastructure.Implementation;
+using File = Dentist.Models.File;
 
 namespace Dentist.ViewModels
 {
     public class PersonViewModel
     {
         public int Id { get; set; }
+
+        public HttpPostedFileBase UploadedAvatar { get; set; }
+
+        public File UploadedAvatarFile
+        {
+            get
+            {
+                if (UploadedAvatar != null && UploadedAvatar.ContentLength >0)
+                {
+                    var avatar = new File
+                    {
+                        FileName = UploadedAvatar.FileName,
+                        ContentType = UploadedAvatar.ContentType,
+                        FileType = FileType.Avatar,
+                        CreatedDateTime = DateTime.Now
+                    };
+                    using (var reader = new BinaryReader(UploadedAvatar.InputStream))
+                    {
+                        avatar.Content = reader.ReadBytes(UploadedAvatar.ContentLength);
+                    }
+                    return avatar;
+                }
+                return null;
+            }
+        }
+
+        public int AvatarId { get; set; }
 
         public Title Title { get; set; }
 

@@ -22,6 +22,7 @@ namespace Dentist.Enums
 
     public enum Title
     {
+        Dr,
         Mr,
         Mrs,
         Ms,

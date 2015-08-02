@@ -7,13 +7,13 @@ namespace Dentist.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.0-30225")]
-    public sealed partial class _2 : IMigrationMetadata
+    public sealed partial class DentistProfileupgrade : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(_2));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(DentistProfileupgrade));
         
         string IMigrationMetadata.Id
         {
-            get { return "201508010104188_2"; }
+            get { return "201508021037571_Dentist Profile upgrade"; }
         }
         
         string IMigrationMetadata.Source

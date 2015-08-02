@@ -40,5 +40,18 @@ namespace Dentist.Controllers
                 return _writeContext;
             }
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_readContext != null)
+                    _readContext.Dispose();
+                if (_writeContext != null)
+                    _writeContext.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

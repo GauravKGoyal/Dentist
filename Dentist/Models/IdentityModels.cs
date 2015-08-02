@@ -60,6 +60,7 @@ namespace Dentist.Models
 
         public System.Data.Entity.DbSet<Dentist.Models.DailyAvailabilitySetting> DailyAvailabilitySettings { get; set; }
         public System.Data.Entity.DbSet<Dentist.Models.CalenderSetting> CalenderSettings { get; set; }
+        public System.Data.Entity.DbSet<Dentist.Models.File> Files { get; set; }
     }
 
    

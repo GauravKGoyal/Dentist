@@ -16,7 +16,7 @@ namespace Dentist.ViewModels
         public string Color { get; set; }
 
         [RequiredListItem]
-        public List<int> Practices { get; set; }        
+        public List<int> Practices { get; set; }
 
         public List<int> PracticeIdsToRemove(Doctor doctor)
         {
@@ -27,6 +27,16 @@ namespace Dentist.ViewModels
         {
             return Practices.Where(practiceId => doctor.Practices.All(practice => practice.Id != practiceId))
                     .ToList();    
+        }
+
+        public void CopyTo(Doctor doctor)
+        {
+             Mapper.Map(this, doctor);
+
+             if (UploadedAvatarFile != null)
+             { 
+                doctor.Files.Add(UploadedAvatarFile);
+             }
         }
     }
 }

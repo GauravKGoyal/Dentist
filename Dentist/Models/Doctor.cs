@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.Contracts;
-using System.Web.Mvc;
-using Autofac;
 using AutoMapper;
 using System.Linq;
-using WebGrease.Css.Extensions;
 
 namespace Dentist.Models
 {
@@ -15,17 +12,39 @@ namespace Dentist.Models
         public Doctor() : base()
         {
             PersonRole = Enums.PersonRole.Doctor;
-            Practices = new List<Practice>();
-            DailyAvailabilities = new List<DailyAvailability>();
-            Appointments = new List<Appointment>();
+            Practices = new List<Practice>(); // lookup
+            Services = new List<Service>(); //lookup
+            Specializations = new List<Specialization>(); //lookup
+            Memberships = new List<Membership>(); //lookup
+
+            DailyAvailabilities = new List<DailyAvailability>(); //owner
+            Appointments = new List<Appointment>(); //owner
+            Qualification = new List<Qualification>();//owner
+            Experiences = new List<Experience>(); //owner
+            Awards = new List<Award>(); //owner
+            Registration = new Registration(); //owner
+
         }
+
+        public string About { get; set; }
+
+       
+
+        public virtual List<Service> Services { get; set; }
+        public virtual List<Specialization> Specializations { get; set; }
+        public virtual List<Qualification> Qualification { get; set; }
+        public virtual List<Experience> Experiences { get; set; }
+        public virtual List<Award> Awards { get; set; }
+        public virtual List<Membership> Memberships { get; set; }
+        public Registration Registration { get; set; }
+
 
         [NotMapped]
         public ApplicationDbContext Context { get; set; }
 
-        public virtual List<DailyAvailability> DailyAvailabilities { get; set; }
+        public virtual List<DailyAvailability> DailyAvailabilities { get; private set; }
 
-        public virtual List<Practice> Practices { get; set; }
+        public virtual List<Practice> Practices { get; private set; }
 
         [InverseProperty("Doctor")]
         public virtual List<Appointment> Appointments { get; private set; }
@@ -133,5 +152,91 @@ namespace Dentist.Models
         }
 
     }
+
+    public class Registration
+    {
+         [Key, ForeignKey("Doctor")]
+        public int Id { get; set; }
+        public string Number { get; set; }
+        public string College { get; set; }
+        public int DoctorId { get; set; }
+        public virtual Doctor Doctor { get; set; }
+    }
+
+    public class Membership
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public virtual List<Doctor> Doctors { get; set; }
+    }
+
+    public class Service
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public virtual List<Doctor> Doctors { get; set; }
+    }
+
+    public class Award
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Year { get; set; }
+        public int DoctorId { get; set; }
+        public virtual Doctor Doctor { get; set; }
+    }
+
+    public class Experience
+    {
+        public int Id { get; set; }
+        public int FromYear { get; set; }
+        public int ToYear { get; set; }
+        public string As { get; set; }
+        public string At { get; set; }
+        public int DoctorId { get; set; }
+        public virtual Doctor Doctor { get; set; }
+    }
+
+    public class Qualification
+    {
+        public int Id { get; set; }
+        public string College { get; set; }
+        public int Year { get; set; }
+        public int DoctorId { get; set; }
+        public virtual Doctor Doctor { get; set; }
+    }
+
+    public class Specialization
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public virtual List<Doctor> Doctors { get; set; }
+    }
+
+    public enum FileType
+    {
+        
+        //http://www.mikesdotnetting.com/article/260/mvc-5-with-ef-6-in-visual-basic-working-with-files
+        Avatar        
+    }
+
+    public class File
+    {
+        public int Id { get; set; }
+        [StringLength(100)]
+        [Required]
+        public string FileName { get; set; }
+        [Required]
+        public string ContentType { get; set; }
+        [Required]
+        public byte[] Content { get; set; }
+        [Required]
+        public FileType FileType { get; set; }
+        [Required]
+        public DateTime CreatedDateTime { get; set; }
+        public virtual List<Person> Persons { get; set; }       
+    }
+        
 }
+
 

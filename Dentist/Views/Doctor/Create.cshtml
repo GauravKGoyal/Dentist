@@ -3,6 +3,7 @@
 @{
     var isCreate = Model == null || Model.Id == 0;
     ViewBag.Title = isCreate ? "Create Doctor" : "Edit Doctor- " + Model.FirstName + " " + Model.LastName;
+    var actionName = isCreate ? "Create" : "Edit";
 }
 
 
@@ -17,7 +18,7 @@
 
 <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="Detail" style="margin-top: 15px">
-        @using (Html.BeginForm())
+        @using (Html.BeginForm(actionName, "Doctor", FormMethod.Post, new {enctype = "multipart/form-data"}))
         {
             @Html.AntiForgeryToken()
 

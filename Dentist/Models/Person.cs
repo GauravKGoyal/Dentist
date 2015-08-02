@@ -11,7 +11,10 @@ namespace Dentist.Models
         {
             Address = new Address();
         }
+
         public int Id { get; set; }
+
+        public virtual List<File> Files { get; set; }
 
         public Title Title { get; set; }
 

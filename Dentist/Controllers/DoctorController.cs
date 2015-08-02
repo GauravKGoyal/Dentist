@@ -73,7 +73,7 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var doctor = Doctor.New(WriteContext);
-                Mapper.Map(viewModel, doctor);
+                viewModel.CopyTo(doctor);
                 doctor.AddPractices(viewModel.Practices);
                 WriteContext.SaveChanges();
 
@@ -112,7 +112,7 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var doctor = Doctor.Find(WriteContext, viewModel.Id);
-                Mapper.Map(viewModel, doctor);
+                viewModel.CopyTo(doctor);
                 doctor.RemovePractices(viewModel.PracticeIdsToRemove(doctor));
                 doctor.AddPractices(viewModel.PracticeIdsToAdd(doctor));
                 WriteContext.SaveChanges();
