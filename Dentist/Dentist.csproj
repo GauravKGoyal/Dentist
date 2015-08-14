@@ -182,6 +182,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DoctorController.cs" />
     <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\GridController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PatientController.cs" />
     <Compile Include="Controllers\PracticeController.cs" />
@@ -195,10 +196,23 @@
     </Compile>
     <Compile Include="Helpers\ConvertHelper.cs" />
     <Compile Include="Helpers\GreaterThanAttribute.cs" />
+    <Compile Include="Helpers\HttpRequestHelper.cs" />
     <Compile Include="Helpers\RequiredListItemAttribute.cs" />
     <Compile Include="Migrations\201508021037571_Dentist Profile upgrade.cs" />
     <Compile Include="Migrations\201508021037571_Dentist Profile upgrade.Designer.cs">
       <DependentUpon>201508021037571_Dentist Profile upgrade.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508030926534_doctor model update.cs" />
+    <Compile Include="Migrations\201508030926534_doctor model update.Designer.cs">
+      <DependentUpon>201508030926534_doctor model update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508030940038_doctor domain update 2.cs" />
+    <Compile Include="Migrations\201508030940038_doctor domain update 2.Designer.cs">
+      <DependentUpon>201508030940038_doctor domain update 2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508031040263_make registration optional.cs" />
+    <Compile Include="Migrations\201508031040263_make registration optional.Designer.cs">
+      <DependentUpon>201508031040263_make registration optional.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
@@ -711,6 +725,7 @@
     <Content Include="Views\Shared\EditorTemplates\Number.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Time.cshtml" />
     <Content Include="Views\Settings\EditCalenderSetting.cshtml" />
+    <Content Include="Views\Grid\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -726,6 +741,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201508021037571_Dentist Profile upgrade.resx">
       <DependentUpon>201508021037571_Dentist Profile upgrade.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508030926534_doctor model update.resx">
+      <DependentUpon>201508030926534_doctor model update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508030940038_doctor domain update 2.resx">
+      <DependentUpon>201508030940038_doctor domain update 2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508031040263_make registration optional.resx">
+      <DependentUpon>201508031040263_make registration optional.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

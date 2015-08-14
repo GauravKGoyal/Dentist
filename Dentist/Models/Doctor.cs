@@ -22,13 +22,11 @@ namespace Dentist.Models
             Qualification = new List<Qualification>();//owner
             Experiences = new List<Experience>(); //owner
             Awards = new List<Award>(); //owner
-            Registration = new Registration(); //owner
+         //   Registration = new Registration(); //owner
 
         }
 
         public string About { get; set; }
-
-       
 
         public virtual List<Service> Services { get; set; }
         public virtual List<Specialization> Specializations { get; set; }
@@ -36,6 +34,8 @@ namespace Dentist.Models
         public virtual List<Experience> Experiences { get; set; }
         public virtual List<Award> Awards { get; set; }
         public virtual List<Membership> Memberships { get; set; }
+
+        public int? RegistrationId { get; set; }
         public Registration Registration { get; set; }
 
 
@@ -51,6 +51,11 @@ namespace Dentist.Models
 
         public string Color { get; set; }
 
+        private Practice LoadPractice(int practiceId)
+        {
+            return Context.Practices.Find(practiceId);
+        }
+
         public bool PracticeExists(int practiceId)
         {
             return Practices.Exists(x => x.Id == practiceId);
@@ -61,13 +66,13 @@ namespace Dentist.Models
             practiceIdsToAdd.ForEach(AddPractice);
         }
 
-        public void AddPractice(int practiceId)
+        private void AddPractice(int practiceId)
         {
             var practice = LoadPractice(practiceId);
             AddPractice(practice);
         }
 
-        public void AddPractice(Practice practice)
+        private void AddPractice(Practice practice)
         {
             // note the add and delete only works against context but not against list
             Practices.Add(practice);
@@ -84,13 +89,18 @@ namespace Dentist.Models
             }
         }
 
-        public void RemovePractice(int practiceId)
+        public void RemovePractices(List<int> practiceIdsToRemove)
+        {
+            practiceIdsToRemove.ForEach(RemovePractice);
+        }
+
+        private void RemovePractice(int practiceId)
         {
             var practice = Practices.Find(x => x.Id == practiceId);
             RemovePractice(practice);
         }
 
-        public void RemovePractice(Practice practice)
+        private void RemovePractice(Practice practice)
         {
             var daily = DailyAvailabilities.Where(x => x.PracticeId == practice.Id);
             // Note remove range on the list does not work
@@ -98,19 +108,36 @@ namespace Dentist.Models
             Practices.Remove(practice);
         }
 
-        public void RemovePractices(List<int> practiceIdsToRemove)
+        private Service LoadService(int serviceId)
         {
-            practiceIdsToRemove.ForEach(RemovePractice);
+            return Context.Services.Find(serviceId);
         }
 
-        public void RemovePractices(List<Practice> practicesToRemove)
+        public bool ServiceExists(int serviceId)
         {
-            practicesToRemove.ForEach(RemovePractice);                     
+            return Services.Exists(x => x.Id == serviceId);
         }
 
-        private Practice LoadPractice(int practiceId)
+        public void AddServices(List<int> serviceIdsToAdd)
         {
-            return Context.Practices.Find(practiceId);
+            serviceIdsToAdd.ForEach(AddService);
+        }
+
+        private void AddService(int serviceId)
+        {
+            var service = LoadService(serviceId);
+            Services.Add(service);
+        }
+
+        public void RemoveServices(List<int> serviceIdsToRemove)
+        {
+            serviceIdsToRemove.ForEach(RemoveService);
+        }
+
+        private void RemoveService(int serviceId)
+        {
+            var service = Services.Find(x => x.Id == serviceId);
+            Services.Remove(service);
         }
 
         private List<DailyAvailabilitySetting> GetDailyAvailabilitySetting()
@@ -155,12 +182,9 @@ namespace Dentist.Models
 
     public class Registration
     {
-         [Key, ForeignKey("Doctor")]
         public int Id { get; set; }
         public string Number { get; set; }
         public string College { get; set; }
-        public int DoctorId { get; set; }
-        public virtual Doctor Doctor { get; set; }
     }
 
     public class Membership
@@ -175,6 +199,7 @@ namespace Dentist.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public virtual List<Doctor> Doctors { get; set; }
+        //public bool IsDeleted { get; set; }
     }
 
     public class Award

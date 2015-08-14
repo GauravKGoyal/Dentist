@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -17,6 +18,49 @@ namespace Dentist.Models
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
             return userIdentity;
+        }
+    }
+
+
+    public class WriteContext : ApplicationDbContext
+    {
+        public WriteContext():base()
+        {
+
+        }
+
+        public bool TrySaveChanges(ModelStateDictionary modelState)
+        {
+            bool hasError = AddModelErrors(modelState, this);
+            if (hasError)
+            {
+                return false;
+            }            
+
+            base.SaveChanges();
+            return true;
+        }
+
+        public override int SaveChanges()
+        {
+            throw new Exception("Please make use of TrySaveChanges method with modelState and writeContext parameter to pass errors from business layer to modestate");
+            return base.SaveChanges();
+        }
+
+        private bool AddModelErrors(ModelStateDictionary modelState, ApplicationDbContext writeContext)
+        {
+            var hasError = false;
+            var dbEntityValidationResults = writeContext.GetValidationErrors();
+            foreach (var dbEntityValidationResult in dbEntityValidationResults)
+            {
+                var validationErrors = dbEntityValidationResult.ValidationErrors;
+                foreach (var dbValidationError in validationErrors)
+                {
+                    modelState.AddModelError(string.Empty, dbValidationError.ErrorMessage);
+                    hasError = true;
+                }
+            }
+            return hasError;
         }
     }
 
@@ -38,16 +82,17 @@ namespace Dentist.Models
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
         }
         
+        [Obsolete]        
         public override int SaveChanges()
         {
             bool isReadOnlyContext = (this.Configuration.ProxyCreationEnabled == false);
             if (isReadOnlyContext)
             {
                 throw new Exception("Please use write context");
-            }
+            }            
             return base.SaveChanges();
         }
-       
+
         public System.Data.Entity.DbSet<Dentist.Models.Practice> Practices { get; set; }
 
         public System.Data.Entity.DbSet<Dentist.Models.Paitient> Paitients { get; set; }
@@ -61,6 +106,7 @@ namespace Dentist.Models
         public System.Data.Entity.DbSet<Dentist.Models.DailyAvailabilitySetting> DailyAvailabilitySettings { get; set; }
         public System.Data.Entity.DbSet<Dentist.Models.CalenderSetting> CalenderSettings { get; set; }
         public System.Data.Entity.DbSet<Dentist.Models.File> Files { get; set; }
+        public System.Data.Entity.DbSet<Dentist.Models.Service> Services { get; set; }
     }
 
    

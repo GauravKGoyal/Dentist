@@ -17,8 +17,8 @@ namespace Dentist.Controllers
         public ActionResult GetAppointmentBrowserItems([DataSourceRequest] DataSourceRequest request, int personId)
         {
             var query = ReadContext.Appointments
-                        .Include(x=>x.Patient)
-                        .Include(x=>x.Practice)
+                        .Include(x => x.Patient)
+                        .Include(x => x.Practice)
                         .Where(x => x.DoctorId == personId || x.PatientId == personId)
                         .ProjectTo<AppointmentViewModel>();
 
@@ -32,13 +32,14 @@ namespace Dentist.Controllers
             {
                 var appointment = Mapper.Map<Appointment>(viewModel);
                 WriteContext.Appointments.Add(appointment);
-                WriteContext.SaveChanges();
+                WriteContext.TrySaveChanges(ModelState);
+                
                 // load second person before updating the viewModel
                 WriteContext.Appointments
                     .Include(x => x.Patient)
                     .Include(x => x.Practice)
                     .First(x => x.Id == appointment.Id);
-                Mapper.Map(appointment, viewModel);
+                Mapper.Map(appointment, viewModel);                
             }
 
             // Return the inserted product. The grid needs the generated id. Also return any validation errors.
@@ -51,9 +52,9 @@ namespace Dentist.Controllers
             {
                 var appointment = ReadContext.Appointments.First(x => x.Id == viewModel.Id);
                 Mapper.Map(viewModel, appointment);
-                ReadContext.SaveChanges();
+                WriteContext.TrySaveChanges(ModelState);
                 // load second person before updating the viewModel
-                ReadContext.Appointments
+                WriteContext.Appointments
                     .Include(x => x.Patient)
                     .Include(x => x.Practice)
                     .First(x => x.Id == appointment.Id);
@@ -68,9 +69,9 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var appointment = ReadContext.Appointments.First(x => x.Id == viewModel.Id);
-                ReadContext.Appointments.Remove(appointment);
-                ReadContext.SaveChanges();
+                var appointment = WriteContext.Appointments.First(x => x.Id == viewModel.Id);
+                WriteContext.Appointments.Remove(appointment);
+                WriteContext.TrySaveChanges(ModelState);
             }
 
             // Return the removed item. Also return any validation errors.
@@ -80,10 +81,10 @@ namespace Dentist.Controllers
         public ActionResult GetDailyAvailabilityBrowserItems([DataSourceRequest] DataSourceRequest request, int personId)
         {
             var query = ReadContext.DailyAvailabilities
-                        .Include(x=>x.Practice)
+                        .Include(x => x.Practice)
                         .Where(x => x.DoctorId == personId)
                         .ProjectTo<DailyAvailabilityViewModel>();
-            
+
             var result = query.ToDataSourceResult(request);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -93,8 +94,8 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var dailyAvailability = Mapper.Map<DailyAvailability>(viewModel);
-                ReadContext.DailyAvailabilities.Add(dailyAvailability);
-                ReadContext.SaveChanges();
+                WriteContext.DailyAvailabilities.Add(dailyAvailability);
+                WriteContext.TrySaveChanges(ModelState);
                 // load practice to load practice name
                 var practice = dailyAvailability.Practice;
             }
@@ -107,9 +108,9 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var dailyAvailability = ReadContext.DailyAvailabilities.First(x => x.Id == viewModel.Id);
+                var dailyAvailability = WriteContext.DailyAvailabilities.First(x => x.Id == viewModel.Id);
                 Mapper.Map(viewModel, dailyAvailability);
-                ReadContext.SaveChanges();
+                WriteContext.TrySaveChanges(ModelState);
                 // load practice to load practice name
                 var practice = dailyAvailability.Practice;
             }
@@ -122,9 +123,9 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var dailyAvailability = ReadContext.DailyAvailabilities.First(x => x.Id == viewModel.Id);
-                ReadContext.DailyAvailabilities.Remove(dailyAvailability);
-                ReadContext.SaveChanges();
+                var dailyAvailability = WriteContext.DailyAvailabilities.First(x => x.Id == viewModel.Id);
+                WriteContext.DailyAvailabilities.Remove(dailyAvailability);
+                WriteContext.TrySaveChanges(ModelState);
             }
 
             // Return the removed item. Also return any validation errors.

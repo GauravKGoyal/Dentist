@@ -7,7 +7,7 @@ namespace Dentist.Controllers
     public class BaseController : Controller
     {
         private ApplicationDbContext _readContext;
-        private ApplicationDbContext _writeContext;
+        private WriteContext _writeContext;
         public BaseController()
         {
         }
@@ -27,13 +27,13 @@ namespace Dentist.Controllers
         }
 
 
-        public ApplicationDbContext WriteContext
+        public WriteContext WriteContext
         {
             get
             {
                 if (_writeContext == null)
                 {
-                    _writeContext = new ApplicationDbContext();
+                    _writeContext = new WriteContext();
                     _writeContext.Configuration.ProxyCreationEnabled = true;
                     _writeContext.Configuration.LazyLoadingEnabled = true;
                 }

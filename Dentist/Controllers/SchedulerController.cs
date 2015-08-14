@@ -136,18 +136,18 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var appointment = ReadContext.Appointments.First(x => x.Id == view.Id);
+                var appointment = WriteContext.Appointments.First(x => x.Id == view.Id);
                 Mapper.Map(view, appointment);
                 // do not load patient before mapping view to the appointment 
                 // because during update process view patient may have been replaced 
                 // with new patient therefore mapping view to the appointment may have updated the appointment's paitient link
-                ReadContext.Paitients.Find(appointment.PatientId);
+                WriteContext.Paitients.Find(appointment.PatientId);
                 appointment.Patient.FirstName = view.FirstName;
                 appointment.Patient.LastName = view.LastName;
                 appointment.Patient.Phone = view.Phone;
-                ReadContext.SaveChanges();
+                WriteContext.TrySaveChanges(ModelState);
                 // load practice to update the practice color
-                appointment.Practice = ReadContext.Practices.Find(appointment.PracticeId);
+                appointment.Practice = WriteContext.Practices.Find(appointment.PracticeId);
                 Mapper.Map(appointment, view);
             }
 
@@ -159,9 +159,9 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var appointment = ReadContext.Appointments.First(x => x.Id == view.Id);
-                ReadContext.Appointments.Remove(appointment);
-                ReadContext.SaveChanges();
+                var appointment = WriteContext.Appointments.First(x => x.Id == view.Id);
+                WriteContext.Appointments.Remove(appointment);
+                WriteContext.SaveChanges();
             }
 
             // Return the removed item. Also return any validation errors.

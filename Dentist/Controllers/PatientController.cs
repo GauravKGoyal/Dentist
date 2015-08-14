@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Dentist.Enums;
+using Dentist.Helpers;
 using Dentist.Models;
 using Dentist.ViewModels;
 using Kendo.Mvc.Extensions;
@@ -50,7 +51,7 @@ namespace Dentist.Controllers
         {
             var query = ReadContext
                 .Paitients
-                .Where(x=>x.IsDeleted != true);
+                .Where(x => x.IsDeleted != true);
             query = query.Where(x => x.PersonRole == PersonRole.Patient);
             var projectedQuery = query.ProjectTo<PatientListViewModel>();
 
@@ -78,11 +79,10 @@ namespace Dentist.Controllers
                 var patient = Paitient.New(WriteContext);
                 Mapper.Map(viewModel, patient);
                 patient.Practice = WriteContext.Practices.Find(viewModel.PatientViewPracticeId);
-                WriteContext.SaveChanges();
-
-                if (Request.Form["btnSubmit"] == "Save and Close")
-                    return RedirectToAction("Index");
-                return RedirectToAction("Edit", new { @id = patient.Id });
+                if (WriteContext.TrySaveChanges(ModelState))
+                {
+                    return Request.FormSaveAndCloseClicked() ? RedirectToAction("Index") : RedirectToAction("Edit", new { @id = patient.Id });
+                }
             }
 
             return View(viewModel);
@@ -94,9 +94,9 @@ namespace Dentist.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            
+
             var patient = ReadContext.Paitients
-                            .Include(x =>x.Address)
+                            .Include(x => x.Address)
                             .Include(x => x.Practice)
                             .First(x => x.Id == id);
 
@@ -115,15 +115,14 @@ namespace Dentist.Controllers
         public ActionResult Edit(PatientViewModel viewModel)
         {
             if (ModelState.IsValid)
-            {                
+            {
                 var patient = Paitient.Find(WriteContext, viewModel.Id);
                 Mapper.Map(viewModel, patient);
                 patient.Practice = WriteContext.Practices.Find(viewModel.PatientViewPracticeId);
-                WriteContext.SaveChanges();
-
-                if (Request.Form["btnSubmit"] == "Save and Close")
-                    return RedirectToAction("Index");
-                return RedirectToAction("Edit", new { @id = patient.Id });
+                if (WriteContext.TrySaveChanges(ModelState))
+                {
+                    return Request.FormSaveAndCloseClicked() ? RedirectToAction("Index") : RedirectToAction("Edit", new { @id = patient.Id });
+                }
             }
             return View("Create", viewModel);
         }
@@ -131,9 +130,9 @@ namespace Dentist.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            Paitient.Delete(WriteContext,id);
+            Paitient.Delete(WriteContext, id);
             WriteContext.SaveChanges();
-            return Json(new {Success=true});
+            return Json(new { Success = true });
         }
 
     }

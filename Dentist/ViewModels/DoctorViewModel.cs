@@ -29,14 +29,34 @@ namespace Dentist.ViewModels
                     .ToList();    
         }
 
+        public List<int> Services { get; set; }
+
+        public List<int> ServiceIdsToRemove(Doctor doctor)
+        {
+            return doctor.Services.Where(service => !Services.Contains(service.Id)).Select(x => x.Id).ToList();
+        }
+
+        public List<int> ServiceIdsToAdd(Doctor doctor)
+        {           
+            return Services.Where(serviceId => doctor.Services.All(service => service.Id != serviceId))
+                    .ToList();
+        }
+
         public void CopyTo(Doctor doctor)
         {
+             base.CopyTo(doctor);
              Mapper.Map(this, doctor);
 
              if (UploadedAvatarFile != null)
              { 
                 doctor.Files.Add(UploadedAvatarFile);
              }
+        }
+
+        public void CopyFrom(Doctor doctor)
+        {
+            base.CopyFrom(doctor);
+            Mapper.Map(doctor, this);
         }
     }
 }

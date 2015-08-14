@@ -85,6 +85,19 @@
             @Html.ValidationMessageFor(model => model.Color, "", new { @class = "text-danger" })
         </div>
     </div>
+    @*<div class="form-group">
+        @Html.LabelFor(model => model.Services, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @(Html.Kendo().MultiSelectFor(model => model.Practices)
+                  .DataTextField("Text")
+                  .DataValueField("Id")
+                  .Placeholder("--Select--")
+                  .HtmlAttributes(new { style = "width:100%" })
+                  .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "Practice")))
+            )
+            @Html.ValidationMessageFor(model => model.Practices, "", new { @class = "text-danger" })
+        </div>
+    </div>*@
 </div>
 <div class="col-md-6 ">
     <div class="form-group">
@@ -116,18 +129,26 @@
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(model => model.UploadedAvatar, htmlAttributes: new { @class = "control-label col-md-4" })
-        <div class="col-md-10">
-            <input type="file" id="UploadedAvatar" name="UploadedAvatar" />
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-8">
+            <input title="Upload profile pic" type="file" id="UploadedAvatar" name="UploadedAvatar" />
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-2">
+        <div class="col-md-7">
         </div>
-        <div class="col-md-10">
-            <img src="~/File/Get?id=" @Model.AvatarId alt="avatar" />            
+        <div class="col-md-5">
+            <img class="img-thumbnail" src="~/File/Get?id=@Model.AvatarId" alt="avatar" />
         </div>
     </div>
-
-
 </div>
+
+<script>
+    $(document).on('change', '.btn-file :file', function () {
+        var input = $(this),
+            numFiles = input.get(0).files ? input.get(0).files.length : 1,
+            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+        input.trigger('fileselect', [numFiles, label]);
+    });
+</script>

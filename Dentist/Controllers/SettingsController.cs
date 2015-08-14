@@ -30,14 +30,14 @@ namespace Dentist.Controllers
             if (ModelState.IsValid)
             {
                 var idsToLoad = dailyAvailabilitySettingViewModels.Select(x => x.Id);
-                var loadedDailyAvailabilitySettings = ReadContext.DailyAvailabilitySettings.Where(x => idsToLoad.Contains(x.Id));
+                var loadedDailyAvailabilitySettings = WriteContext.DailyAvailabilitySettings.Where(x => idsToLoad.Contains(x.Id));
                 foreach (var dailyAvailabilitySetting in loadedDailyAvailabilitySettings)
                 {
                     var id = dailyAvailabilitySetting.Id;
                     var viewModel = dailyAvailabilitySettingViewModels.Single(x => x.Id == id);
                     Mapper.Map(viewModel, dailyAvailabilitySetting);
                 }
-                ReadContext.SaveChanges();
+                WriteContext.TrySaveChanges(ModelState);
             }
 
             return Json(dailyAvailabilitySettingViewModels.ToDataSourceResult(request, ModelState));
@@ -55,9 +55,9 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var calenderSetting = ReadContext.CalenderSettings.FirstOrDefault();
+                var calenderSetting = WriteContext.CalenderSettings.FirstOrDefault();
                 Mapper.Map(calenderSettingViewModel, calenderSetting);
-                ReadContext.SaveChanges();
+                WriteContext.TrySaveChanges(ModelState);
             }
             return View(calenderSettingViewModel);
         }

@@ -135,7 +135,7 @@ namespace Dentist.Controllers
             Array daysOfWeek = Enum.GetValues(typeof(DayOfWeek));
             foreach (object dayOfWeek in daysOfWeek)
             {
-                ReadContext.DailyAvailabilitySettings.Add(new DailyAvailabilitySetting()
+                WriteContext.DailyAvailabilitySettings.Add(new DailyAvailabilitySetting()
                 {
                     DayOfWeek = (DayOfWeek)dayOfWeek,
                     IsWorking = true,
@@ -145,12 +145,12 @@ namespace Dentist.Controllers
                     EndTime2 = endTime2
                 });
             }
-            ReadContext.SaveChanges();
+            WriteContext.SaveChanges();
         }
 
         private void CreateDefaultCalenderSettings()
         {
-            ReadContext.CalenderSettings.Add(new CalenderSetting()
+            WriteContext.CalenderSettings.Add(new CalenderSetting()
             {
                 DayStartTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 8, 0, 0, 0),
                 DayEndTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 17, 0, 0, 0),
@@ -160,7 +160,7 @@ namespace Dentist.Controllers
                 WorkWeekEndDay = DayOfWeek.Friday
             });
 
-            ReadContext.SaveChanges();
+            WriteContext.SaveChanges();
         }
 
         //

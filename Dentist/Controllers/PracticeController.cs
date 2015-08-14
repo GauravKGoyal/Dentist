@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Dentist.Enums;
+using Dentist.Helpers;
 using Dentist.Models;
 using Dentist.ViewModels;
 using Kendo.Mvc.Extensions;
@@ -84,10 +85,10 @@ namespace Dentist.Controllers
             {
                 var practice = Mapper.Map<Practice>(viewModel);
                 WriteContext.Practices.Add(practice);
-                WriteContext.SaveChanges();
-                if (Request.Form["btnSubmit"] == "Save and Close")
-                    return RedirectToAction("Index");
-                return RedirectToAction("Edit", new { @id = practice.Id });
+                if (WriteContext.TrySaveChanges(ModelState))
+                { 
+                    return Request.FormSaveAndCloseClicked() ? RedirectToAction("Index") : RedirectToAction("Edit", new { @id = practice.Id });
+                }
             }
 
             return View(viewModel);
@@ -118,11 +119,10 @@ namespace Dentist.Controllers
                 WriteContext.Entry(practice).State = EntityState.Modified;
                 WriteContext.Entry(practice.Address).State = EntityState.Modified;
 
-                WriteContext.SaveChanges();
-
-                if (Request.Form["btnSubmit"] == "Save and Close")
-                    return RedirectToAction("Index");
-                return RedirectToAction("Edit", new { @id = practice.Id });
+                if (WriteContext.TrySaveChanges(ModelState))
+                {
+                    return (Request.FormSaveAndCloseClicked()) ? RedirectToAction("Index") : RedirectToAction("Edit", new { @id = practice.Id });   
+                }
             }
             return View("Create", viewModel);
         }
@@ -130,9 +130,9 @@ namespace Dentist.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            Practice practice = ReadContext.Practices.Find(id);
+            Practice practice = WriteContext.Practices.Find(id);
             practice.IsDeleted = true;
-            ReadContext.SaveChanges();
+            WriteContext.SaveChanges();
             return Json(new { Success = true });
         }
     }

@@ -39,7 +39,18 @@ namespace Dentist.Models
 
         public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            return new List<ValidationResult>();
+            var result = new List<ValidationResult>();
+            if (Files != null && Files.Count > 0)
+            {
+                Files.ForEach(f =>
+                {
+                    if (f.Content.Length > (1000*1000))
+                    {
+                        result.Add(new ValidationResult("File cannot be bigger than 1 Mb"));
+                    }
+                });
+            }
+            return result;
         }
     }
 }

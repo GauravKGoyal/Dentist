@@ -28,7 +28,7 @@ namespace Dentist.Models
 
             if (Practice == null && PracticeId == 0)
             {
-                results.Add(new ValidationResult("Paitient has to be registered with a practice"));
+                results.Add(new ValidationResult("Paitient can not be registered without a practice"));
             }
             return results;
         }

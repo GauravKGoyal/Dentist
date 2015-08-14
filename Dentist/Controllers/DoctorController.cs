@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Dentist.Enums;
+using Dentist.Helpers;
 using Dentist.Models;
 using Dentist.ViewModels;
 using Kendo.Mvc.Extensions;
@@ -75,15 +76,16 @@ namespace Dentist.Controllers
                 var doctor = Doctor.New(WriteContext);
                 viewModel.CopyTo(doctor);
                 doctor.AddPractices(viewModel.Practices);
-                WriteContext.SaveChanges();
-
-                if (Request.Form["btnSubmit"] == "Save and Close")
-                    return RedirectToAction("Index");
-                return RedirectToAction("Edit", new { @id = doctor.Id });
+                doctor.AddServices(viewModel.Services);
+                if (WriteContext.TrySaveChanges(ModelState))
+                {
+                    return Request.FormSaveAndCloseClicked() ?  RedirectToAction("Index") :  RedirectToAction("Edit", new { @id = doctor.Id });
+                }
             }
 
             return View(viewModel);
         }
+
 
         public ActionResult Edit(int? id)
         {
@@ -95,12 +97,14 @@ namespace Dentist.Controllers
             var doctor = ReadContext.Doctors
                             .Include(x => x.Address)
                             .Include(x=> x.Practices)
+                            .Include(x=> x.Files)
                             .First(x => x.Id == id);
             if (doctor.PersonRole != PersonRole.Doctor)
             {
                 throw new Exception(string.Format("Person with id {0} is not a doctor", id));
             }
-            var doctorView = Mapper.Map<DoctorViewModel>(doctor);
+            var doctorView = new DoctorViewModel();
+            doctorView.CopyFrom(doctor);
 
             return View("Create", doctorView);
         }
@@ -115,11 +119,12 @@ namespace Dentist.Controllers
                 viewModel.CopyTo(doctor);
                 doctor.RemovePractices(viewModel.PracticeIdsToRemove(doctor));
                 doctor.AddPractices(viewModel.PracticeIdsToAdd(doctor));
-                WriteContext.SaveChanges();
-
-                if (Request.Form["btnSubmit"] == "Save and Close")
-                    return RedirectToAction("Index");
-                return RedirectToAction("Edit", new { @id = doctor.Id });
+                //doctor.RemoveServices(viewModel.ServiceIdsToRemove(doctor));
+                //doctor.AddServices(viewModel.ServiceIdsToAdd(doctor));
+                if (WriteContext.TrySaveChanges(ModelState))
+                {
+                    return Request.FormSaveAndCloseClicked() ? RedirectToAction("Index") : RedirectToAction("Edit", new { @id = doctor.Id });
+                }
             }
             return View("Create", viewModel);
         }

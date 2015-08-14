@@ -12,6 +12,7 @@ namespace Dentist.ViewModels
 {
     public class PersonViewModel
     {
+        private File _uploadedAvatarFile;
         public int Id { get; set; }
 
         public HttpPostedFileBase UploadedAvatar { get; set; }
@@ -20,9 +21,9 @@ namespace Dentist.ViewModels
         {
             get
             {
-                if (UploadedAvatar != null && UploadedAvatar.ContentLength >0)
+                if (UploadedAvatar != null && UploadedAvatar.ContentLength > 0 && _uploadedAvatarFile == null)
                 {
-                    var avatar = new File
+                    _uploadedAvatarFile = new File
                     {
                         FileName = UploadedAvatar.FileName,
                         ContentType = UploadedAvatar.ContentType,
@@ -31,11 +32,10 @@ namespace Dentist.ViewModels
                     };
                     using (var reader = new BinaryReader(UploadedAvatar.InputStream))
                     {
-                        avatar.Content = reader.ReadBytes(UploadedAvatar.ContentLength);
+                        _uploadedAvatarFile.Content = reader.ReadBytes(UploadedAvatar.ContentLength);
                     }
-                    return avatar;
                 }
-                return null;
+                return _uploadedAvatarFile;
             }
         }
 
@@ -65,5 +65,13 @@ namespace Dentist.ViewModels
 
         public AddressViewModel Address { get; set; }
         public bool IsDeleted { get; set; }
+
+        protected virtual void CopyTo(Person person)
+        {
+        }
+        protected virtual void CopyFrom(Person person)
+        {
+            AvatarId = person.Files.Count > 0 ? person.Files[person.Files.Count - 1].Id : 0;
+        }
     }
 }
