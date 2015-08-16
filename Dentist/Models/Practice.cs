@@ -12,7 +12,7 @@ namespace Dentist.Models
         public string Email { get; set; }
         public string Website { get; set; }
         public virtual List<Paitient> Paitients { get; set; }
-        public virtual List<Doctor> Doctors { get; set; }
+        public virtual List<Doctor.Doctor> Doctors { get; set; }
 
         [InverseProperty("Practice")]
         public virtual List<Appointment> PracticeAppointments { get; set; }

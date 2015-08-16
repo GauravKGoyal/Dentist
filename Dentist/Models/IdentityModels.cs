@@ -4,6 +4,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Dentist.Models.Doctor;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -37,6 +38,12 @@ namespace Dentist.Models
                 return false;
             }            
 
+            base.SaveChanges();
+            return true;
+        }
+
+        public bool TrySaveChanges()
+        {
             base.SaveChanges();
             return true;
         }
@@ -96,7 +103,7 @@ namespace Dentist.Models
         public System.Data.Entity.DbSet<Dentist.Models.Practice> Practices { get; set; }
 
         public System.Data.Entity.DbSet<Dentist.Models.Paitient> Paitients { get; set; }
-        public System.Data.Entity.DbSet<Dentist.Models.Doctor> Doctors { get; set; }
+        public System.Data.Entity.DbSet<Doctor.Doctor> Doctors { get; set; }
 
         public System.Data.Entity.DbSet<Dentist.Models.Address> Addresses { get; set; }
 
@@ -106,7 +113,7 @@ namespace Dentist.Models
         public System.Data.Entity.DbSet<Dentist.Models.DailyAvailabilitySetting> DailyAvailabilitySettings { get; set; }
         public System.Data.Entity.DbSet<Dentist.Models.CalenderSetting> CalenderSettings { get; set; }
         public System.Data.Entity.DbSet<Dentist.Models.File> Files { get; set; }
-        public System.Data.Entity.DbSet<Dentist.Models.Service> Services { get; set; }
+        public System.Data.Entity.DbSet<Service> Services { get; set; }
     }
 
    

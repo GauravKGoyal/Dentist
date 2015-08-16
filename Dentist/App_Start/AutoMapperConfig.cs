@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Dentist.Models;
+using Dentist.Models.Doctor;
 using Dentist.ViewModels;
 
 namespace Dentist
@@ -27,16 +28,16 @@ namespace Dentist
                 .ForMember(d => d.PatientViewPracticeId, opt => opt.MapFrom(s => s.Practice.Id));
             Mapper.CreateMap<PatientViewModel, Paitient>().ForMember(d => d.Practice, opt => opt.Ignore());
 
+            Mapper.CreateMap<Service, int>().ConstructUsing(s => s.Id);
             Mapper.CreateMap<Doctor, DoctorViewModel>()
-                .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Id));
+                .ForMember(d => d.Address, opt => opt.MapFrom(s => s.Address));
 
-            Mapper.CreateMap<DoctorViewModel, Doctor>().ForMember(d => d.Practices, opt => opt.Ignore())
-                .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Id));
-
+            Mapper.CreateMap<DoctorViewModel, Doctor>()
+                .ForMember(d => d.Practices, opt => opt.Ignore())
+                .ForMember(d => d.Services, opt => opt.Ignore())
+                .ForMember(d => d.Address, opt => opt.MapFrom(s => s.Address));
 
             Mapper.CreateMap<Practice, int>().ConstructUsing(s => s.Id);
-
-
             Mapper.CreateMap<Practice, PracticeViewModel>();
             Mapper.CreateMap<PracticeViewModel, Practice>();
 

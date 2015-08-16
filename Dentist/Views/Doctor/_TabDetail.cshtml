@@ -85,19 +85,19 @@
             @Html.ValidationMessageFor(model => model.Color, "", new { @class = "text-danger" })
         </div>
     </div>
-    @*<div class="form-group">
+    <div class="form-group">
         @Html.LabelFor(model => model.Services, htmlAttributes: new { @class = "control-label col-md-4" })
         <div class="col-md-8">
-            @(Html.Kendo().MultiSelectFor(model => model.Practices)
+            @(Html.Kendo().MultiSelectFor(model => model.Services)
                   .DataTextField("Text")
                   .DataValueField("Id")
                   .Placeholder("--Select--")
                   .HtmlAttributes(new { style = "width:100%" })
-                  .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "Practice")))
+                  .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "Services")))
             )
-            @Html.ValidationMessageFor(model => model.Practices, "", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(model => model.Services, "", new { @class = "text-danger" })
         </div>
-    </div>*@
+    </div>
 </div>
 <div class="col-md-6 ">
     <div class="form-group">

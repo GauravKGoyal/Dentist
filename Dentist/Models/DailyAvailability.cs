@@ -8,7 +8,7 @@ namespace Dentist.Models
         public DayOfWeek DayOfWeek { get; set; }
 
         public int DoctorId { get; set; }
-        public virtual Doctor Doctor { get; set; }
+        public virtual Doctor.Doctor Doctor { get; set; }
 
         public int PracticeId { get; set; }
         public virtual Practice Practice { get; set; }

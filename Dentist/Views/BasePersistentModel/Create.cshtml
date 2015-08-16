@@ -1,0 +1,42 @@
+﻿@using System.Collections
+@using Dentist.Helpers
+@model dynamic
+
+@{
+    var isCreate = Model == null || Model.Id == 0;
+    ViewBag.Title = isCreate ? "Create" : "Edit - " + Model.Name;
+    string controllerName = ViewBag.ControllerName;
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="col-md-12">
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @*@Html.EditorFor(model => model)*@
+            @foreach (var property in DefaultScaffoldingExtensions.VisibleProperties(Model))
+            {
+                if ((property.PropertyType != typeof(string)) &&
+                    (typeof (IEnumerable).IsAssignableFrom(property.PropertyType)))
+                {
+                    continue;
+                }
+                
+                <div class="form-group">
+                    @{ string propertyName = property.Name; }
+                    <label class="control-label col-md-3" for=@propertyName>@propertyName</label>
+                    <div class="col-md-9">
+                        @Html.Editor(propertyName, new { @class = "form-control" })
+                        @Html.ValidationMessage(propertyName, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+            }
+        </div>
+        <hr>
+        <button class="btn btn-primary" value="Save" type="submit" name="btnSubmit"><span class="k-icon k-update"></span> Save</button>
+        <button class="btn btn-default" value="Save and Close" type="submit" name="btnSubmit"><span class="k-icon k-update"></span> Save and Close</button>
+        <a href="@Url.Action("Index", controllerName)" class="btn btn-default"><span class="k-icon k-cancel"></span> Close</a>
+
+    </div>
+}

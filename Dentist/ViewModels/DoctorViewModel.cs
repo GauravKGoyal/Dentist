@@ -3,11 +3,17 @@ using AutoMapper;
 using Dentist.Helpers;
 using Dentist.Models;
 using System.Linq;
+using Dentist.Models.Doctor;
 
 namespace Dentist.ViewModels
 {
     public class DoctorViewModel : PersonViewModel
     {
+        public DoctorViewModel()
+        {
+            Services = new List<int>();
+        }
+
         public bool IsDoctor
         {
             get { return true; }
@@ -37,7 +43,7 @@ namespace Dentist.ViewModels
         }
 
         public List<int> ServiceIdsToAdd(Doctor doctor)
-        {           
+        {
             return Services.Where(serviceId => doctor.Services.All(service => service.Id != serviceId))
                     .ToList();
         }
@@ -45,7 +51,7 @@ namespace Dentist.ViewModels
         public void CopyTo(Doctor doctor)
         {
              base.CopyTo(doctor);
-             Mapper.Map(this, doctor);
+             Mapper.DynamicMap(this, doctor);
 
              if (UploadedAvatarFile != null)
              { 
@@ -56,7 +62,7 @@ namespace Dentist.ViewModels
         public void CopyFrom(Doctor doctor)
         {
             base.CopyFrom(doctor);
-            Mapper.Map(doctor, this);
+            Mapper.DynamicMap(doctor, this);
         }
     }
 }

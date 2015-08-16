@@ -16,7 +16,7 @@ namespace Dentist.Models
         public int DoctorId { get; set; }
 
         [InverseProperty("Appointments")]
-        public Doctor Doctor { get; set; }
+        public Doctor.Doctor Doctor { get; set; }
 
         public int PatientId { get; set; }
 

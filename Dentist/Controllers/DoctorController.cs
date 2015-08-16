@@ -8,6 +8,7 @@ using AutoMapper.QueryableExtensions;
 using Dentist.Enums;
 using Dentist.Helpers;
 using Dentist.Models;
+using Dentist.Models.Doctor;
 using Dentist.ViewModels;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
@@ -97,6 +98,7 @@ namespace Dentist.Controllers
             var doctor = ReadContext.Doctors
                             .Include(x => x.Address)
                             .Include(x=> x.Practices)
+                            .Include(x=> x.Services)
                             .Include(x=> x.Files)
                             .First(x => x.Id == id);
             if (doctor.PersonRole != PersonRole.Doctor)
@@ -119,8 +121,8 @@ namespace Dentist.Controllers
                 viewModel.CopyTo(doctor);
                 doctor.RemovePractices(viewModel.PracticeIdsToRemove(doctor));
                 doctor.AddPractices(viewModel.PracticeIdsToAdd(doctor));
-                //doctor.RemoveServices(viewModel.ServiceIdsToRemove(doctor));
-                //doctor.AddServices(viewModel.ServiceIdsToAdd(doctor));
+                doctor.RemoveServices(viewModel.ServiceIdsToRemove(doctor));
+                doctor.AddServices(viewModel.ServiceIdsToAdd(doctor));
                 if (WriteContext.TrySaveChanges(ModelState))
                 {
                     return Request.FormSaveAndCloseClicked() ? RedirectToAction("Index") : RedirectToAction("Edit", new { @id = doctor.Id });
