@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Dentist.Enums;
+using Dentist.Models.Tags;
 
 namespace Dentist.Models
 {
@@ -12,9 +13,6 @@ namespace Dentist.Models
         {
             PersonRole = PersonRole.Patient;
         }
-
-        [NotMapped]
-        public ApplicationDbContext Context { get; set; }
 
         [InverseProperty("Patient")]
         public virtual List<Appointment> PatientAppointments { get; set; }
@@ -31,27 +29,6 @@ namespace Dentist.Models
                 results.Add(new ValidationResult("Paitient can not be registered without a practice"));
             }
             return results;
-        }
-
-        public static Paitient New(ApplicationDbContext context)
-        {
-            var entity = new Paitient { Context = context };
-            context.Paitients.Add(entity);
-            return entity;
-        }
-
-        public static Paitient Find(ApplicationDbContext context, int id)
-        {
-            var entity = context.Paitients.Find(id);
-            entity.Context = context;
-            return entity;
-        }
-
-        public static void Delete(ApplicationDbContext context, int id)
-        {
-            var entity = context.Paitients.Find(id);
-            entity.Context = context;
-            entity.IsDeleted = true;
         }
     }
 }

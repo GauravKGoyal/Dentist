@@ -28,7 +28,7 @@ namespace Dentist
                 .ForMember(d => d.PatientViewPracticeId, opt => opt.MapFrom(s => s.Practice.Id));
             Mapper.CreateMap<PatientViewModel, Paitient>().ForMember(d => d.Practice, opt => opt.Ignore());
 
-            Mapper.CreateMap<Service, int>().ConstructUsing(s => s.Id);
+            Mapper.CreateMap<CareService, int>().ConstructUsing(s => s.Id);
             Mapper.CreateMap<Doctor, DoctorViewModel>()
                 .ForMember(d => d.Address, opt => opt.MapFrom(s => s.Address));
 
@@ -41,8 +41,8 @@ namespace Dentist
             Mapper.CreateMap<Practice, PracticeViewModel>();
             Mapper.CreateMap<PracticeViewModel, Practice>();
 
-            //Mapper.CreateMap<Service, ServiceViewModel>();
-            //Mapper.CreateMap<ServiceViewModel, Service>();
+            //Mapper.CreateMap<CareService, ServiceViewModel>();
+            //Mapper.CreateMap<ServiceViewModel, CareService>();
 
             Mapper.CreateMap<Address, AddressViewModel>();
             Mapper.CreateMap<AddressViewModel, Address>();

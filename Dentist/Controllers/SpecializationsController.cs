@@ -2,7 +2,7 @@
 
 namespace Dentist.Controllers
 {
-    public class SpecializationsController : BasePersistentModelController<Specialization>
+    public class SpecializationsController : CrudController<Specialization>
     {
         public SpecializationsController()
             : base("Specializations")

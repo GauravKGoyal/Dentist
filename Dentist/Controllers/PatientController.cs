@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -76,9 +75,10 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var patient = Paitient.New(WriteContext);
+                var patient = new Paitient();
                 Mapper.Map(viewModel, patient);
                 patient.Practice = WriteContext.Practices.Find(viewModel.PatientViewPracticeId);
+                WriteContext.Paitients.Add(patient);
                 if (WriteContext.TrySaveChanges(ModelState))
                 {
                     return Request.FormSaveAndCloseClicked() ? RedirectToAction("Index") : RedirectToAction("Edit", new { @id = patient.Id });
@@ -116,7 +116,7 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var patient = Paitient.Find(WriteContext, viewModel.Id);
+                var patient = WriteContext.Paitients.Find(viewModel.Id);
                 Mapper.Map(viewModel, patient);
                 patient.Practice = WriteContext.Practices.Find(viewModel.PatientViewPracticeId);
                 if (WriteContext.TrySaveChanges(ModelState))
@@ -130,10 +130,26 @@ namespace Dentist.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            Paitient.Delete(WriteContext, id);
-            WriteContext.SaveChanges();
-            return Json(new { Success = true });
+            var errorMessage = "";
+            var patient = WriteContext.Paitients.Find(id);
+            patient.IsDeleted = true;
+            var changesSaved = WriteContext.TrySaveChanges(out errorMessage);
+            return Json(new { Success = changesSaved, ErrorMessage = errorMessage });
         }
+
+        //private IPatientService _patientService;
+        //public IPatientService PatientService
+        //{
+        //    get
+        //    {
+        //        if (_patientService == null)
+        //        {
+        //            _patientService = DependencyInjectionConfig.Container.Resolve<IPatientService>();
+        //        }
+        //        return _patientService;
+        //    }
+        //}
+
 
     }
 }

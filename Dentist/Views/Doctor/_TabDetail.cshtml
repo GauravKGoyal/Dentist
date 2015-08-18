@@ -93,7 +93,7 @@
                   .DataValueField("Id")
                   .Placeholder("--Select--")
                   .HtmlAttributes(new { style = "width:100%" })
-                  .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "Services")))
+                  .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "CareServices")))
             )
             @Html.ValidationMessageFor(model => model.Services, "", new { @class = "text-danger" })
         </div>

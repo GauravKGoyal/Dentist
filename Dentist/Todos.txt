@@ -1,5 +1,9 @@
 ﻿1 DONE Bug - Saving a doctor fails to save address 
 
 Knowledge to remember
-Lazy context will create object using proxy therefore initialization of properties in the constructor will be ignored. However read context will not ignore this
+1 - Lazy context will create object using proxy therefore initialization of properties in the constructor will be ignored. However read context will not ignore this
 when creating an new object using lazy loading you have to make sure that lists are initialized whereas when updating an existing object list should not be initialized
+2 - Domain Modelling
+3 - How EF gets us away from domain modelling by making collection public, having Ids 
+4 - Generic Controller with Generic Views
+5 - Ef doesnt load virtual objects during validations

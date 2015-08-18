@@ -3,7 +3,7 @@ using Dentist.ViewModels;
 
 namespace Dentist.Controllers
 {
-    public class MembershipsController : BasePersistentModelController<Membership>
+    public class MembershipsController : CrudController<Membership>
     {
         public MembershipsController()
             : base("Memberships")

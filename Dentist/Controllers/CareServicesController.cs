@@ -4,10 +4,10 @@ using Dentist.Models.Doctor;
 
 namespace Dentist.Controllers
 {
-    public class ServicesController : BasePersistentModelController<Service>
+    public class CareServicesController : CrudController<CareService>
     {
-        public ServicesController()
-            : base("Services")
+        public CareServicesController()
+            : base("CareServices")
         {
         }
 

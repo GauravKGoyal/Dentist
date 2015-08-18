@@ -125,7 +125,7 @@ namespace Dentist.Controllers
                 }
 
                 WriteContext.Appointments.Add(appointment);
-                WriteContext.SaveChanges();
+                WriteContext.TrySaveChanges(ModelState);
                 Mapper.Map(appointment, view);
             }
 
@@ -162,7 +162,7 @@ namespace Dentist.Controllers
             {
                 var appointment = WriteContext.Appointments.First(x => x.Id == view.Id);
                 WriteContext.Appointments.Remove(appointment);
-                WriteContext.SaveChanges();
+                WriteContext.TrySaveChanges(ModelState);
             }
 
             // Return the removed item. Also return any validation errors.

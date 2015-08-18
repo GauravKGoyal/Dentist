@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Dentist.Enums;
+using Dentist.Models.Tags;
 
 namespace Dentist.Models
-{    
-    public class Person : IValidatableObject, ISoftDelete
+{
+    public class Person : IValidatableObject, IModelWithIsDelete
     {
         public int Id { get; set; }
 

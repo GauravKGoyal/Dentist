@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Dentist.Models.Doctor;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using WebGrease.Css.Extensions;
 
 namespace Dentist.Models
 {
@@ -25,25 +28,36 @@ namespace Dentist.Models
 
     public class WriteContext : ApplicationDbContext
     {
-        public WriteContext():base()
+        public WriteContext()
+            : base()
         {
 
+        }
+
+        public bool TrySaveChanges(out string errorMessage)
+        {
+            errorMessage = "";
+            var modelState = new ModelStateDictionary();
+            var changesSaved = TrySaveChanges(modelState);
+            if (!changesSaved)
+            {
+                errorMessage = string.Join("; ", modelState.Values
+                    .SelectMany(x => x.Errors)
+                    .Select(x => x.ErrorMessage));
+            }
+            return changesSaved;
         }
 
         public bool TrySaveChanges(ModelStateDictionary modelState)
         {
-            bool hasError = AddModelErrors(modelState, this);
+            bool hasError = GetValidationErrors().Any();
+
             if (hasError)
             {
+                AddModelErrors(this, modelState);
                 return false;
-            }            
+            }
 
-            base.SaveChanges();
-            return true;
-        }
-
-        public bool TrySaveChanges()
-        {
             base.SaveChanges();
             return true;
         }
@@ -54,9 +68,8 @@ namespace Dentist.Models
             return base.SaveChanges();
         }
 
-        private bool AddModelErrors(ModelStateDictionary modelState, ApplicationDbContext writeContext)
+        private void AddModelErrors(ApplicationDbContext writeContext, ModelStateDictionary modelState)
         {
-            var hasError = false;
             var dbEntityValidationResults = writeContext.GetValidationErrors();
             foreach (var dbEntityValidationResult in dbEntityValidationResults)
             {
@@ -64,10 +77,8 @@ namespace Dentist.Models
                 foreach (var dbValidationError in validationErrors)
                 {
                     modelState.AddModelError(string.Empty, dbValidationError.ErrorMessage);
-                    hasError = true;
                 }
             }
-            return hasError;
         }
     }
 
@@ -76,7 +87,7 @@ namespace Dentist.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
-        }     
+        }
 
         public static ApplicationDbContext Create()
         {
@@ -88,15 +99,15 @@ namespace Dentist.Models
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
         }
-        
-        [Obsolete]        
+
+        [Obsolete]
         public override int SaveChanges()
         {
             bool isReadOnlyContext = (this.Configuration.ProxyCreationEnabled == false);
             if (isReadOnlyContext)
             {
                 throw new Exception("Please use write context");
-            }            
+            }
             return base.SaveChanges();
         }
 
@@ -113,8 +124,8 @@ namespace Dentist.Models
         public System.Data.Entity.DbSet<Dentist.Models.DailyAvailabilitySetting> DailyAvailabilitySettings { get; set; }
         public System.Data.Entity.DbSet<Dentist.Models.CalenderSetting> CalenderSettings { get; set; }
         public System.Data.Entity.DbSet<Dentist.Models.File> Files { get; set; }
-        public System.Data.Entity.DbSet<Service> Services { get; set; }
+        public System.Data.Entity.DbSet<CareService> Services { get; set; }
     }
 
-   
+
 }

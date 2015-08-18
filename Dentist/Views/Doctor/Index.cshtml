@@ -6,6 +6,8 @@
     var pageSizeArray = new[] {20, 50, 100};
 }
 
+<script src="~/Scripts/gridHelper.js"></script>
+
 @(Html.Kendo().Grid<DoctorListViewModel>().Name("grdDoctor")
           .DataSource(dataSource => dataSource.Ajax().Model(model => model.Id(x => x.Id))
               .PageSize(pageSizeArray[0])
@@ -32,7 +34,7 @@
           })
           .Resizable(resizable => resizable.Columns(true))
               .ToolBar(toolbar => { toolbar.Custom().Name("Create").Action("Create", "Doctor"); })
-              .Events(e => e.DataBound("grdDoctor_onDataBound"))
+              .Events(e => e.DataBound("grd_onDataBound"))
           .Pageable(pager =>
           {
               pager.PageSizes(pageSizeArray);
@@ -43,34 +45,15 @@
           .Filterable()              
 )
 
+
 <script>
-    $(function() {
-       
-    });
-
-    function grdDoctor_onDataBound(args) {
-        $(".k-grid-Edit").find("span").addClass("k-icon k-edit");
-        $(".k-grid-Delete").find("span").addClass("k-icon k-delete");
-        $(".k-grid-Create").find("span").addClass("k-icon k-add");
-    }
-
     function grdDoctor_onEdit(e) {
         e.preventDefault();
-        var id = $("#grdDoctor").data("kendoGrid").dataItem($(e.currentTarget).closest("tr")).Id;
-        window.location.href = "@Url.Action("Edit", "Doctor")" + "/" + id;
+        EditGridRow(e, $("#grdDoctor"), '@Url.Action("Edit", "Doctor")');
     }
 
     function grdDoctor_onDelete(e) {
         e.preventDefault();
-        if (confirm('Are you sure you want to delete this record ?')) {
-            var id = $("#grdDoctor").data("kendoGrid").dataItem($(e.currentTarget).closest("tr")).Id;
-            $.post('@Url.Action("Delete", "Doctor")' + '?id=' + id, function (data) {
-                if (data !== undefined && data !== null && data.Success == 1) {
-                    $('#grdDoctor').data('kendoGrid').dataSource.read();
-                    $('#grdDoctor').data('kendoGrid').refresh();
-                }
-            });
-        }
+        DeleteGridRow(e, $("#grdDoctor"), '@Url.Action("Delete", "Doctor")');
     }
-
 </script>

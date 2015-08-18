@@ -3,12 +3,15 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using Autofac;
+using Autofac.Core;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Dentist.Enums;
 using Dentist.Helpers;
 using Dentist.Models;
 using Dentist.Models.Doctor;
+using Dentist.Services;
 using Dentist.ViewModels;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
@@ -74,10 +77,12 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var doctor = Doctor.New(WriteContext);
+                var doctor = new Doctor();
+                doctor.Context = WriteContext;
                 viewModel.CopyTo(doctor);
                 doctor.AddPractices(viewModel.Practices);
                 doctor.AddServices(viewModel.Services);
+                WriteContext.Doctors.Add(doctor);
                 if (WriteContext.TrySaveChanges(ModelState))
                 {
                     return Request.FormSaveAndCloseClicked() ?  RedirectToAction("Index") :  RedirectToAction("Edit", new { @id = doctor.Id });
@@ -117,7 +122,8 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var doctor = Doctor.Find(WriteContext, viewModel.Id);
+                var doctor = WriteContext.Doctors.Find(viewModel.Id);
+                doctor.Context = WriteContext;
                 viewModel.CopyTo(doctor);
                 doctor.RemovePractices(viewModel.PracticeIdsToRemove(doctor));
                 doctor.AddPractices(viewModel.PracticeIdsToAdd(doctor));
@@ -134,10 +140,29 @@ namespace Dentist.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            Doctor.Delete(WriteContext, id);
-            WriteContext.SaveChanges();
-            return Json(new { Success = true });
+            var errorMessage = "";
+            Doctor doctor = WriteContext
+                .Doctors
+                .Include(x => x.Practices)
+                .First(x => x.Id == id);
+            doctor.Context = WriteContext;
+            doctor.IsDeleted = true;
+            var changesSaved = WriteContext.TrySaveChanges(out errorMessage);            
+            return Json(new { Success = changesSaved, ErrorMessage = errorMessage });
         }
+
+        //private IDoctorService _doctorService;
+        //public IDoctorService DoctorService
+        //{
+        //    get 
+        //    {
+        //        if (_doctorService == null)
+        //        {
+        //            _doctorService = DependencyInjectionConfig.Container.Resolve<IDoctorService>();
+        //        }
+        //        return _doctorService;
+        //    } 
+        //}
 
     }
 }

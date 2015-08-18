@@ -40,6 +40,11 @@ namespace Dentist
             // Register your MVC controllers.
             Builder.RegisterControllers(typeof(MvcApplication).Assembly);
 
+            Builder.RegisterAssemblyTypes(typeof(MvcApplication).Assembly)
+                .Where(t => t.Name.EndsWith("Service"))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
             // Register context
             //Builder.Register(c => new ApplicationDbContext())
             //    .InstancePerLifetimeScope()

@@ -182,8 +182,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DoctorController.cs" />
     <Compile Include="Controllers\FileController.cs" />
-    <Compile Include="Controllers\BasePersistentModelController.cs" />
-    <Compile Include="Controllers\GridController.cs" />
+    <Compile Include="Controllers\CrudController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PatientController.cs" />
     <Compile Include="Controllers\PracticeController.cs" />
@@ -191,7 +190,7 @@
     <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Controllers\MembershipsController.cs" />
     <Compile Include="Controllers\SpecializationsController.cs" />
-    <Compile Include="Controllers\ServicesController.cs" />
+    <Compile Include="Controllers\CareServicesController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\TryController.cs" />
     <Compile Include="Enums\Enums.cs" />
@@ -226,18 +225,24 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Appointment.cs" />
-    <Compile Include="Models\BasePersistentModel.cs" />
+    <Compile Include="Models\Tags\IModelWithIsDelete.cs" />
+    <Compile Include="Models\Tags\IModelWithWriteContext.cs" />
+    <Compile Include="Models\Tags\IModelWithId.cs" />
     <Compile Include="Models\Doctor\Award.cs" />
     <Compile Include="Models\Doctor\Experience.cs" />
     <Compile Include="Models\File.cs" />
     <Compile Include="Models\FileType.cs" />
     <Compile Include="Models\Doctor\Qualification.cs" />
     <Compile Include="Models\Doctor\Specialization.cs" />
-    <Compile Include="Models\ModelWithName.cs" />
-    <Compile Include="Models\ISoftDelete.cs" />
+    <Compile Include="Models\Tags\IModelWithName.cs" />
+    <Compile Include="Models\CrudControllerGridLine.cs" />
     <Compile Include="Models\Doctor\Membership.cs" />
     <Compile Include="Models\Doctor\Registration.cs" />
-    <Compile Include="Models\Doctor\Service.cs" />
+    <Compile Include="Models\Doctor\CareService.cs" />
+    <Compile Include="Services\DoctorService.cs" />
+    <Compile Include="Services\GenericService.cs" />
+    <Compile Include="Services\IDoctorService.cs" />
+    <Compile Include="Services\IGenericService.cs" />
     <Compile Include="ViewModels\CalenderSettingViewModel.cs" />
     <Compile Include="Models\DailyAvailability.cs" />
     <Compile Include="Models\DailyAvailabilitySetting.cs" />
@@ -744,9 +749,8 @@
     <Content Include="Views\Shared\EditorTemplates\Number.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Time.cshtml" />
     <Content Include="Views\Settings\EditCalenderSetting.cshtml" />
-    <Content Include="Views\Grid\Index.cshtml" />
-    <Content Include="Views\BasePersistentModel\Create.cshtml" />
-    <Content Include="Views\BasePersistentModel\Index.cshtml" />
+    <Content Include="Views\Crud\Create.cshtml" />
+    <Content Include="Views\Crud\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
   </ItemGroup>
   <ItemGroup>

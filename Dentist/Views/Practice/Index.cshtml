@@ -1,6 +1,6 @@
 ﻿@using Dentist.Enums
 @using Dentist.ViewModels
-
+<script src="~/Scripts/gridHelper.js"></script>
 @{
     ViewBag.Title = "Practice Browser";
     var pageSizeArray = new[] { 20, 50, 100 };
@@ -30,7 +30,7 @@
           })
           .Resizable(resizable => resizable.Columns(true))
           .ToolBar(toolbar => { toolbar.Custom().Name("Create").Action("Create", "Practice"); })
-          .Events(e => e.DataBound("grdPractice_onDataBound"))
+          .Events(e => e.DataBound("grd_onDataBound"))
           .Pageable(pager =>
           {
               pager.PageSizes(pageSizeArray);
@@ -43,29 +43,14 @@
 
 <script>
 
-    function grdPractice_onDataBound(args) {
-        $(".k-grid-Edit").find("span").addClass("k-icon k-edit");
-        $(".k-grid-Delete").find("span").addClass("k-icon k-delete");
-        $(".k-grid-Create").find("span").addClass("k-icon k-add");
-    }
-
     function grdPractice_onEdit(e) {
         e.preventDefault();
-        var id = $("#grdPractice").data("kendoGrid").dataItem($(e.currentTarget).closest("tr")).Id;
-        window.location.href = "@Url.Action("Edit", "Practice")" + "/" + id;
+        EditGridRow(e, $("#grdPractice"), '@Url.Action("Edit", "Practice")');
     }
 
     function grdPractice_onDelete(e) {
         e.preventDefault();
-        if (confirm('Are you sure you want to delete this record ?')) {
-            var id = $("#grdPractice").data("kendoGrid").dataItem($(e.currentTarget).closest("tr")).Id;
-            $.post('@Url.Action("Delete", "Practice")' + '?id=' + id, function (data) {
-                if (data !== undefined && data !== null && data.Success == 1) {
-                    $('#grdPractice').data('kendoGrid').dataSource.read();
-                    $('#grdPractice').data('kendoGrid').refresh();
-                }
-            });
-        }
+        DeleteGridRow(e, $("#grdPractice"), '@Url.Action("Delete", "Practice")');
     }
 
 </script>

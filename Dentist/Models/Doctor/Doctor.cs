@@ -2,32 +2,34 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Data.Entity;
+using System.Web.Services.Description;
 using AutoMapper;
 using Dentist.Enums;
+using Dentist.Models.Tags;
 
 namespace Dentist.Models.Doctor
 {
-    public class Doctor : Person
+    public class Doctor : Person, IModelWithWriteContext
     {
         public Doctor() :base()
         {
             PersonRole = PersonRole.Doctor;
             Practices = new List<Practice>(); // lookup
-            Services = new List<Service>(); //lookup
-            //Specializations = new List<Specialization>(); //lookup
-            //Memberships = new List<Membership>(); //lookup
+            Services = new List<CareService>(); //lookup
+            Specializations = new List<Specialization>(); //lookup
+            Memberships = new List<Membership>(); //lookup
 
             DailyAvailabilities = new List<DailyAvailability>(); //owner
-            //Appointments = new List<Appointment>(); //owner
-            //Qualification = new List<Qualification>(); //owner
-            //Experiences = new List<Experience>(); //owner
-            //Awards = new List<Award>(); //owner
-            ////   Registration = new Registration(); //owner
+            Appointments = new List<Appointment>(); //owner
+            Qualification = new List<Qualification>(); //owner
+            Experiences = new List<Experience>(); //owner
+            Awards = new List<Award>(); //owner
+            //   Registration = new Registration(); //owner
         }
 
         public string About { get; set; }
-
-        public virtual List<Service> Services { get; set; }
+        public virtual List<CareService> Services { get; set; }
         public virtual List<Specialization> Specializations { get; set; }
         public virtual List<Qualification> Qualification { get; set; }
         public virtual List<Experience> Experiences { get; set; }
@@ -37,9 +39,8 @@ namespace Dentist.Models.Doctor
         public int? RegistrationId { get; set; }
         public Registration Registration { get; set; }
 
-
         [NotMapped]
-        public ApplicationDbContext Context { get; set; }
+        public WriteContext Context { get; set; }
 
         public virtual List<DailyAvailability> DailyAvailabilities { get; private set; }
 
@@ -102,7 +103,7 @@ namespace Dentist.Models.Doctor
             Practices.Remove(practice);
         }
 
-        private Service LoadService(int serviceId)
+        private CareService LoadService(int serviceId)
         {
             return Context.Services.Find(serviceId);
         }
@@ -114,8 +115,8 @@ namespace Dentist.Models.Doctor
 
         private void AddService(int serviceId)
         {
-            Service service = LoadService(serviceId);
-            Services.Add(service);
+            CareService careService = LoadService(serviceId);
+            Services.Add(careService);
         }
 
         public void RemoveServices(List<int> serviceIdsToRemove)
@@ -125,8 +126,8 @@ namespace Dentist.Models.Doctor
 
         private void RemoveService(int serviceId)
         {
-            Service service = Services.Find(x => x.Id == serviceId);
-            Services.Remove(service);
+            CareService careService = Services.Find(x => x.Id == serviceId);
+            Services.Remove(careService);
         }
 
         private List<DailyAvailabilitySetting> GetDailyAvailabilitySetting()
@@ -144,35 +145,6 @@ namespace Dentist.Models.Doctor
             }
 
             return results;
-        }
-
-        public static Doctor New(ApplicationDbContext context)
-        {
-            var entity = new Doctor
-            {
-                Context = context,
-                //Practices = new List<Practice>(),
-                //Services = new List<Service>(),
-                //DailyAvailabilities = new List<DailyAvailability>()
-                //Specializations = new List<Specialization>(); //lookup
-                //Memberships = new List<Membership>(); //lookup
-            };
-            context.Doctors.Add(entity);
-            return entity;
-        }
-
-        public static Doctor Find(ApplicationDbContext context, int id)
-        {
-            Doctor entity = context.Doctors.Find(id);
-            entity.Context = context;
-            return entity;
-        }
-
-        public static void Delete(ApplicationDbContext context, int id)
-        {
-            Doctor entity = context.Doctors.Find(id);
-            entity.Context = context;
-            entity.IsDeleted = true;
         }
     }
 }

@@ -130,10 +130,11 @@ namespace Dentist.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
+            var errorMessage = ""; 
             Practice practice = WriteContext.Practices.Find(id);
             practice.IsDeleted = true;
-            WriteContext.SaveChanges();
-            return Json(new { Success = true });
+            var changesSaved = WriteContext.TrySaveChanges(out errorMessage);
+            return Json(new { Success = changesSaved, ErrorMessage = errorMessage });
         }
     }
  

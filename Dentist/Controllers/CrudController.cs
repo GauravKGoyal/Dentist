@@ -8,17 +8,21 @@ using AutoMapper.QueryableExtensions;
 using Dentist.Enums;
 using Dentist.Helpers;
 using Dentist.Models;
+using Dentist.Models.Tags;
 using Dentist.ViewModels;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 
 namespace Dentist.Controllers
 {
-    public class BasePersistentModelController<T> : BaseController where T : ModelWithName
+    // IModelWithName - Name property is required by the grid
+    // IModelWithId - Id property is required by the grid and for Deleting a record
+    // Note this controller does not consider view model approach
+    public class CrudController<T> : BaseController where T : class, IModelWithId, IModelWithName
     {
         public string ControllerName { get; set; }
 
-        public BasePersistentModelController(string controllerName) : base()
+        protected CrudController(string controllerName) : base()
         {
             ControllerName = controllerName;
         }
@@ -26,7 +30,7 @@ namespace Dentist.Controllers
         public ActionResult Index()
         {
             ViewBag.ControllerName = ControllerName;
-            return View(@"~\Views\BasePersistentModel\Index.cshtml");
+            return View(@"~\Views\Crud\Index.cshtml");
         }
 
         public ActionResult GetBrowserItems([DataSourceRequest] DataSourceRequest request)
@@ -39,7 +43,7 @@ namespace Dentist.Controllers
         {
             ViewBag.ControllerName = ControllerName;
             var model = (T)Activator.CreateInstance(typeof(T));
-            return View(@"~\Views\BasePersistentModel\Create.cshtml", model);
+            return View(@"~\Views\Crud\Create.cshtml", model);
         }
 
         [HttpPost]
@@ -57,14 +61,14 @@ namespace Dentist.Controllers
                 }
             }
 
-            return View(@"~\Views\BasePersistentModel\Create.cshtml", model);
+            return View(@"~\Views\Crud\Create.cshtml", model);
         }
 
         public ActionResult Edit(int id)
         {
-            ViewBag.ControllerName = typeof(T).Name;
+            ViewBag.ControllerName = ControllerName;
             var model = ReadContext.Set<T>().Find(id);
-            return View(@"~\Views\BasePersistentModel\Create.cshtml", model);
+            return View(@"~\Views\Crud\Create.cshtml", model);
         }
 
         [HttpPost]
@@ -83,7 +87,7 @@ namespace Dentist.Controllers
                 }
             }
 
-            return View(@"~\Views\BasePersistentModel\Create.cshtml", model);
+            return View(@"~\Views\Crud\Create.cshtml", model);
         }
 
         [HttpPost]
@@ -93,8 +97,9 @@ namespace Dentist.Controllers
             model.Id = id;
             WriteContext.Set<T>().Attach(model);
             WriteContext.Set<T>().Remove(model);
-            WriteContext.TrySaveChanges();
-            return Json(new { Success = true });
+            var errorMessage = "";
+            var changesSaved = WriteContext.TrySaveChanges(out errorMessage);
+            return Json(new { Success = changesSaved, ErrorMessage = errorMessage });
         }
     }
 }
