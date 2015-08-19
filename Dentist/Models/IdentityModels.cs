@@ -125,6 +125,7 @@ namespace Dentist.Models
         public System.Data.Entity.DbSet<Dentist.Models.CalenderSetting> CalenderSettings { get; set; }
         public System.Data.Entity.DbSet<Dentist.Models.File> Files { get; set; }
         public System.Data.Entity.DbSet<CareService> Services { get; set; }
+        public System.Data.Entity.DbSet<Membership> Memberships { get; set; }
     }
 
 

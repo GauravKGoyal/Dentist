@@ -80,8 +80,6 @@ namespace Dentist.Controllers
                 var doctor = new Doctor();
                 doctor.Context = WriteContext;
                 viewModel.CopyTo(doctor);
-                doctor.AddPractices(viewModel.Practices);
-                doctor.AddServices(viewModel.Services);
                 WriteContext.Doctors.Add(doctor);
                 if (WriteContext.TrySaveChanges(ModelState))
                 {
@@ -104,6 +102,7 @@ namespace Dentist.Controllers
                             .Include(x => x.Address)
                             .Include(x=> x.Practices)
                             .Include(x=> x.Services)
+                            .Include(x=> x.Memberships)
                             .Include(x=> x.Files)
                             .First(x => x.Id == id);
             if (doctor.PersonRole != PersonRole.Doctor)
@@ -125,10 +124,6 @@ namespace Dentist.Controllers
                 var doctor = WriteContext.Doctors.Find(viewModel.Id);
                 doctor.Context = WriteContext;
                 viewModel.CopyTo(doctor);
-                doctor.RemovePractices(viewModel.PracticeIdsToRemove(doctor));
-                doctor.AddPractices(viewModel.PracticeIdsToAdd(doctor));
-                doctor.RemoveServices(viewModel.ServiceIdsToRemove(doctor));
-                doctor.AddServices(viewModel.ServiceIdsToAdd(doctor));
                 if (WriteContext.TrySaveChanges(ModelState))
                 {
                     return Request.FormSaveAndCloseClicked() ? RedirectToAction("Index") : RedirectToAction("Edit", new { @id = doctor.Id });

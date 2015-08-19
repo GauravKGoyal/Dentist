@@ -102,7 +102,7 @@ namespace Dentist.Models.Doctor
             Context.DailyAvailabilities.RemoveRange(daily);
             Practices.Remove(practice);
         }
-
+        
         private CareService LoadService(int serviceId)
         {
             return Context.Services.Find(serviceId);
@@ -128,6 +128,33 @@ namespace Dentist.Models.Doctor
         {
             CareService careService = Services.Find(x => x.Id == serviceId);
             Services.Remove(careService);
+        }
+
+        private Membership LoadMembership(int membershipId)
+        {
+            return Context.Memberships.Find(membershipId);
+        }
+
+        public void AddMemberships(List<int> membershipIdsToAdd)
+        {
+            membershipIdsToAdd.ForEach(AddMembership);
+        }
+
+        private void AddMembership(int membershipId)
+        {
+            Membership careMembership = LoadMembership(membershipId);
+            Memberships.Add(careMembership);
+        }
+
+        public void RemoveMemberships(List<int> membershipIdsToRemove)
+        {
+            membershipIdsToRemove.ForEach(RemoveMembership);
+        }
+
+        private void RemoveMembership(int membershipId)
+        {
+            Membership careMembership = Memberships.Find(x => x.Id == membershipId);
+            Memberships.Remove(careMembership);
         }
 
         private List<DailyAvailabilitySetting> GetDailyAvailabilitySetting()
