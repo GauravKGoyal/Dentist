@@ -142,8 +142,8 @@ namespace Dentist.Models.Doctor
 
         private void AddMembership(int membershipId)
         {
-            Membership careMembership = LoadMembership(membershipId);
-            Memberships.Add(careMembership);
+            Membership membership = LoadMembership(membershipId);
+            Memberships.Add(membership);
         }
 
         public void RemoveMemberships(List<int> membershipIdsToRemove)
@@ -153,8 +153,35 @@ namespace Dentist.Models.Doctor
 
         private void RemoveMembership(int membershipId)
         {
-            Membership careMembership = Memberships.Find(x => x.Id == membershipId);
-            Memberships.Remove(careMembership);
+            Membership membership = Memberships.Find(x => x.Id == membershipId);
+            Memberships.Remove(membership);
+        }
+
+        private Specialization LoadSpecialization(int specializationId)
+        {
+            return Context.Specializations.Find(specializationId);
+        }
+
+        public void AddSpecializations(List<int> specializationIdsToAdd)
+        {
+            specializationIdsToAdd.ForEach(AddSpecialization);
+        }
+
+        private void AddSpecialization(int specializationId)
+        {
+            var specialization = LoadSpecialization(specializationId);
+            Specializations.Add(specialization);
+        }
+
+        public void RemoveSpecializations(List<int> specializationIdsToRemove)
+        {
+            specializationIdsToRemove.ForEach(RemoveSpecialization);
+        }
+
+        private void RemoveSpecialization(int specializationId)
+        {
+            var specialization = Specializations.Find(x => x.Id == specializationId);
+            Specializations.Remove(specialization);
         }
 
         private List<DailyAvailabilitySetting> GetDailyAvailabilitySetting()

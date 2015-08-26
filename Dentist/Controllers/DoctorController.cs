@@ -103,6 +103,7 @@ namespace Dentist.Controllers
                             .Include(x=> x.Practices)
                             .Include(x=> x.Services)
                             .Include(x=> x.Memberships)
+                            .Include(x=> x.Specializations)
                             .Include(x=> x.Files)
                             .First(x => x.Id == id);
             if (doctor.PersonRole != PersonRole.Doctor)

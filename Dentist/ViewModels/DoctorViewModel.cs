@@ -11,8 +11,10 @@ namespace Dentist.ViewModels
     {
         public DoctorViewModel()
         {
+            Practices = new List<int>();
             Services = new List<int>();
             Memberships = new List<int>();
+            Specializations = new List<int>();
         }
 
         public bool IsDoctor
@@ -61,6 +63,20 @@ namespace Dentist.ViewModels
             return Memberships.Where(id => doctor.Memberships.All(membership => membership.Id != id))
                     .ToList();
         }
+
+        public List<int> Specializations { get; set; }
+
+        private List<int> SpecializationsToRemove(Doctor doctor)
+        {
+            return doctor.Specializations.Where(specialization => !Specializations.Contains(specialization.Id)).Select(x => x.Id).ToList();
+        }
+
+        private List<int> SpecializationIdsToAdd(Doctor doctor)
+        {
+            return Specializations.Where(id => doctor.Specializations.All(specialization => specialization.Id != id))
+                    .ToList();
+        }
+
         public void CopyTo(Doctor doctor)
         {
              base.CopyTo(doctor);
@@ -72,6 +88,8 @@ namespace Dentist.ViewModels
              doctor.AddServices(ServiceIdsToAdd(doctor));
              doctor.RemoveMemberships(MembershipsToRemove(doctor));
              doctor.AddMemberships(MembershipIdsToAdd(doctor));
+             doctor.RemoveSpecializations(SpecializationsToRemove(doctor));
+             doctor.AddSpecializations(SpecializationIdsToAdd(doctor));
 
              if (UploadedAvatarFile != null)
              { 

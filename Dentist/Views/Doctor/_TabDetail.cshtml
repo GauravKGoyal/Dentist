@@ -108,8 +108,22 @@
                   .Placeholder("--Select--")
                   .HtmlAttributes(new { style = "width:100%" })
                   .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "Memberships")))
-            )
+                  )
             @Html.ValidationMessageFor(model => model.Memberships, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.Specializations, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @(Html.Kendo().MultiSelectFor(model => model.Specializations)
+                  .DataTextField("Text")
+                  .DataValueField("Id")
+                  .Placeholder("--Select--")
+                  .HtmlAttributes(new { style = "width:100%" })
+                  .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "Specializations")))
+            )
+            @Html.ValidationMessageFor(model => model.Specializations, "", new { @class = "text-danger" })
         </div>
     </div>
 </div>
