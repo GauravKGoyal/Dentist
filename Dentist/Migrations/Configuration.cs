@@ -10,6 +10,7 @@ namespace Dentist.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(Dentist.Models.ApplicationDbContext context)

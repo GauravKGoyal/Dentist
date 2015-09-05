@@ -11,7 +11,7 @@ namespace Dentist.ViewModels
         private DateTime? _startTime2;
         private DateTime? _endTime2;
       
-        //[ReadOnly(true)] doesnot bing the values to view model treats it as a readonly property
+        //[ReadOnly(true)] doesnot bring the values to view model treats it as a readonly property
         [Editable(false)]
         public int Id { get; set; }
 

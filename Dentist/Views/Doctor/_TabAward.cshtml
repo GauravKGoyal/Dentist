@@ -1,0 +1,59 @@
+﻿
+@using Dentist.ViewModels
+
+<script src="~/Scripts/gridHelper.js"></script>
+@{
+    var pageSizeArray = new[] { 20, 50, 100 };
+}
+
+@(Html.Kendo().Grid<AwardViewModel>().Name("grdAward")
+          .DataSource(dataSource => dataSource
+              .Ajax()
+              .Model(model => model.Id(x => x.Id))
+              .PageSize(pageSizeArray[0])
+              .Batch(true)
+              .Sort(sort =>
+              {
+                  sort.Add(x => x.Year).Descending();
+              }).Events(e =>
+              {
+                  e.Error("grid_OnError");
+                  
+              })
+              .Read(read => read.Action("GetAwardBrowserItems", "Doctor", new { doctorId = Model.Id }))
+              .Create(create => create.Action("CreateAward", "Doctor", new { doctorId = Model.Id }))
+              .Update(update => update.Action("UpdateAward", "Doctor"))
+              .Destroy(destroy => destroy.Action("DeleteAward", "Doctor"))
+          )
+          .Columns(columns =>
+          {
+              columns.Bound(x => x.Id);
+              columns.Bound(x => x.Name);
+              columns.Bound(x => x.Year);
+              columns.Command(command => command.Destroy()).Width("10%");
+          })
+             .ToolBar(toolbar =>
+          {
+              toolbar.Create();
+              toolbar.Save();
+          })
+          .Editable(editable => editable.Mode(GridEditMode.InCell)
+          )
+          .Resizable(resizable => resizable.Columns(true))
+          .Pageable(pager =>
+          {
+              pager.PageSizes(pageSizeArray);             
+          })
+              .Navigatable()
+          .Sortable()
+          .Scrollable(s => s.Height("auto"))          
+          .AutoBind(false)
+)
+
+<script>
+    function grdAppointment_OnEdit(e) {
+        if (e.model.isNew()) {
+            e.model.set("DoctorId", '@Model.Id');
+        }
+    }
+</script>

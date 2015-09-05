@@ -11,6 +11,9 @@
     <li role="presentation" class="active"><a href="#Detail" aria-controls="Detail" role="tab" data-toggle="tab">Detail</a></li>
     @if (!isCreate)
     {
+        <li role="presentation"><a id="tabQualification" href="#Qualification" aria-controls="Qualification" role="tab" data-toggle="tab">Qualification</a></li>
+        <li role="presentation"><a id="tabExperience" href="#Experience" aria-controls="Experience" role="tab" data-toggle="tab">Experience</a></li>
+        <li role="presentation"><a id="tabAward" href="#Award" aria-controls="Award" role="tab" data-toggle="tab">Award</a></li>
         <li role="presentation"><a id="tabAppointments" href="#Appointments" aria-controls="Appointments" role="tab" data-toggle="tab">Appointments</a></li>
         <li role="presentation"><a id="tabAvailability" href="#Availability" aria-controls="Availability" role="tab" data-toggle="tab">Availability</a></li>
     }
@@ -18,7 +21,7 @@
 
 <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="Detail" style="margin-top: 15px">
-        @using (Html.BeginForm(actionName, "Doctor", FormMethod.Post, new {enctype = "multipart/form-data"}))
+        @using (Html.BeginForm(actionName, "Doctor", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
 
@@ -41,6 +44,27 @@
 
     @if (!isCreate)
     {
+        <div role="tabpanel" class="tab-pane" id="Qualification" style="margin-top: 15px">
+            @Html.Partial("~/Views/Doctor/_TabQualification.cshtml")
+            <div class="col-md-12" style="text-align:right">
+                <hr>
+                <a href="@Url.Action("Index", "Doctor")" class="btn btn-default"><span class="k-icon k-cancel"></span> Close</a>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="Experience" style="margin-top: 15px">
+            @Html.Partial("~/Views/Doctor/_TabExperience.cshtml")
+            <div class="col-md-12" style="text-align:right">
+                <hr>
+                <a href="@Url.Action("Index", "Doctor")" class="btn btn-default"><span class="k-icon k-cancel"></span> Close</a>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="Award" style="margin-top: 15px">
+            @Html.Partial("~/Views/Doctor/_TabAward.cshtml")
+            <div class="col-md-12" style="text-align:right">
+                <hr>
+                <a href="@Url.Action("Index", "Doctor")" class="btn btn-default"><span class="k-icon k-cancel"></span> Close</a>
+            </div>
+        </div>
         <div role="tabpanel" class="tab-pane" id="Appointments" style="margin-top: 15px">
             @Html.Partial("~/Views/People/_TabAppointment.cshtml")
             <div class="col-md-12" style="text-align:right">
@@ -63,6 +87,9 @@
     $(function () {
         window.grdAppointmentLoaded = false;
         window.grdAvailabilityLoaded = false;
+        window.grdQualificationLoaded = false;
+        window.grdExperienceLoaded = false;
+        window.grdAwardLoaded = false;
     });
 
     $("#tabAppointments").on("click", function () {
@@ -79,4 +106,24 @@
         }
     });
 
+    $("#tabQualification").on("click", function () {
+        if (!window.grdQualificationLoaded) {
+            $('#grdQualification').data('kendoGrid').dataSource.read();
+            window.grdQualificationLoaded = true;
+        }
+    });
+
+    $("#tabExperience").on("click", function () {
+        if (!window.grdExperienceLoaded) {
+            $('#grdExperience').data('kendoGrid').dataSource.read();
+            window.grdExperienceLoaded = true;
+        }
+    });
+
+    $("#tabAward").on("click", function () {
+        if (!window.grdAwardLoaded) {
+            $('#grdAward').data('kendoGrid').dataSource.read();
+            window.grdAwardLoaded = true;
+        }
+    });
 </script>

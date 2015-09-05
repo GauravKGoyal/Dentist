@@ -127,6 +127,9 @@ namespace Dentist.Models
         public System.Data.Entity.DbSet<CareService> Services { get; set; }
         public System.Data.Entity.DbSet<Membership> Memberships { get; set; }
         public System.Data.Entity.DbSet<Specialization> Specializations { get; set; }
+        public System.Data.Entity.DbSet<Qualification> Qualifications { get; set; }
+        public System.Data.Entity.DbSet<Experience> Experiences { get; set; }
+        public System.Data.Entity.DbSet<Award> Awards { get; set; }
     }
 
 

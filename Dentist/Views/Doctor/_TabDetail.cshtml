@@ -1,20 +1,6 @@
 ﻿@model Dentist.ViewModels.DoctorViewModel
 
-<div class="col-md-6">
-    <div class="form-group">
-        @Html.LabelFor(model => model.Practices, htmlAttributes: new { @class = "control-label col-md-4" })
-        <div class="col-md-8">
-            @(Html.Kendo().MultiSelectFor(model => model.Practices)
-                  .DataTextField("Text")
-                  .DataValueField("Id")
-                  .Placeholder("--Select--")
-                  .HtmlAttributes(new { style = "width:100%" })
-                  .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "Practice")))
-            )
-            @Html.ValidationMessageFor(model => model.Practices, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
+<div class="col-md-6">   
     <div class="form-group">
         @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-4" })
         <div class="col-md-8">
@@ -40,14 +26,6 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-4" })
-        <div class="col-md-8">
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
         @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "control-label col-md-4" })
         <div class="col-md-8">
             @Html.Kendo().DatePickerFor(model => model.DateOfBirth)
@@ -56,33 +34,16 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Color, htmlAttributes: new { @class = "control-label col-md-4" })
+        @Html.LabelFor(model => model.Practices, htmlAttributes: new { @class = "control-label col-md-4" })
         <div class="col-md-8">
-            @*<input id="Color" type="color" />
-                <script>
-                    $("#Color").kendoColorPicker({
-                        palette: [
-                                  "#fcecd5", "#f9d9ab", "#f6c781", "#c87d0e",
-                                  "#9ae5b1", "#35cc62", "#03c03c", "#01601e",
-                                  "#e1dca5", "#d0c974", "#a29a36", "#514d1b",
-                                  "#c6d9f0", "#8db3e2", "#548dd4", "#17365d",
-                                  "#f0d0c9", "#e2a293", "#d4735e", "#65281a",
-                                  "#e06750", "#d84226", "#ac341e", "#812717",
-                                  "#f9ff99", "#f0ff00", "#d8e600", "#a8b300",
-                                  "#887CAF", "#615192", "#261758", "#13073A",
-                                  "#947EA0", "#744489", "#3F0E5A", "#2C0243",
-                                  "#DEA0C3", "#B66091", "#5A0D39", "#2D0019"
-                        ],
-                        columns: 8,
-                        tileSize: 32
-                    });
-                </script>*@
-
-            @(Html.Kendo().ColorPickerFor(model => model.Color)
-                  .Palette(ColorPickerPalette.WebSafe)
+            @(Html.Kendo().MultiSelectFor(model => model.Practices)
+                  .DataTextField("Text")
+                  .DataValueField("Id")
+                  .Placeholder("--Select--")
+                  .HtmlAttributes(new { style = "width:100%" })
+                  .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "Practice")))
             )
-
-            @Html.ValidationMessageFor(model => model.Color, "", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(model => model.Practices, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="form-group">
@@ -129,6 +90,44 @@
 </div>
 <div class="col-md-6 ">
     <div class="form-group">
+        @Html.LabelFor(model => model.Color, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @*<input id="Color" type="color" />
+                <script>
+                    $("#Color").kendoColorPicker({
+                        palette: [
+                                  "#fcecd5", "#f9d9ab", "#f6c781", "#c87d0e",
+                                  "#9ae5b1", "#35cc62", "#03c03c", "#01601e",
+                                  "#e1dca5", "#d0c974", "#a29a36", "#514d1b",
+                                  "#c6d9f0", "#8db3e2", "#548dd4", "#17365d",
+                                  "#f0d0c9", "#e2a293", "#d4735e", "#65281a",
+                                  "#e06750", "#d84226", "#ac341e", "#812717",
+                                  "#f9ff99", "#f0ff00", "#d8e600", "#a8b300",
+                                  "#887CAF", "#615192", "#261758", "#13073A",
+                                  "#947EA0", "#744489", "#3F0E5A", "#2C0243",
+                                  "#DEA0C3", "#B66091", "#5A0D39", "#2D0019"
+                        ],
+                        columns: 8,
+                        tileSize: 32
+                    });
+                </script>*@
+
+            @(Html.Kendo().ColorPickerFor(model => model.Color)
+                  .Palette(ColorPickerPalette.WebSafe)
+            )
+
+            @Html.ValidationMessageFor(model => model.Color, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
         @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-4" })
         <div class="col-md-8">
             @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
@@ -157,6 +156,20 @@
         </div>
     </div>
     <div class="form-group">
+        @Html.LabelFor(model => model.Registration.Number, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.Registration.Number, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Registration.Number, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Registration.College, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.Registration.College, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Registration.College, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
         <div class="col-md-4">
         </div>
         <div class="col-md-8">
@@ -170,6 +183,8 @@
             <img class="img-thumbnail" src="~/File/Get?id=@Model.AvatarId" alt="avatar" />
         </div>
     </div>
+    
+   
 </div>
 
 <script>

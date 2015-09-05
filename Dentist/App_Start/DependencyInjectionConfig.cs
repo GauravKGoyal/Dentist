@@ -32,6 +32,7 @@ namespace Dentist
 
             // Set the dependency resolver to be Autofac.
             Container = Builder.Build();
+            
             DependencyResolver.SetResolver(new AutofacDependencyResolver(Container));
         }
 

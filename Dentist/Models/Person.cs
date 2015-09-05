@@ -8,6 +8,12 @@ namespace Dentist.Models
 {
     public class Person : IValidatableObject, IModelWithIsDelete
     {
+        public Person()
+            : base()
+        {
+            Address = new Address();
+        }
+
         public int Id { get; set; }
 
         public virtual List<File> Files { get; set; }

@@ -22,7 +22,7 @@ namespace Dentist
 
             Mapper.CreateMap<Practice, SchedulerPracticeViewModel>();
             Mapper.CreateMap<Doctor, SchedulerDoctorViewModel>();
-                //.ForMember(d => d.Practices, opt => opt.MapFrom(s => s.Practices));
+
 
             Mapper.CreateMap<Paitient, PatientViewModel>()
                 .ForMember(d => d.PatientViewPracticeId, opt => opt.MapFrom(s => s.Practice.Id));
@@ -33,13 +33,22 @@ namespace Dentist
             Mapper.CreateMap<Specialization, int>().ConstructUsing(s => s.Id);
             Mapper.CreateMap<Doctor, DoctorViewModel>()
                 .ForMember(d => d.Address, opt => opt.MapFrom(s => s.Address));
-
             Mapper.CreateMap<DoctorViewModel, Doctor>()
                 .ForMember(d => d.Practices, opt => opt.Ignore())
                 .ForMember(d => d.Services, opt => opt.Ignore())
                 .ForMember(d => d.Memberships, opt => opt.Ignore())
                 .ForMember(d => d.Specializations, opt => opt.Ignore())
+                .ForMember(d => d.Registration, opt => opt.MapFrom(s => s.Registration))
                 .ForMember(d => d.Address, opt => opt.MapFrom(s => s.Address));
+
+            Mapper.CreateMap<Qualification, QualificationViewModel>();
+            Mapper.CreateMap<QualificationViewModel, Qualification>();
+
+            Mapper.CreateMap<Experience, ExperienceViewModel>();
+            Mapper.CreateMap<ExperienceViewModel, Experience>();
+
+            Mapper.CreateMap<Award, AwardViewModel>();
+            Mapper.CreateMap<AwardViewModel, Award>();
 
             Mapper.CreateMap<Practice, int>().ConstructUsing(s => s.Id);
             Mapper.CreateMap<Practice, PracticeViewModel>();
@@ -47,6 +56,8 @@ namespace Dentist
 
             //Mapper.CreateMap<CareService, ServiceViewModel>();
             //Mapper.CreateMap<ServiceViewModel, CareService>();
+            Mapper.CreateMap<Registration, RegistrationViewModel>();
+            Mapper.CreateMap<RegistrationViewModel, Registration>();
 
             Mapper.CreateMap<Address, AddressViewModel>();
             Mapper.CreateMap<AddressViewModel, Address>();
@@ -92,7 +103,6 @@ namespace Dentist
                 .ForMember(d => d.Phone, opt => opt.MapFrom(s => s.Patient.Phone))
                 .ForMember(d => d.PracticeColor, opt => opt.MapFrom(s => s.Practice.Color));
             Mapper.CreateMap<SchedulerAppointmentViewModel, Appointment>()
-            
                 .ForMember(d => d.StartDateTime, opt => opt.MapFrom(s => s.Start))
                 .ForMember(d => d.EndDateTime, opt => opt.MapFrom(s => s.End));
 

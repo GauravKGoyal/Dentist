@@ -1,0 +1,10 @@
+﻿@using Dentist.Helpers
+@model Int32
+
+
+@(Html.Kendo().DropDownListFor(model => model)       
+              .Value(((int)Model).ToString())         
+              .HtmlAttributes(new { style = "width: 100%"})
+              .BindTo(YearHelper.GetSelectList())
+
+)

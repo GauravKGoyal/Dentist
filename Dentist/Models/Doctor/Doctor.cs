@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -15,26 +17,27 @@ namespace Dentist.Models.Doctor
         public Doctor() :base()
         {
             PersonRole = PersonRole.Doctor;
-            Practices = new List<Practice>(); // lookup
+            // following lists has to be created for new objects to work
+            Practices = new List<Practice>(); // lookup (Many to Many)
             Services = new List<CareService>(); //lookup
             Specializations = new List<Specialization>(); //lookup
             Memberships = new List<Membership>(); //lookup
 
             DailyAvailabilities = new List<DailyAvailability>(); //owner
             Appointments = new List<Appointment>(); //owner
-            Qualification = new List<Qualification>(); //owner
+            Qualifications = new List<Qualification>(); //owner (One To Many)
             Experiences = new List<Experience>(); //owner
             Awards = new List<Award>(); //owner
-            //   Registration = new Registration(); //owner
+            Registration = new Registration(); //owner
         }
 
         public string About { get; set; }
-        public virtual List<CareService> Services { get; set; }
-        public virtual List<Specialization> Specializations { get; set; }
-        public virtual List<Qualification> Qualification { get; set; }
-        public virtual List<Experience> Experiences { get; set; }
-        public virtual List<Award> Awards { get; set; }
-        public virtual List<Membership> Memberships { get; set; }
+        public virtual List<CareService> Services { get; private set; }
+        public virtual List<Specialization> Specializations { get; private set; }
+        public virtual List<Qualification> Qualifications { get; private set; }
+        public virtual List<Experience> Experiences { get; private set; }
+        public virtual List<Award> Awards { get; private set; }
+        public virtual List<Membership> Memberships { get; private set; }
 
         public int? RegistrationId { get; set; }
         public Registration Registration { get; set; }
@@ -184,6 +187,24 @@ namespace Dentist.Models.Doctor
             Specializations.Remove(specialization);
         }
 
+        public void AddQualification(Qualification qualificationToAdd)
+        {
+            qualificationToAdd.Doctor = this;
+            this.Qualifications.Add(qualificationToAdd);
+        }
+
+        public void AddExperience(Experience experienceToAdd)
+        {
+            experienceToAdd.Doctor = this;
+            this.Experiences.Add(experienceToAdd);
+        }
+
+        public void AddAward(Award awardToAdd)
+        {
+            awardToAdd.Doctor = this;
+            this.Awards.Add(awardToAdd);
+        }
+
         private List<DailyAvailabilitySetting> GetDailyAvailabilitySetting()
         {
             return Context.DailyAvailabilitySettings.ToList();
@@ -191,14 +212,26 @@ namespace Dentist.Models.Doctor
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            List<ValidationResult> results = base.Validate(validationContext).ToList();
+            if (Context == null)
+            {
+                throw new Exception("Context missing in doctor");
+            }
 
-            if (Practices.Count == 0)
+            List<ValidationResult> results = base.Validate(validationContext).ToList();            
+
+            // Lazy loading is turned off by EF during validation therefore load the practicies manually
+            if (!Context.Entry(this).Collection(p => p.Practices).IsLoaded)
+            {
+                Context.Entry(this).Collection(p => p.Practices).Load();
+            }
+            if (this.Practices.Count == 0)
             {
                 results.Add(new ValidationResult("Doctor can not be registered without a practice"));
             }
 
+            // Note qualification entity will validate itself
             return results;
         }
     }
+
 }

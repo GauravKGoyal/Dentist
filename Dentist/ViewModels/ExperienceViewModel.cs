@@ -1,20 +1,23 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Dentist.Models.Doctor
+namespace Dentist.ViewModels
 {
-    public class Experience
+    public class ExperienceViewModel
     {
+        [Editable(false)]
         public int Id { get; set; }
+        [UIHint("Year")]
+        [Display(Name = "From Year")]
         [Required]
         public int FromYear { get; set; }
+        [UIHint("Year")]
+        [Display(Name = "To Year")]
         [Required]
         public int ToYear { get; set; }
         [Required]
         public string As { get; set; }
         [Required]
         public string At { get; set; }
-        [Required]
         public int DoctorId { get; set; }
-        public virtual Doctor Doctor { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Dentist.Helpers;
 using Dentist.Models;
@@ -22,6 +23,11 @@ namespace Dentist.ViewModels
             get { return true; }
         }
 
+        public int RegistrationId { get; set; }
+
+        public RegistrationViewModel Registration { get; set; }
+
+        [Display(Name = "Appointment Color")]
         public string Color { get; set; }
 
         [RequiredListItem]

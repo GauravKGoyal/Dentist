@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -15,6 +16,7 @@ using Dentist.Services;
 using Dentist.ViewModels;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
+using WebGrease.Css.Extensions;
 
 namespace Dentist.Controllers
 {
@@ -90,7 +92,6 @@ namespace Dentist.Controllers
             return View(viewModel);
         }
 
-
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -100,6 +101,7 @@ namespace Dentist.Controllers
 
             var doctor = ReadContext.Doctors
                             .Include(x => x.Address)
+                            .Include(x => x.Registration)
                             .Include(x=> x.Practices)
                             .Include(x=> x.Services)
                             .Include(x=> x.Memberships)
@@ -147,18 +149,214 @@ namespace Dentist.Controllers
             return Json(new { Success = changesSaved, ErrorMessage = errorMessage });
         }
 
-        //private IDoctorService _doctorService;
-        //public IDoctorService DoctorService
-        //{
-        //    get 
-        //    {
-        //        if (_doctorService == null)
-        //        {
-        //            _doctorService = DependencyInjectionConfig.Container.Resolve<IDoctorService>();
-        //        }
-        //        return _doctorService;
-        //    } 
-        //}
+        public ActionResult GetQualificationBrowserItems([DataSourceRequest] DataSourceRequest request, int doctorId)
+        {
+            if (doctorId == 0)
+            {
+                throw  new ArgumentException("Doctor id cannot be 0", "doctorId");
+            }
+
+            var query = ReadContext.Set<Qualification>().Where(x => x.DoctorId == doctorId)                      
+                        .ProjectTo<QualificationViewModel>();
+            var result = query.ToDataSourceResult(request);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+       
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult CreateQualification([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<QualificationViewModel> viewModels, int doctorId)
+        {
+            var results = new List<QualificationViewModel>();
+            if (viewModels != null && ModelState.IsValid)
+            {
+                var doctor = WriteContext.Doctors.First(x => x.Id == doctorId);
+                doctor.Context = WriteContext;
+                foreach (var qualificationViewModel in viewModels)
+                {
+                    var qualification = Mapper.Map<Qualification>(qualificationViewModel);
+                    doctor.AddQualification(qualification);                    
+                    WriteContext.TrySaveChanges(ModelState);
+
+                    qualificationViewModel.Id = qualification.Id; 
+                    results.Add(qualificationViewModel);
+                }
+
+            }
+            return Json(results.ToDataSourceResult(request, ModelState));
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult UpdateQualification([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<QualificationViewModel> viewModels)
+        {            
+            var qualificationViewModels = viewModels as IList<QualificationViewModel> ?? viewModels.ToList();
+
+            if (viewModels != null && ModelState.IsValid)
+            {
+                foreach (var qualificationViewModel in qualificationViewModels)
+                {
+                    var qualification = WriteContext.Qualifications.Find(qualificationViewModel.Id);
+                    qualification.Context = WriteContext;
+                    Mapper.Map(qualificationViewModel, qualification);
+                }
+                WriteContext.TrySaveChanges(ModelState);
+            }
+
+            return Json(qualificationViewModels.ToDataSourceResult(request, ModelState));
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult DeleteQualification([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<QualificationViewModel> viewModels)
+        {
+            var qualificationViewModelList = viewModels as IList<QualificationViewModel> ?? viewModels.ToList();
+
+            foreach (var qualificationViewModel in qualificationViewModelList)
+            {
+                var qualification = new Qualification() {Id = qualificationViewModel.Id};
+                WriteContext.Qualifications.Attach(qualification);
+                WriteContext.Qualifications.Remove(qualification);
+            }
+            WriteContext.TrySaveChanges(ModelState);
+
+            return Json(qualificationViewModelList.ToDataSourceResult(request, ModelState));
+        }
+        
+        public ActionResult GetExperienceBrowserItems([DataSourceRequest] DataSourceRequest request, int doctorId)
+        {
+            if (doctorId == 0)
+            {
+                throw new ArgumentException("Doctor id cannot be 0", "doctorId");
+            }
+
+            var query = ReadContext.Set<Experience>().Where(x => x.DoctorId == doctorId)
+                        .ProjectTo<ExperienceViewModel>();
+            var result = query.ToDataSourceResult(request);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult CreateExperience([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<ExperienceViewModel> viewModels, int doctorId)
+        {
+            var results = new List<ExperienceViewModel>();
+            if (viewModels != null && ModelState.IsValid)
+            {
+                var doctor = WriteContext.Doctors.First(x => x.Id == doctorId);
+                doctor.Context = WriteContext;
+                foreach (var experienceViewModel in viewModels)
+                {
+                    var experience = Mapper.Map<Experience>(experienceViewModel);
+                    doctor.AddExperience(experience);
+                    WriteContext.TrySaveChanges(ModelState);
+
+                    experienceViewModel.Id = experience.Id;
+                    results.Add(experienceViewModel);
+                }
+
+            }
+            return Json(results.ToDataSourceResult(request, ModelState));
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult UpdateExperience([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<ExperienceViewModel> viewModels)
+        {
+            var experienceViewModels = viewModels as IList<ExperienceViewModel> ?? viewModels.ToList();
+
+            if (viewModels != null && ModelState.IsValid)
+            {
+                foreach (var experienceViewModel in experienceViewModels)
+                {
+                    var experience = WriteContext.Experiences.Find(experienceViewModel.Id);
+                    Mapper.Map(experienceViewModel, experience);
+                }
+                WriteContext.TrySaveChanges(ModelState);
+            }
+
+            return Json(experienceViewModels.ToDataSourceResult(request, ModelState));
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult DeleteExperience([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<ExperienceViewModel> viewModels)
+        {
+            var experienceViewModels = viewModels as IList<ExperienceViewModel> ?? viewModels.ToList();
+
+            foreach (var experienceViewModel in experienceViewModels)
+            {
+                var experience = new Experience() { Id = experienceViewModel.Id };
+                WriteContext.Experiences.Attach(experience);
+                WriteContext.Experiences.Remove(experience);
+            }
+            WriteContext.TrySaveChanges(ModelState);
+
+            return Json(experienceViewModels.ToDataSourceResult(request, ModelState));
+        }
+
+//---------------------------------
+        public ActionResult GetAwardBrowserItems([DataSourceRequest] DataSourceRequest request, int doctorId)
+        {
+            if (doctorId == 0)
+            {
+                throw new ArgumentException("Doctor id cannot be 0", "doctorId");
+            }
+
+            var query = ReadContext.Set<Award>().Where(x => x.DoctorId == doctorId)
+                        .ProjectTo<AwardViewModel>();
+            var result = query.ToDataSourceResult(request);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult CreateAward([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<AwardViewModel> viewModels, int doctorId)
+        {
+            var results = new List<AwardViewModel>();
+            if (viewModels != null && ModelState.IsValid)
+            {
+                var doctor = WriteContext.Doctors.First(x => x.Id == doctorId);
+                doctor.Context = WriteContext;
+                foreach (var awardViewModel in viewModels)
+                {
+                    var award = Mapper.Map<Award>(awardViewModel);
+                    doctor.AddAward(award);
+                    WriteContext.TrySaveChanges(ModelState);
+
+                    awardViewModel.Id = award.Id;
+                    results.Add(awardViewModel);
+                }
+
+            }
+            return Json(results.ToDataSourceResult(request, ModelState));
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult UpdateAward([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<AwardViewModel> viewModels)
+        {
+            var awardViewModels = viewModels as IList<AwardViewModel> ?? viewModels.ToList();
+
+            if (viewModels != null && ModelState.IsValid)
+            {
+                foreach (var awardViewModel in awardViewModels)
+                {
+                    var award = WriteContext.Awards.Find(awardViewModel.Id);
+                    Mapper.Map(awardViewModel, award);
+                }
+                WriteContext.TrySaveChanges(ModelState);
+            }
+
+            return Json(awardViewModels.ToDataSourceResult(request, ModelState));
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult DeleteAward([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<AwardViewModel> viewModels)
+        {
+            var awardViewModels = viewModels as IList<AwardViewModel> ?? viewModels.ToList();
+
+            foreach (var awardViewModel in awardViewModels)
+            {
+                var award = new Award() { Id = awardViewModel.Id };
+                WriteContext.Awards.Attach(award);
+                WriteContext.Awards.Remove(award);
+            }
+            WriteContext.TrySaveChanges(ModelState);
+
+            return Json(awardViewModels.ToDataSourceResult(request, ModelState));
+        }
 
     }
 }
