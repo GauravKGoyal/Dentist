@@ -145,7 +145,8 @@ namespace Dentist.Controllers
                     EndTime2 = endTime2
                 });
             }
-            WriteContext.SaveChanges();
+            string errorMessage;
+            WriteContext.TrySaveChanges(out errorMessage);
         }
 
         private void CreateDefaultCalenderSettings()

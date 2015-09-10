@@ -29,16 +29,7 @@ namespace Dentist.Controllers
 
         public WriteContext WriteContext
         {
-            get
-            {
-                if (_writeContext == null)
-                {
-                    _writeContext = new WriteContext();
-                    _writeContext.Configuration.ProxyCreationEnabled = true;
-                    _writeContext.Configuration.LazyLoadingEnabled = true;
-                }
-                return _writeContext;
-            }
+            get { return _writeContext ?? (_writeContext = new WriteContext()); }
         }
 
         protected override void Dispose(bool disposing)

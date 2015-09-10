@@ -9,7 +9,6 @@ namespace Dentist.ViewModels
 {
     public class RegistrationViewModel
     {
-        public int Id { get; set; }
         [Required]
         [Display(Name = "Registration Number")]
         public string Number { get; set; }

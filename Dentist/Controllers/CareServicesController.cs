@@ -14,7 +14,7 @@ namespace Dentist.Controllers
 
         public JsonResult GetAllIdTexts()
         {
-            var query = ReadContext.Services
+            var query = ReadContext.CareServices
                                 .Select(x => new
                                 {
                                     x.Id,

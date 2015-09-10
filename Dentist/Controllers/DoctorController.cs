@@ -79,7 +79,7 @@ namespace Dentist.Controllers
         {
             if (ModelState.IsValid)
             {
-                var doctor = new Doctor();
+                var doctor = new Doctor();// or WriteContext.Doctors.Create(); 
                 doctor.Context = WriteContext;
                 viewModel.CopyTo(doctor);
                 WriteContext.Doctors.Add(doctor);
@@ -127,6 +127,7 @@ namespace Dentist.Controllers
                 var doctor = WriteContext.Doctors.Find(viewModel.Id);
                 doctor.Context = WriteContext;
                 viewModel.CopyTo(doctor);
+              
                 if (WriteContext.TrySaveChanges(ModelState))
                 {
                     return Request.FormSaveAndCloseClicked() ? RedirectToAction("Index") : RedirectToAction("Edit", new { @id = doctor.Id });

@@ -203,26 +203,6 @@
     <Compile Include="Helpers\RequiredListItemAttribute.cs" />
     <Compile Include="Helpers\ViewHelper.cs" />
     <Compile Include="Helpers\YearHealper.cs" />
-    <Compile Include="Migrations\201508021037571_Dentist Profile upgrade.cs" />
-    <Compile Include="Migrations\201508021037571_Dentist Profile upgrade.Designer.cs">
-      <DependentUpon>201508021037571_Dentist Profile upgrade.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201508030926534_doctor model update.cs" />
-    <Compile Include="Migrations\201508030926534_doctor model update.Designer.cs">
-      <DependentUpon>201508030926534_doctor model update.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201508030940038_doctor domain update 2.cs" />
-    <Compile Include="Migrations\201508030940038_doctor domain update 2.Designer.cs">
-      <DependentUpon>201508030940038_doctor domain update 2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201508031040263_make registration optional.cs" />
-    <Compile Include="Migrations\201508031040263_make registration optional.Designer.cs">
-      <DependentUpon>201508031040263_make registration optional.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201508161131401_a.cs" />
-    <Compile Include="Migrations\201508161131401_a.Designer.cs">
-      <DependentUpon>201508161131401_a.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Appointment.cs" />
@@ -773,23 +753,6 @@
     <Folder Include="Views\File\" />
     <Folder Include="Views\People\EditorTemplates\" />
     <Folder Include="Views\Qualification\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201508021037571_Dentist Profile upgrade.resx">
-      <DependentUpon>201508021037571_Dentist Profile upgrade.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201508030926534_doctor model update.resx">
-      <DependentUpon>201508030926534_doctor model update.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201508030940038_doctor domain update 2.resx">
-      <DependentUpon>201508030940038_doctor domain update 2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201508031040263_make registration optional.resx">
-      <DependentUpon>201508031040263_make registration optional.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201508161131401_a.resx">
-      <DependentUpon>201508161131401_a.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -18,17 +18,17 @@ namespace Dentist.Models.Doctor
         {
             PersonRole = PersonRole.Doctor;
             // following lists has to be created for new objects to work
-            Practices = new List<Practice>(); // lookup (Many to Many)
+            Practices = new List<Practice>(); // lookup (M:M)
             Services = new List<CareService>(); //lookup
             Specializations = new List<Specialization>(); //lookup
             Memberships = new List<Membership>(); //lookup
 
             DailyAvailabilities = new List<DailyAvailability>(); //owner
             Appointments = new List<Appointment>(); //owner
-            Qualifications = new List<Qualification>(); //owner (One To Many)
+            Qualifications = new List<Qualification>(); //owner (M:1)
             Experiences = new List<Experience>(); //owner
             Awards = new List<Award>(); //owner
-            Registration = new Registration(); //owner
+            //Registration = new Registration(); //owner (nullable 1:M) they should not be created in ctor for ef to work
         }
 
         public string About { get; set; }
@@ -38,16 +38,17 @@ namespace Dentist.Models.Doctor
         public virtual List<Experience> Experiences { get; private set; }
         public virtual List<Award> Awards { get; private set; }
         public virtual List<Membership> Memberships { get; private set; }
-
+        
+        public virtual Registration Registration { get; set; }
         public int? RegistrationId { get; set; }
-        public Registration Registration { get; set; }
 
         [NotMapped]
         public WriteContext Context { get; set; }
 
         public virtual List<DailyAvailability> DailyAvailabilities { get; private set; }
-
-        public virtual List<Practice> Practices { get; private set; }
+        
+        [Required]
+        public virtual ICollection<Practice> Practices { get; private set; }
 
         [InverseProperty("Doctor")]
         public virtual List<Appointment> Appointments { get; private set; }
@@ -94,7 +95,7 @@ namespace Dentist.Models.Doctor
 
         private void RemovePractice(int practiceId)
         {
-            Practice practice = Practices.Find(x => x.Id == practiceId);
+            Practice practice = Practices.First(x => x.Id == practiceId);
             RemovePractice(practice);
         }
 
@@ -108,7 +109,7 @@ namespace Dentist.Models.Doctor
         
         private CareService LoadService(int serviceId)
         {
-            return Context.Services.Find(serviceId);
+            return Context.CareServices.Find(serviceId);
         }
 
         public void AddServices(List<int> serviceIdsToAdd)
@@ -220,7 +221,8 @@ namespace Dentist.Models.Doctor
             List<ValidationResult> results = base.Validate(validationContext).ToList();            
 
             // Lazy loading is turned off by EF during validation therefore load the practicies manually
-            if (!Context.Entry(this).Collection(p => p.Practices).IsLoaded)
+            var isNewObj = Id == 0;// cannot load practices for the doctor which is new
+            if ((!Context.Entry(this).Collection(p => p.Practices).IsLoaded) && (!isNewObj))
             {
                 Context.Entry(this).Collection(p => p.Practices).Load();
             }

@@ -31,7 +31,8 @@ namespace Dentist.Models
         public WriteContext()
             : base()
         {
-
+            this.Configuration.ProxyCreationEnabled = true;
+            this.Configuration.LazyLoadingEnabled = true;
         }
 
         public bool TrySaveChanges(out string errorMessage)
@@ -98,6 +99,7 @@ namespace Dentist.Models
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+
         }
 
         [Obsolete]
@@ -124,12 +126,13 @@ namespace Dentist.Models
         public System.Data.Entity.DbSet<Dentist.Models.DailyAvailabilitySetting> DailyAvailabilitySettings { get; set; }
         public System.Data.Entity.DbSet<Dentist.Models.CalenderSetting> CalenderSettings { get; set; }
         public System.Data.Entity.DbSet<Dentist.Models.File> Files { get; set; }
-        public System.Data.Entity.DbSet<CareService> Services { get; set; }
+        public System.Data.Entity.DbSet<CareService> CareServices { get; set; }
         public System.Data.Entity.DbSet<Membership> Memberships { get; set; }
         public System.Data.Entity.DbSet<Specialization> Specializations { get; set; }
         public System.Data.Entity.DbSet<Qualification> Qualifications { get; set; }
         public System.Data.Entity.DbSet<Experience> Experiences { get; set; }
         public System.Data.Entity.DbSet<Award> Awards { get; set; }
+        //public System.Data.Entity.DbSet<Registration> Registrations { get; set; }
     }
 
 

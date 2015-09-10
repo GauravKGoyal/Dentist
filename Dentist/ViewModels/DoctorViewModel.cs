@@ -23,8 +23,6 @@ namespace Dentist.ViewModels
             get { return true; }
         }
 
-        public int RegistrationId { get; set; }
-
         public RegistrationViewModel Registration { get; set; }
 
         [Display(Name = "Appointment Color")]
