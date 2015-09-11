@@ -92,7 +92,9 @@ namespace Dentist.Models
 
         public static ApplicationDbContext Create()
         {
-            return new ApplicationDbContext();
+            var applicationDbContext = new ApplicationDbContext();
+            applicationDbContext.Database.CreateIfNotExists();
+            return applicationDbContext;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

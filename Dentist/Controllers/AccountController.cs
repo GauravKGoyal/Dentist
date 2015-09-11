@@ -100,7 +100,7 @@ namespace Dentist.Controllers
         public async Task<ActionResult> RegisterG(RegisterViewModel model)
         {
             if (ModelState.IsValid)
-            {
+            {                
                 var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
                 IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -161,7 +161,8 @@ namespace Dentist.Controllers
                 WorkWeekEndDay = DayOfWeek.Friday
             });
 
-            WriteContext.SaveChanges();
+            string errorMessage;
+            WriteContext.TrySaveChanges(out errorMessage);
         }
 
         //

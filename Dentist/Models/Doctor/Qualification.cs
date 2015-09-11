@@ -51,7 +51,7 @@ namespace Dentist.Models.Doctor
 
             var results = new List<ValidationResult>();
 
-            // Lazy loading is turned off by EF during validation therefore load the practicies manually
+            // Lazy loading is turned off by EF during validation therefore load the doctor manually
             if (!Context.Entry(this).Reference(p => p.Doctor).IsLoaded)
             {
                 Context.Entry(this).Reference(p => p.Doctor).Load();

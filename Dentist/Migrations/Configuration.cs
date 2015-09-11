@@ -14,6 +14,7 @@ namespace Dentist.Migrations
         {
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;
+
         }
 
         protected override void Seed(Dentist.Models.ApplicationDbContext context)
@@ -45,6 +46,7 @@ namespace Dentist.Migrations
                 new Specialization(){Id = 1, Name = "Dentist"},
                 new Specialization(){Id = 2, Name = "Prosthodontist"}
                 );
+
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 

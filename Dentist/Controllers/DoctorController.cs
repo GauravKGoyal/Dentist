@@ -169,12 +169,12 @@ namespace Dentist.Controllers
             var results = new List<QualificationViewModel>();
             if (viewModels != null && ModelState.IsValid)
             {
-                var doctor = WriteContext.Doctors.First(x => x.Id == doctorId);
-                doctor.Context = WriteContext;
                 foreach (var qualificationViewModel in viewModels)
                 {
                     var qualification = Mapper.Map<Qualification>(qualificationViewModel);
-                    doctor.AddQualification(qualification);                    
+                    qualification.Context = WriteContext;
+                    qualification.DoctorId = doctorId;
+                    WriteContext.Qualifications.Add(qualification);
                     WriteContext.TrySaveChanges(ModelState);
 
                     qualificationViewModel.Id = qualification.Id; 
@@ -239,12 +239,11 @@ namespace Dentist.Controllers
             var results = new List<ExperienceViewModel>();
             if (viewModels != null && ModelState.IsValid)
             {
-                var doctor = WriteContext.Doctors.First(x => x.Id == doctorId);
-                doctor.Context = WriteContext;
                 foreach (var experienceViewModel in viewModels)
                 {
                     var experience = Mapper.Map<Experience>(experienceViewModel);
-                    doctor.AddExperience(experience);
+                    experience.DoctorId = doctorId;
+                    WriteContext.Experiences.Add(experience);
                     WriteContext.TrySaveChanges(ModelState);
 
                     experienceViewModel.Id = experience.Id;
@@ -309,12 +308,11 @@ namespace Dentist.Controllers
             var results = new List<AwardViewModel>();
             if (viewModels != null && ModelState.IsValid)
             {
-                var doctor = WriteContext.Doctors.First(x => x.Id == doctorId);
-                doctor.Context = WriteContext;
                 foreach (var awardViewModel in viewModels)
                 {
                     var award = Mapper.Map<Award>(awardViewModel);
-                    doctor.AddAward(award);
+                    award.DoctorId = doctorId;
+                    WriteContext.Awards.Add(award);
                     WriteContext.TrySaveChanges(ModelState);
 
                     awardViewModel.Id = award.Id;
