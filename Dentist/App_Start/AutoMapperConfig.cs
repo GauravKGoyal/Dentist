@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using Dentist.Models;
 using Dentist.Models.Doctor;
+using Dentist.Models.Patient;
 using Dentist.ViewModels;
 
 namespace Dentist

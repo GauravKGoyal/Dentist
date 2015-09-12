@@ -1,4 +1,5 @@
 ﻿
+@using Dentist.Helpers
 @using Dentist.ViewModels
 
 <script src="~/Scripts/gridHelper.js"></script>
@@ -9,7 +10,11 @@
 @(Html.Kendo().Grid<QualificationViewModel>().Name("grdQualification")
           .DataSource(dataSource => dataSource
               .Ajax()
-              .Model(model => model.Id(x => x.Id))
+              .Model(model =>
+              {
+                  model.Id(x => x.Id);
+                  model.Field(x => x.Year).DefaultValue(SystemDefaults.DefaultYear);
+              })
               .PageSize(pageSizeArray[0])
               .Batch(true)
               .Sort(sort =>

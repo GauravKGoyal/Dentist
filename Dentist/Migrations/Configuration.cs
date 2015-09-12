@@ -1,4 +1,6 @@
+using Dentist.Models;
 using Dentist.Models.Doctor;
+using Dentist.Models.Patient;
 using Microsoft.Ajax.Utilities;
 
 namespace Dentist.Migrations
@@ -47,6 +49,18 @@ namespace Dentist.Migrations
                 new Specialization(){Id = 2, Name = "Prosthodontist"}
                 );
 
+            context.NoteTypes.AddOrUpdate(x => x.Description,
+                new NoteType() {Description = "Complaints"},
+                new NoteType() {Description = "Observations"},
+                new NoteType() {Description = "Investigations"},
+                new NoteType() {Description = "Diagnoses"},
+                new NoteType() {Description = "Notes"}
+                );
+
+            context.JobStates.AddOrUpdate(x=>x.Descrition,
+                new JobState() { Descrition = "Open"},
+                new JobState() { Descrition = "Done"}
+                );
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 

@@ -15,8 +15,10 @@ namespace Dentist.Models.Doctor
         public virtual ICollection<Doctor> Doctors { get; set; }
 
         [Required]
+        [StringLength(100)]
         public string Number { get; set; }
         [Required]
+        [StringLength(100)]
         public string College { get; set; }
     }
 }

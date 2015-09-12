@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Dentist.Enums;
+using Dentist.Models.Patient;
 
 namespace Dentist.Models
 {
@@ -28,6 +29,7 @@ namespace Dentist.Models
         [InverseProperty("PracticeAppointments")]
         public Practice Practice { get; set; }
 
+        [StringLength(100)]
         public string Description { get; set; }
         public AppointmentStatus AppointmentStatus { get; set; }
 

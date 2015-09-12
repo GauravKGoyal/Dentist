@@ -11,6 +11,11 @@ namespace Dentist.Controllers
         // GET: File
         public ActionResult Get(int id)
         {
+            if (id == 0)
+            {
+                return null;
+            }
+
             var fileToRetrieve = ReadContext.Files.Find(id);
             return File(fileToRetrieve.Content, fileToRetrieve.ContentType);
         }

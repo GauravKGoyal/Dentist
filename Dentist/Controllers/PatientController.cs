@@ -8,6 +8,7 @@ using AutoMapper.QueryableExtensions;
 using Dentist.Enums;
 using Dentist.Helpers;
 using Dentist.Models;
+using Dentist.Models.Patient;
 using Dentist.ViewModels;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;

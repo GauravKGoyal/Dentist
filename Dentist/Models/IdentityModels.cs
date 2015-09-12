@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Dentist.Models.Doctor;
+using Dentist.Models.Patient;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WebGrease.Css.Extensions;
@@ -117,7 +118,7 @@ namespace Dentist.Models
 
         public System.Data.Entity.DbSet<Dentist.Models.Practice> Practices { get; set; }
 
-        public System.Data.Entity.DbSet<Dentist.Models.Paitient> Paitients { get; set; }
+        public System.Data.Entity.DbSet<Paitient> Paitients { get; set; }
         public System.Data.Entity.DbSet<Doctor.Doctor> Doctors { get; set; }
 
         public System.Data.Entity.DbSet<Dentist.Models.Address> Addresses { get; set; }
@@ -134,6 +135,15 @@ namespace Dentist.Models
         public System.Data.Entity.DbSet<Qualification> Qualifications { get; set; }
         public System.Data.Entity.DbSet<Experience> Experiences { get; set; }
         public System.Data.Entity.DbSet<Award> Awards { get; set; }
+        public System.Data.Entity.DbSet<VitalSign> VitalSigns { get; set; }
+        public System.Data.Entity.DbSet<Note> Notes { get; set; }
+        public System.Data.Entity.DbSet<NoteType> NoteTypes { get; set; }
+        public System.Data.Entity.DbSet<TreatmentPlan> TreatmentPlans { get; set; }
+        public System.Data.Entity.DbSet<Job> Jobs { get; set; }
+        public System.Data.Entity.DbSet<Sitting> Sittings { get; set; }
+        public System.Data.Entity.DbSet<JobState> JobStates { get; set; }
+        public System.Data.Entity.DbSet<JobTemplate> JobTemplates { get; set; }
+        public System.Data.Entity.DbSet<SittingTemplate> SittingTemplates { get; set; }
         //public System.Data.Entity.DbSet<Registration> Registrations { get; set; }
     }
 

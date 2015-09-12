@@ -21,15 +21,19 @@ namespace Dentist.Models
         public Title Title { get; set; }
 
         [Required]
+        [StringLength(100)]
         public string FirstName { get; set; }
 
         [Required]
+        [StringLength(100)]
         public string LastName { get; set; }
-
+        
+        [StringLength(100)]
         public string Email { get; set; }
 
         public DateTime? DateOfBirth { get; set; }
 
+        [StringLength(100)]
         public string Phone { get; set; }
 
         public PersonRole PersonRole { get; protected set; }

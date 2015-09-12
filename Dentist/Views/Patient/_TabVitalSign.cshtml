@@ -1,39 +1,45 @@
 ﻿@using Dentist.Helpers
 @using Dentist.ViewModels
+@model Dentist.ViewModels.PatientViewModel
 
 <script src="~/Scripts/gridHelper.js"></script>
 @{
     var pageSizeArray = new[] { 20, 50, 100 };
 }
 
-@(Html.Kendo().Grid<AwardViewModel>().Name("grdAward")
+@(Html.Kendo().Grid<VitalSignViewModel>().Name("grdVitalSign")
           .DataSource(dataSource => dataSource
               .Ajax()
             .Model(model =>
             {
                 model.Id(x => x.Id);
-                model.Field(x => x.Year).DefaultValue(SystemDefaults.DefaultYear);
+                model.Field(x => x.PatientId).DefaultValue(Model.Id);
             })
               .PageSize(pageSizeArray[0])
               .Batch(true)
               .Sort(sort =>
               {
-                  sort.Add(x => x.Year).Descending();
+                  sort.Add(x => x.PatientId).Descending();
               }).Events(e =>
               {
                   e.Error("grid_OnError");
 
               })
-              .Read(read => read.Action("GetAwardBrowserItems", "Doctor", new { doctorId = Model.Id }))
-              .Create(create => create.Action("CreateAward", "Doctor", new { doctorId = Model.Id }))
-              .Update(update => update.Action("UpdateAward", "Doctor"))
-              .Destroy(destroy => destroy.Action("DeleteAward", "Doctor"))
+              .Read(read => read.Action("GetVitalSignBrowserItems", "Patient", new { doctorId = Model.Id }))
+                  .Create(create => create.Action("CreateVitalSign", "Patient", new { doctorId = Model.Id }))
+                      .Update(update => update.Action("UpdateVitalSign", "Patient"))
+                      .Destroy(destroy => destroy.Action("DeleteVitalSign", "Patient"))
           )
           .Columns(columns =>
           {
               columns.Bound(x => x.Id);
-              columns.Bound(x => x.Name);
-              columns.Bound(x => x.Year);
+              columns.Bound(x => x.Pulse);
+              columns.Bound(x => x.Temperature);
+              columns.Bound(x => x.SystolicBloodPressure);
+              columns.Bound(x => x.DiastolicBloodPressure);
+              columns.Bound(x => x.Weight);
+              columns.Bound(x => x.ResperatoryRate);
+              
               columns.Command(command => command.Destroy()).Width("10%");
           })
              .ToolBar(toolbar =>
@@ -54,10 +60,3 @@
           .AutoBind(false)
 )
 
-<script>
-    function grdAppointment_OnEdit(e) {
-        if (e.model.isNew()) {
-            e.model.set("DoctorId", '@Model.Id');
-        }
-    }
-</script>

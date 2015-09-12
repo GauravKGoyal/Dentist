@@ -31,6 +31,7 @@ namespace Dentist.Models.Doctor
             //Registration = new Registration(); //owner (nullable 1:M) they should not be created in ctor for ef to work
         }
 
+        [StringLength(100)]
         public string About { get; set; }
         public virtual List<CareService> Services { get; private set; }
         public virtual List<Specialization> Specializations { get; private set; }
@@ -53,6 +54,7 @@ namespace Dentist.Models.Doctor
         [InverseProperty("Doctor")]
         public virtual List<Appointment> Appointments { get; private set; }
 
+        [StringLength(10)]
         public string Color { get; set; }
 
         private Practice LoadPractice(int practiceId)

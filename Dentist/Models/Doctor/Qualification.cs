@@ -13,6 +13,7 @@ namespace Dentist.Models.Doctor
         [Required]
         public string Name { get; set; }
         [Required]
+        [StringLength(100)]
         public string College { get; set; }
         [Required]
         public int Year { get; set; }

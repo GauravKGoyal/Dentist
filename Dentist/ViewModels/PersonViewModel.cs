@@ -39,7 +39,7 @@ namespace Dentist.ViewModels
             }
         }
 
-        public int AvatarId { get; set; }
+        public int? AvatarId { get; set; }
 
         public Title Title { get; set; }
 
@@ -71,7 +71,7 @@ namespace Dentist.ViewModels
         }
         protected virtual void CopyFrom(Person person)
         {
-            AvatarId = person.Files.Count > 0 ? person.Files[person.Files.Count - 1].Id : 0;
+            AvatarId = person.Files.Count > 0 ? person.Files[person.Files.Count - 1].Id : (int?)null;
         }
     }
 }

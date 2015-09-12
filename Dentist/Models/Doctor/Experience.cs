@@ -10,8 +10,10 @@ namespace Dentist.Models.Doctor
         [Required]
         public int ToYear { get; set; }
         [Required]
+        [StringLength(100)]
         public string As { get; set; }
         [Required]
+        [StringLength(100)]
         public string At { get; set; }
         [Required]
         public int DoctorId { get; set; }
