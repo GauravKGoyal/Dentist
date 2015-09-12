@@ -214,9 +214,11 @@
     <Compile Include="Models\Patient\NoteType.cs" />
     <Compile Include="Models\Patient\Sitting.cs" />
     <Compile Include="Models\Patient\SittingTemplate.cs" />
+    <Compile Include="Models\Tags\IModelWithId.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Models\Tags\IModelWithIsDelete.cs" />
     <Compile Include="Models\Tags\IModelWithWriteContext.cs" />
-    <Compile Include="Models\Tags\IModelWithId.cs" />
     <Compile Include="Models\Doctor\Award.cs" />
     <Compile Include="Models\Doctor\Experience.cs" />
     <Compile Include="Models\File.cs" />
