@@ -12,6 +12,7 @@
     @if (!isCreate)
     {
         <li role="presentation"><a id="tabAppointments" href="#Appointments" aria-controls="Appointments" role="tab" data-toggle="tab">Appointments</a></li>
+        <li role="presentation"><a id="tabVitalSigns" href="#VitalSigns" aria-controls="VitalSigns" role="tab" data-toggle="tab">Vital Signs</a></li>
     }
 </ul>
 
@@ -46,6 +47,14 @@
                 <a href="@Url.Action("Index", "Patient")" class="btn btn-default"><span class="k-icon k-cancel"></span> Close</a>
             </div>
         </div>
+
+        <div role="tabpanel" class="tab-pane" id="VitalSigns" style="margin-top: 15px">
+            @Html.Partial("~/Views/Patient/_TabVitalSign.cshtml")
+            <div class="col-md-12" style="text-align:right">
+                <hr>
+                <a href="@Url.Action("Index", "Patient")" class="btn btn-default"><span class="k-icon k-cancel"></span> Close</a>
+            </div>
+        </div>
     }
 </div>
 
@@ -53,13 +62,20 @@
 <script>
     $(function () {
         window.grdAppointmentLoaded = false;
-        window.grdAvailabilityLoaded = false;
+        window.grdVitalSignsLoaded = false;
     });
 
     $("#tabAppointments").on("click", function () {
         if (!window.grdAppointmentLoaded) {
             $('#grdAppointment').data('kendoGrid').dataSource.read();
             window.grdAppointmentLoaded = true;
+        }
+    });
+
+    $("#tabVitalSigns").on("click", function () {
+        if (!window.grdVitalSignsLoaded) {
+            $('#grdVitalSign').data('kendoGrid').dataSource.read();
+            window.grdVitalSignsLoaded = true;
         }
     });
 

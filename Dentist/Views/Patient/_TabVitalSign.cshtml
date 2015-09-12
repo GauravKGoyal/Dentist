@@ -25,8 +25,8 @@
                   e.Error("grid_OnError");
 
               })
-              .Read(read => read.Action("GetVitalSignBrowserItems", "Patient", new { doctorId = Model.Id }))
-                  .Create(create => create.Action("CreateVitalSign", "Patient", new { doctorId = Model.Id }))
+              .Read(read => read.Action("GetVitalSignBrowserItems", "Patient", new { patientId = Model.Id }))
+                      .Create(create => create.Action("CreateVitalSign", "Patient", new { patientId = Model.Id }))
                       .Update(update => update.Action("UpdateVitalSign", "Patient"))
                       .Destroy(destroy => destroy.Action("DeleteVitalSign", "Patient"))
           )

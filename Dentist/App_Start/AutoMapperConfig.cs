@@ -48,6 +48,9 @@ namespace Dentist
             Mapper.CreateMap<Experience, ExperienceViewModel>();
             Mapper.CreateMap<ExperienceViewModel, Experience>();
 
+            Mapper.CreateMap<VitalSign, VitalSignViewModel>();
+            Mapper.CreateMap<VitalSignViewModel, VitalSign>();
+
             Mapper.CreateMap<Award, AwardViewModel>();
             Mapper.CreateMap<AwardViewModel, Award>();
 

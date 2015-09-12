@@ -755,6 +755,7 @@
     <Content Include="Views\Doctor\_TabExperience.cshtml" />
     <Content Include="Views\Doctor\_TabAward.cshtml" />
     <Content Include="Views\Patient\_TabVitalSign.cshtml" />
+    <Content Include="Views\Patient\TreatmentPlan.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Dentist.ViewModels
 {
     public class VitalSignViewModel
     {
+        [Editable(false)]
         public int Id { get; set; }        
         public int Pulse { get; set; }
         public double Temperature { get; set; }

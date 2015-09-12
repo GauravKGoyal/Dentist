@@ -288,7 +288,7 @@ namespace Dentist.Controllers
             return Json(experienceViewModels.ToDataSourceResult(request, ModelState));
         }
 
-//---------------------------------
+        #region Award -------------------------------------------------------------------------------------
         public ActionResult GetAwardBrowserItems([DataSourceRequest] DataSourceRequest request, int doctorId)
         {
             if (doctorId == 0)
@@ -356,6 +356,7 @@ namespace Dentist.Controllers
 
             return Json(awardViewModels.ToDataSourceResult(request, ModelState));
         }
+        #endregion
 
     }
 }
