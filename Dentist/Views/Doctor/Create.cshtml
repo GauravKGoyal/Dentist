@@ -2,7 +2,7 @@
 
 @{
     var isCreate = Model == null || Model.Id == 0;
-    ViewBag.Title = isCreate ? "Create Doctor" : "Edit Doctor- " + Model.FirstName + " " + Model.LastName;
+    ViewBag.Title = isCreate ? "Create Doctor" : "Edit " + Model.FirstName + " " + Model.LastName;
     var actionName = isCreate ? "Create" : "Edit";
 }
 
