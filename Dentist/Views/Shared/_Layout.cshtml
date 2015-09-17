@@ -34,7 +34,7 @@
         <p> userIsAuthenticated: @userIsAuthenticated</p>*@
 
         <div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="icon-bar"></span>
@@ -66,18 +66,18 @@
                         </li>
 
                     </ul>
-                    @*@Html.Partial("_LoginPartial")*@
+                    @Html.Partial("_LoginPartial")
                 </div>
             </div>
         </div>
-
-        <div class="well well-sm" style="margin-bottom: 10px">
-            <div class="container">
-                <h4 style="margin: 0px; padding-Left:15px">@ViewBag.Title</h4>
-            </div>
+        
+        
+        <div class="well well-sm visible-md-block visible-lg-block" style="left:0;right:0;position:fixed; z-index:1; height: 50px; top: 50px">
+            <h2 style="margin: 0px; padding-Left:15px"><strong>@ViewBag.Title</strong></h2>
         </div>
 
-        <div class="container"> @*body-content*@
+        <div class="container-fluid">
+            @*body-content*@
             @RenderBody()
             <div id="divFooter" class="col-md-12">
                 <footer>

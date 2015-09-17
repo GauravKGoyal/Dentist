@@ -24,6 +24,9 @@ namespace Dentist
             Mapper.CreateMap<Practice, SchedulerPracticeViewModel>();
             Mapper.CreateMap<Doctor, SchedulerDoctorViewModel>();
 
+            Mapper.CreateMap<Person, PersonListViewModel>();
+
+            Mapper.CreateMap<Person, PersonViewModel>();
 
             Mapper.CreateMap<Paitient, PatientViewModel>()
                 .ForMember(d => d.PatientViewPracticeId, opt => opt.MapFrom(s => s.Practice.Id));

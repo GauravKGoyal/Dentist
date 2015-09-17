@@ -19,5 +19,7 @@ namespace Dentist.ViewModels
 
         [DataType(DataType.PhoneNumber)]
         public string Phone { get; set; }
+
+        public int? AvatarId { get; set; }
     }
 }

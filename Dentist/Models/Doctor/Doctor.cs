@@ -39,6 +39,7 @@ namespace Dentist.Models.Doctor
         public virtual List<Experience> Experiences { get; private set; }
         public virtual List<Award> Awards { get; private set; }
         public virtual List<Membership> Memberships { get; private set; }
+        public int? ExperienceInYears { get; set; }
         
         public virtual Registration Registration { get; set; }
         public int? RegistrationId { get; set; }

@@ -277,6 +277,9 @@
     <Content Include="Content\Images\scheduler-people.png" />
     <Content Include="Content\Images\SmilyTooth.jpg" />
     <Content Include="Content\Images\treeViewIcon.png" />
+    <Content Include="Content\Images\user.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\kendo\bootstrap\editor.png" />
     <Content Include="Content\kendo\bootstrap\imagebrowser.png" />
     <Content Include="Content\kendo\bootstrap\indeterminate.gif" />

@@ -1,4 +1,5 @@
-﻿@using Dentist.Enums
+﻿@using System.Web.UI.WebControls
+@using Dentist.Enums
 @using Dentist.ViewModels
 
 @{
@@ -19,19 +20,45 @@
           )
           .Columns(columns =>
           {
-              columns.Bound(x => x.Id).Width("5%");
-              columns.Bound(x => x.FirstName);
-              columns.Bound(x => x.LastName);
-              columns.Bound(x => x.Email);
-              columns.Bound(x => x.Phone);
+              //columns.Bound(x => x.Id).Title("Picture").Width(140);
+              columns.Bound(x => x.FirstName).Title("Detail").ClientTemplate(
+             "<table>"+
+               "<tr data-uid='#: data.Id #'>" +
+                 "<td style=width:140px>" +
+                       "#if (data.AvatarId == 0){# " +
+                            "<img width=140px src='" + Url.Content("~/Content/Images/user.png") +"' alt='#: data.AvatarId #' />" +
+                       "#}else{#"+
+                            "<img width=140px src='" + Url.Content("~/File/Get?id=") + "#:data.AvatarId#' alt='#: data.AvatarId #' />" +
+                       "#}#"+
+                 "</td>" +
+                 "<td style='padding-top:0' >" +
+                    "<h3 style='margin-top:0'><a href=/Doctor/Edit/#:id#>Dr #: FirstName # #: LastName #</a></h3>" +
+                    "<div>#:QualificationsName# </div>" +
+                    "<div>#:ExperienceInYears# years Experience</div>" +
+                    "<div>#:About#</div>" +
+                 "</td>" +
+               "</tr>"+
+             "</table>"
+                  );
               columns.Command(
                   command =>
                   {
-                      command.Custom("Edit").Click("grdDoctor_onEdit").Text("Edit");
+                      //command.Custom("Edit").Click("grdDoctor_onEdit").Text("Edit");
                       command.Custom("Delete").Click("grdDoctor_onDelete").Text("Delete");
-                  }).Width("16%");
+                  }).Width(100);
 
           })
+          //.ClientRowTemplate(
+          //  "<tr data-uid='#: data.Id #'>" +
+          //      "<td class='photo'>" +
+          //             "<img src='" + Url.Content("~/File/Get?id=") + "#:data.AvatarId#' alt='#: data.AvatarId #' />" +
+          //      "</td>" +
+          //      "<td class='details'>" +
+          //          "<a href=/Doctor/Edit/#:id#><h2 class='title'>Dr #: FirstName # #: LastName #</h2></a>" +
+          //          "<span class='title'>Experience: 15 Years</span>" +
+          //      "</td>" +
+          //   "</tr>"
+          //)
           .Resizable(resizable => resizable.Columns(true))
               .ToolBar(toolbar => { toolbar.Custom().Name("Create").Action("Create", "Doctor"); })
               .Events(e => e.DataBound("grd_onDataBound"))

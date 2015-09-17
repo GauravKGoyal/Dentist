@@ -55,11 +55,36 @@ namespace Dentist.Controllers
 
         public ActionResult GetBrowserItems([DataSourceRequest] DataSourceRequest request)
         {
-            var context = ReadContext;
-            var query = context.Doctors.Where(x => x.IsDeleted != true);
+            var query = ReadContext.Doctors
+                .Where(x => x.IsDeleted != true);
             query = query.Where(x => x.PersonRole == PersonRole.Doctor);
             var projectedQuery = query.ProjectTo<DoctorListViewModel>();
             var result = projectedQuery.ToDataSourceResult(request);
+
+            var doctorViewModels = ((IEnumerable<DoctorListViewModel>) result.Data);
+            var doctorIds = doctorViewModels.Select(x => x.Id);
+
+            foreach (var doctorListViewModel in doctorViewModels)
+            {
+                doctorListViewModel.AvatarId = ReadContext.Files
+                    .Where(f => f.FileType == FileType.Avatar)
+                    .Where(f => f.Persons.Any(p => p.Id == doctorListViewModel.Id))
+                    .OrderByDescending(f=> f.Id)
+                    .Select(f => f.Id)
+                    .ToList()
+                    .FirstOrDefault();
+
+            }
+
+            foreach (var doctorListViewModel in doctorViewModels)
+            {                
+                var qualifications = ReadContext.Qualifications
+                    .Where(f => f.DoctorId == doctorListViewModel.Id)
+                    .Select(x => x.Name)
+                    .ToList();
+                doctorListViewModel.QualificationsName = string.Join(",", qualifications);
+            }
+
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

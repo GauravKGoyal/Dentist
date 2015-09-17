@@ -23,6 +23,11 @@ namespace Dentist.ViewModels
             get { return true; }
         }
 
+        [DataType(DataType.MultilineText)]
+        public string About { get; set; }
+
+        public int? ExperienceInYears { get; set; }
+
         public RegistrationViewModel Registration { get; set; }
 
         [Display(Name = "Appointment Color")]

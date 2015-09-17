@@ -1,9 +1,15 @@
 ﻿body {
-    padding-top: 50px;
+    padding-top: 110px;
     padding-bottom: 20px;
     background-image: url('Images/background2.jpg');
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+@media (max-width: 978px) {
+    body {
+      padding-top: 60px;
+    }
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -87,8 +93,21 @@ textarea {
     text-align: right;
     filter: alpha(opacity=0);
     opacity: 0;
-    outline: none;
+    outline: none;  
     background: white;
     cursor: inherit;
     display: block;
+}
+
+div.fixed {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    border: 3px solid #8AC007;
+}
+
+ul li a.selected {
+    color: #FFFFFF;
+    font-weight: bold !important;
 }

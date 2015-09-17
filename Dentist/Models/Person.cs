@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using Dentist.Enums;
 using Dentist.Models.Tags;
 
@@ -17,7 +19,7 @@ namespace Dentist.Models
         public int Id { get; set; }
 
         public virtual List<File> Files { get; set; }
-
+      
         public Title Title { get; set; }
 
         [Required]

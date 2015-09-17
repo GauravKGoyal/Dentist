@@ -168,6 +168,22 @@
         </div>
     </div>
     <div class="form-group">
+        @Html.LabelFor(model => model.About, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.About, new { htmlAttributes = new { rows="3" } })
+            @Html.ValidationMessageFor(model => model.About, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ExperienceInYears, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.Kendo().IntegerTextBoxFor(model => model.ExperienceInYears)
+            @Html.ValidationMessageFor(model => model.ExperienceInYears, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
         <div class="col-md-4">
         </div>
         <div class="col-md-8">
@@ -180,7 +196,7 @@
         <div class="col-md-5">
             @if (Model.AvatarId.HasValue)
             { 
-                <img class="img-thumbnail" src="~/File/Get?id=@Model.AvatarId" alt="avatar" />
+                <img class="img-thumbnail" height="140" src="~/File/Get?id=@Model.AvatarId" alt="avatar" />
             }
         </div>
     </div>
