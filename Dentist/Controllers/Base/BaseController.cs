@@ -1,8 +1,7 @@
 ﻿using System.Web.Mvc;
-using Autofac;
 using Dentist.Models;
 
-namespace Dentist.Controllers
+namespace Dentist.Controllers.Base
 {
     public class BaseController : Controller
     {

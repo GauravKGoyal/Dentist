@@ -19,8 +19,11 @@ namespace Dentist.ViewModels
         public DateTime EndDateTime { get; set; }
 
         [Display(Name = "Doctor")]
+        [UIHint("DoctorSelector")]
         public int DoctorId { get; set; }
+
         [Display(Name = "Patient")]
+        [UIHint("PatientSelector")]
         public int PatientId { get; set; }
 
         [Display(Name = "Practice")]

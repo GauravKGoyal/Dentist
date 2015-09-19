@@ -8,6 +8,7 @@ using Autofac;
 using Autofac.Core;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Dentist.Controllers.Base;
 using Dentist.Enums;
 using Dentist.Helpers;
 using Dentist.Models;
@@ -175,6 +176,7 @@ namespace Dentist.Controllers
             return Json(new { Success = changesSaved, ErrorMessage = errorMessage });
         }
 
+        #region Qualification
         public ActionResult GetQualificationBrowserItems([DataSourceRequest] DataSourceRequest request, int doctorId)
         {
             if (doctorId == 0)
@@ -244,7 +246,9 @@ namespace Dentist.Controllers
 
             return Json(qualificationViewModelList.ToDataSourceResult(request, ModelState));
         }
-        
+        # endregion 
+
+        #region Experience
         public ActionResult GetExperienceBrowserItems([DataSourceRequest] DataSourceRequest request, int doctorId)
         {
             if (doctorId == 0)
@@ -312,8 +316,9 @@ namespace Dentist.Controllers
 
             return Json(experienceViewModels.ToDataSourceResult(request, ModelState));
         }
+        #endregion
 
-        #region Award -------------------------------------------------------------------------------------
+        #region Award
         public ActionResult GetAwardBrowserItems([DataSourceRequest] DataSourceRequest request, int doctorId)
         {
             if (doctorId == 0)
@@ -383,5 +388,61 @@ namespace Dentist.Controllers
         }
         #endregion
 
+        #region DailyAvailability
+        public ActionResult GetDailyAvailabilityBrowserItems([DataSourceRequest] DataSourceRequest request, int personId)
+        {
+            var query = ReadContext.DailyAvailabilities
+                        .Include(x => x.Practice)
+                        .Where(x => x.DoctorId == personId)
+                        .ProjectTo<DailyAvailabilityViewModel>();
+
+            var result = query.ToDataSourceResult(request);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult CreateDailyAvailability([DataSourceRequest] DataSourceRequest request, DailyAvailabilityViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var dailyAvailability = Mapper.Map<DailyAvailability>(viewModel);
+                WriteContext.DailyAvailabilities.Add(dailyAvailability);
+                WriteContext.TrySaveChanges(ModelState);
+                // load practice to load practice name
+                var practice = dailyAvailability.Practice;
+            }
+
+            // Return the inserted product. The grid needs the generated id. Also return any validation errors.
+            return Json(new[] { viewModel }.ToDataSourceResult(request, ModelState));
+        }
+
+        public ActionResult UpdateDailyAvailability([DataSourceRequest] DataSourceRequest request, DailyAvailabilityViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var dailyAvailability = WriteContext.DailyAvailabilities.First(x => x.Id == viewModel.Id);
+                Mapper.Map(viewModel, dailyAvailability);
+                WriteContext.TrySaveChanges(ModelState);
+                // load practice to load practice name
+                var practice = dailyAvailability.Practice;
+            }
+
+            // Return the updated item. Also return any validation errors.
+            return Json(new[] { viewModel }.ToDataSourceResult(request, ModelState));
+        }
+
+        public ActionResult DeleteDailyAvailability([DataSourceRequest] DataSourceRequest request, DailyAvailabilityViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var dailyAvailability = WriteContext.DailyAvailabilities.First(x => x.Id == viewModel.Id);
+                WriteContext.DailyAvailabilities.Remove(dailyAvailability);
+                WriteContext.TrySaveChanges(ModelState);
+            }
+
+            // Return the removed item. Also return any validation errors.
+            return Json(new[] { viewModel }.ToDataSourceResult(request, ModelState));
+        }
+
+        #endregion
     }
 }

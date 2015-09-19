@@ -6,6 +6,7 @@ using System.Net;
 using System.Web.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Dentist.Controllers.Base;
 using Dentist.Enums;
 using Dentist.Helpers;
 using Dentist.Models;
@@ -151,75 +152,8 @@ namespace Dentist.Controllers
         //        return _patientService;
         //    }
         //}
+        
+       
 
-        #region  -------------------------------------------------------------------------------------
-        public ActionResult GetVitalSignBrowserItems([DataSourceRequest] DataSourceRequest request, int patientId)
-        {
-            if (patientId == 0)
-            {
-                throw new ArgumentException("Patient id cannot be 0", "patientId");
-            }
-
-            var query = ReadContext.Set<VitalSign>().Where(x => x.PatientId == patientId)
-                        .ProjectTo<VitalSignViewModel>();
-            var result = query.ToDataSourceResult(request);
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult CreateVitalSign([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<VitalSignViewModel> viewModels, int patientId)
-        {
-            var results = new List<VitalSignViewModel>();
-            if (viewModels != null && ModelState.IsValid)
-            {
-                foreach (var viewModel in viewModels)
-                {
-                    var model = Mapper.Map<VitalSign>(viewModel);
-                    model.PatientId = patientId;
-                    WriteContext.Set<VitalSign>().Add(model);
-                    WriteContext.TrySaveChanges(ModelState);
-
-                    viewModel.Id = model.Id;
-                    results.Add(viewModel);
-                }
-
-            }
-            return Json(results.ToDataSourceResult(request, ModelState));
-        }
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult UpdateVitalSign([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<VitalSignViewModel> viewModels)
-        {
-             viewModels = viewModels as IList<VitalSignViewModel> ?? viewModels.ToList();
-
-            if (ModelState.IsValid)
-            {
-                foreach (var viewModel in viewModels)
-                {
-                    var model = WriteContext.Set<VitalSign>().Find(viewModel.Id);
-                    Mapper.Map(viewModel, model);
-                }
-                WriteContext.TrySaveChanges(ModelState);
-            }
-
-            return Json(viewModels.ToDataSourceResult(request, ModelState));
-        }
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult DeleteVitalSign([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<VitalSignViewModel> viewModels)
-        {
-            viewModels = viewModels as IList<VitalSignViewModel> ?? viewModels.ToList();
-
-            foreach (var viewModel in viewModels)
-            {
-                var model = new VitalSign() { Id = viewModel.Id };
-                WriteContext.Set<VitalSign>().Attach(model);
-                WriteContext.Set<VitalSign>().Remove(model);
-            }
-            WriteContext.TrySaveChanges(ModelState);
-
-            return Json(viewModels.ToDataSourceResult(request, ModelState));
-        }
-        #endregion
     }
 }

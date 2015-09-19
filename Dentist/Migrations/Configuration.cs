@@ -57,10 +57,10 @@ namespace Dentist.Migrations
                 new NoteType() {Description = "Notes"}
                 );
 
-            context.JobStates.AddOrUpdate(x=>x.Descrition,
-                new JobState() { Descrition = "Open"},
-                new JobState() { Descrition = "Done"}
-                );
+            //context.JobStates.AddOrUpdate(x=>x.Descrition,
+            //    new JobState() { Descrition = "Open"},
+            //    new JobState() { Descrition = "Done"}
+            //    );
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 

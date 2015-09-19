@@ -1,10 +1,11 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using Dentist.Controllers.Base;
 using Dentist.Models.Doctor;
 
 namespace Dentist.Controllers
 {
-    public class CareServicesController : CrudController<CareService>
+    public class CareServicesController : PageCrudController<CareService>
     {
         public CareServicesController()
             : base("CareServices")

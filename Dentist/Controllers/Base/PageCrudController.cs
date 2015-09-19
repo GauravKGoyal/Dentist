@@ -1,28 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Dentist.Enums;
 using Dentist.Helpers;
-using Dentist.Models;
 using Dentist.Models.Tags;
-using Dentist.ViewModels;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 
-namespace Dentist.Controllers
+namespace Dentist.Controllers.Base
 {
     // IModelWithName - Name property is required by the grid
     // IModelWithId - Id property is required by the grid and for Deleting a record
     // Note this controller does not consider view model approach
-    public class CrudController<T> : BaseController where T : class, IModelWithId, IModelWithName
+    public class PageCrudController<T> : BaseController where T : class, IModelWithId, IModelWithName
     {
         public string ControllerName { get; set; }
 
-        protected CrudController(string controllerName) : base()
+        protected PageCrudController(string controllerName) : base()
         {
             ControllerName = controllerName;
         }

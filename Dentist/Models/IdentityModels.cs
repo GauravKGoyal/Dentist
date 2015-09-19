@@ -139,13 +139,8 @@ namespace Dentist.Models
         public System.Data.Entity.DbSet<Note> Notes { get; set; }
         public System.Data.Entity.DbSet<NoteType> NoteTypes { get; set; }
         public System.Data.Entity.DbSet<TreatmentPlan> TreatmentPlans { get; set; }
-        public System.Data.Entity.DbSet<Job> Jobs { get; set; }
-        public System.Data.Entity.DbSet<Sitting> Sittings { get; set; }
-        public System.Data.Entity.DbSet<JobState> JobStates { get; set; }
-        public System.Data.Entity.DbSet<JobTemplate> JobTemplates { get; set; }
-        public System.Data.Entity.DbSet<SittingTemplate> SittingTemplates { get; set; }
-        //public System.Data.Entity.DbSet<Registration> Registrations { get; set; }
-    }
+        public System.Data.Entity.DbSet<Treatment> Treatments { get; set; }
+   }
 
 
 }

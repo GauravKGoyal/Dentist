@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using Dentist.Controllers.Base;
 using Dentist.Models.Doctor;
 using Dentist.ViewModels;
 
 namespace Dentist.Controllers
 {
-    public class MembershipsController : CrudController<Membership>
+    public class MembershipsController : PageCrudController<Membership>
     {
         public MembershipsController()
             : base("Memberships")

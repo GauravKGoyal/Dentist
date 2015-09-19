@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using AutoMapper;
+using Dentist.Controllers.Base;
 using Dentist.ViewModels;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;

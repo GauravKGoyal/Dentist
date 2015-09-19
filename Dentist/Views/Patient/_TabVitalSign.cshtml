@@ -9,14 +9,14 @@
 
 @(Html.Kendo().Grid<VitalSignViewModel>().Name("grdVitalSign")
           .DataSource(dataSource => dataSource
-              .Ajax()
+            .Ajax()
             .Model(model =>
             {
                 model.Id(x => x.Id);
                 model.Field(x => x.PatientId).DefaultValue(Model.Id);
+                model.Field(x => x.RecordedDate).DefaultValue(DateTime.Now);
             })
               .PageSize(pageSizeArray[0])
-              .Batch(true)
               .Sort(sort =>
               {
                   sort.Add(x => x.PatientId).Descending();
@@ -25,10 +25,10 @@
                   e.Error("grid_OnError");
 
               })
-              .Read(read => read.Action("GetVitalSignBrowserItems", "Patient", new { patientId = Model.Id }))
-                      .Create(create => create.Action("CreateVitalSign", "Patient", new { patientId = Model.Id }))
-                      .Update(update => update.Action("UpdateVitalSign", "Patient"))
-                      .Destroy(destroy => destroy.Action("DeleteVitalSign", "Patient"))
+            .Read(read => read.Action("GetVitalSignBrowserItems", "VitalSign", new { patientId = Model.Id }))
+            .Create(create => create.Action("Create", "VitalSign"))
+            .Update(update => update.Action("Update", "VitalSign"))
+            .Destroy(destroy => destroy.Action("Delete", "VitalSign"))
           )
           .Columns(columns =>
           {
@@ -39,22 +39,21 @@
               columns.Bound(x => x.DiastolicBloodPressure);
               columns.Bound(x => x.Weight);
               columns.Bound(x => x.ResperatoryRate);
-              
-              columns.Command(command => command.Destroy()).Width("10%");
+              columns.Command(command =>
+              {
+                  command.Destroy();
+                  command.Edit();
+              }).Width("12%");
           })
-             .ToolBar(toolbar =>
-          {
-              toolbar.Create();
-              toolbar.Save();
-          })
-          .Editable(editable => editable.Mode(GridEditMode.InCell)
+          .ToolBar(toolbar => toolbar.Create())
+          .Editable(editable => editable.Mode(GridEditMode.PopUp)
           )
           .Resizable(resizable => resizable.Columns(true))
           .Pageable(pager =>
           {
               pager.PageSizes(pageSizeArray);
           })
-              .Navigatable()
+          .Navigatable()
           .Sortable()
           .Scrollable(s => s.Height("auto"))
           .AutoBind(false)

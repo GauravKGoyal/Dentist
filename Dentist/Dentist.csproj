@@ -179,20 +179,23 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\Base\BaseController.cs" />
+    <Compile Include="Controllers\Base\PopupPageCrudController.cs" />
     <Compile Include="Controllers\DoctorController.cs" />
     <Compile Include="Controllers\FileController.cs" />
-    <Compile Include="Controllers\CrudController.cs" />
+    <Compile Include="Controllers\Base\PageCrudController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PatientController.cs" />
     <Compile Include="Controllers\PracticeController.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
-    <Compile Include="Controllers\PeopleController.cs" />
+    <Compile Include="Controllers\AppointmentController.cs" />
     <Compile Include="Controllers\MembershipsController.cs" />
     <Compile Include="Controllers\SpecializationsController.cs" />
     <Compile Include="Controllers\CareServicesController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
+    <Compile Include="Controllers\TreatmentPlantController.cs" />
     <Compile Include="Controllers\TryController.cs" />
+    <Compile Include="Controllers\VitalSignController.cs" />
     <Compile Include="Enums\Enums.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -207,13 +210,10 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Appointment.cs" />
-    <Compile Include="Models\Patient\Job.cs" />
+    <Compile Include="Models\Patient\Treatment.cs" />
     <Compile Include="Models\Patient\JobState.cs" />
-    <Compile Include="Models\Patient\JobTemplate.cs" />
     <Compile Include="Models\Patient\Note.cs" />
     <Compile Include="Models\Patient\NoteType.cs" />
-    <Compile Include="Models\Patient\Sitting.cs" />
-    <Compile Include="Models\Patient\SittingTemplate.cs" />
     <Compile Include="Models\Tags\IModelWithId.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -265,6 +265,7 @@
     <Compile Include="ViewModels\SchedulerAppointmentViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\TreatmentPlanViewModel.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="ViewModels\VitalSignViewModel.cs" />
   </ItemGroup>
@@ -723,8 +724,8 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\People\_TabAppointment.cshtml" />
-    <Content Include="Views\People\_TabAvailability.cshtml" />
+    <Content Include="Views\Appointment\_TabAppointment.cshtml" />
+    <Content Include="Views\Doctor\_TabAvailability.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DailyAvailabilityViewModel.cshtml" />
     <Content Include="Views\Scheduler\Index.cshtml" />
     <Content Include="Views\Scheduler\EditorTemplates\SchedulerAppointmentView.cshtml" />
@@ -750,8 +751,8 @@
     <Content Include="Views\Shared\EditorTemplates\Number.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Time.cshtml" />
     <Content Include="Views\Settings\EditCalenderSetting.cshtml" />
-    <Content Include="Views\Crud\Create.cshtml" />
-    <Content Include="Views\Crud\Index.cshtml" />
+    <Content Include="Views\PageCrud\Create.cshtml" />
+    <Content Include="Views\PageCrud\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\--String.cshtml" />
     <Content Include="Views\Doctor\_TabQualification.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Year.cshtml" />
@@ -759,6 +760,10 @@
     <Content Include="Views\Doctor\_TabAward.cshtml" />
     <Content Include="Views\Patient\_TabVitalSign.cshtml" />
     <Content Include="Views\Patient\TreatmentPlan.cshtml" />
+    <Content Include="Views\Patient\_TabTreatmentPlan.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DoctorSelector.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PatientSelector.cshtml" />
+    <Content Include="Views\Patient\EditorTemplates\VitalSignViewModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -768,9 +773,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Views\Appointment\EditorTemplates\" />
     <Folder Include="Views\File\" />
-    <Folder Include="Views\People\EditorTemplates\" />
     <Folder Include="Views\Qualification\" />
+    <Folder Include="Views\TreatmentPlant\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

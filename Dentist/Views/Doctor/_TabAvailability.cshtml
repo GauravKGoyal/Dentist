@@ -8,10 +8,10 @@
                   sort.Add(x => x.DailyAvailabilityViewModelPracticeName);
                   sort.Add(x => x.DayOfWeek);
               })
-              .Read(read => read.Action("GetDailyAvailabilityBrowserItems", "People", new { personId = Model.Id }))
-              .Create(create => create.Action("CreateDailyAvailability", "People"))
-              .Update(update => update.Action("UpdateDailyAvailability", "People"))
-              .Destroy(destroy => destroy.Action("DeleteDailyAvailability", "People"))
+                  .Read(read => read.Action("GetDailyAvailabilityBrowserItems", "Doctor", new { personId = Model.Id }))
+                      .Create(create => create.Action("CreateDailyAvailability", "Doctor"))
+                      .Update(update => update.Action("UpdateDailyAvailability", "Doctor"))
+                      .Destroy(destroy => destroy.Action("DeleteDailyAvailability", "Doctor"))
           )
           .Columns(columns =>
           {

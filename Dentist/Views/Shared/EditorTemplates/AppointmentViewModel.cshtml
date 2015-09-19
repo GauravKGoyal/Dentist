@@ -16,14 +16,8 @@
         @Html.LabelFor(model => model.DoctorId, new { @class = "control-label" })
     </div>
     <div class="editor-field">
-        @(Html.Kendo().DropDownListFor(model => model.DoctorId)
-              .OptionLabel("--Select--")
-              .HtmlAttributes(new { style = "width: 100%" })
-              .DataTextField("Text")
-              .DataValueField("Id")
-              .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "Doctor")))
-        )
-        @Html.ValidationMessageFor(model => model.PatientId, "", new { @class = "text-danger" })
+        @Html.EditorFor(model => model.DoctorId)  
+        @Html.ValidationMessageFor(model => model.DoctorId, "", new { @class = "text-danger" })
     </div>
 
     <div class="editor-label">
@@ -48,13 +42,7 @@
         @Html.LabelFor(model => model.PatientId, new { @class = "control-label" })
     </div>
     <div class="editor-field">
-        @(Html.Kendo().DropDownListFor(model => model.PatientId)
-              .OptionLabel("--Select--")
-              .HtmlAttributes(new { style = "width: 100%" })
-              .DataTextField("Text")
-              .DataValueField("Id")
-              .DataSource(source => source.Read(read => read.Action("GetAllIdTexts", "Patient")))
-              )
+        @Html.EditorFor(model => model.PatientId)     
         @Html.ValidationMessageFor(model => model.PatientId, "", new { @class = "text-danger" })
     </div>
 

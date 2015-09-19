@@ -26,6 +26,7 @@ namespace Dentist.ViewModels
         [DataType(DataType.MultilineText)]
         public string About { get; set; }
 
+        [Display(Name = "Experience in years")]
         public int? ExperienceInYears { get; set; }
 
         public RegistrationViewModel Registration { get; set; }

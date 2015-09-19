@@ -7,16 +7,18 @@
 }
 
 @(Html.Kendo().Grid<AppointmentViewModel>().Name("grdAppointment")
-          .DataSource(dataSource => dataSource.Ajax().Model(model => model.Id(x => x.Id))
+          .DataSource(dataSource => dataSource
+              .Ajax()
+              .Model(model => model.Id(x => x.Id))
               .PageSize(pageSizeArray[0])
               .Sort(sort =>
               {
                   sort.Add(x => x.StartDateTime).Descending();
               })
-              .Read(read => read.Action("GetAppointmentBrowserItems", "People", new { personId = Model.Id } ))
-              .Create(create => create.Action("CreateAppointment", "People"))
-              .Update(update => update.Action("UpdateAppointment", "People"))
-              .Destroy(destroy => destroy.Action("DeleteAppointment", "People"))
+              .Read(read => read.Action("GetAppointmentBrowserItems", "Appointment", new { personId = Model.Id } ))
+              .Create(create => create.Action("CreateAppointment", "Appointment"))
+              .Update(update => update.Action("UpdateAppointment", "Appointment"))
+              .Destroy(destroy => destroy.Action("DeleteAppointment", "Appointment"))
           )
           .Columns(columns =>
           {

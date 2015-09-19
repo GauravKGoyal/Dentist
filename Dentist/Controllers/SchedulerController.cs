@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Dentist.Controllers.Base;
 using Dentist.Enums;
 using Dentist.Helpers;
 using Dentist.Models;
