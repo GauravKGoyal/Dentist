@@ -180,7 +180,9 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Base\BaseController.cs" />
-    <Compile Include="Controllers\Base\PopupPageCrudController.cs" />
+    <Compile Include="Controllers\Base\PopupPageCrudController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Controllers\DoctorController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\Base\PageCrudController.cs" />
@@ -190,12 +192,18 @@
     <Compile Include="Controllers\SchedulerController.cs" />
     <Compile Include="Controllers\AppointmentController.cs" />
     <Compile Include="Controllers\MembershipsController.cs" />
-    <Compile Include="Controllers\SpecializationsController.cs" />
     <Compile Include="Controllers\CareServicesController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
-    <Compile Include="Controllers\TreatmentPlantController.cs" />
+    <Compile Include="Controllers\SpecializationsController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\TreatmentPlantController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Controllers\TryController.cs" />
-    <Compile Include="Controllers\VitalSignController.cs" />
+    <Compile Include="Controllers\VitalSignController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Enums\Enums.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -692,6 +700,18 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Todos.txt" />
+    <Content Include="Views\Patient\EditorTemplates\VitalSignViewModel.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Patient\_TabTreatmentPlan.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Shared\EditorTemplates\DoctorSelector.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Shared\EditorTemplates\PatientSelector.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -760,10 +780,6 @@
     <Content Include="Views\Doctor\_TabAward.cshtml" />
     <Content Include="Views\Patient\_TabVitalSign.cshtml" />
     <Content Include="Views\Patient\TreatmentPlan.cshtml" />
-    <Content Include="Views\Patient\_TabTreatmentPlan.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\DoctorSelector.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\PatientSelector.cshtml" />
-    <Content Include="Views\Patient\EditorTemplates\VitalSignViewModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

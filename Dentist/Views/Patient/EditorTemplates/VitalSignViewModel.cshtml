@@ -1,0 +1,110 @@
+﻿@using Dentist.Enums
+@using Dentist.Models
+@model Dentist.ViewModels.VitalSignViewModel
+
+<script>
+    function filterPracticeByDoctor() {
+        return { doctorId: $("#DoctorId").val() }
+    }
+</script>
+
+<fieldset class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.DoctorId, new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.DoctorId)
+        @Html.ValidationMessageFor(model => model.DoctorId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.PracticeId, new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @(Html.Kendo().DropDownListFor(model => model.PracticeId)
+              .OptionLabel("--Select--")
+              .HtmlAttributes(new { style = "width: 100%" })
+              .DataTextField("Text")
+              .DataValueField("Id")
+              .DataSource(source => source.Read(read => read
+                  .Action("GetPracticesIdTextsByDoctor", "Practice").Data("filterPracticeByDoctor"))
+                  .ServerFiltering(true))
+              .AutoBind(false)
+              .CascadeFrom("DoctorId")
+        )
+        @Html.ValidationMessageFor(model => model.PracticeId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.PatientId, new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.PatientId)
+        @Html.ValidationMessageFor(model => model.PatientId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Pulse, htmlAttributes: new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Pulse)
+        @Html.ValidationMessageFor(model => model.Pulse, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Temperature, htmlAttributes: new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Temperature)
+        @Html.ValidationMessageFor(model => model.Temperature, "", new { @class = "text-danger" })
+    </div>
+    
+    <div class="editor-label">
+        <label class="control-label">Blood Pressure</label>
+    </div>
+    <div class="editor-field">
+        @(Html.Kendo().IntegerTextBoxFor(m => m.SystolicBloodPressure)
+        .HtmlAttributes(new { style = "width:48%", PlaceHolder = "Systolic" })
+        .Min(int.MinValue)
+        .Max(int.MaxValue)
+        .Spinners(false))
+        @Html.ValidationMessageFor(model => model.SystolicBloodPressure, "", new { @class = "text-danger"})
+        @(Html.Kendo().IntegerTextBoxFor(m => m.DiastolicBloodPressure)
+        .HtmlAttributes(new { style = "width:48%", PlaceHolder = "Diastolic" })
+        .Min(int.MinValue)
+        .Max(int.MaxValue)
+        .Spinners(false))
+        @Html.ValidationMessageFor(model => model.DiastolicBloodPressure, "", new { @class = "text-danger"})
+    </div>
+    
+    
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Weight, new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Weight)
+        @Html.ValidationMessageFor(model => model.Weight, "", new { @class = "text-danger" })
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.ResperatoryRate, new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.ResperatoryRate)
+        @Html.ValidationMessageFor(model => model.ResperatoryRate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.RecordedDate, new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.RecordedDate)
+        @Html.ValidationMessageFor(model => model.RecordedDate, "", new { @class = "text-danger" })
+    </div>
+
+</fieldset>
+
