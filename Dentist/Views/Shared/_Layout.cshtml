@@ -77,9 +77,10 @@
         </div>
 
         <div class="container-fluid">
-            @*body-content*@
-            @RenderBody()
-            <div id="divFooter" class="col-md-12">
+            <div>
+                @RenderBody()
+            </div>
+            <div>
                 <footer>
                     <p style="margin-bottom: 0px"> &copy; @DateTime.Now.Year - @applicationTitle</p>
                 </footer>

@@ -49,7 +49,7 @@ namespace Dentist.Controllers
         public ActionResult Login(string returnUrl)
         {
         #if DEBUG
-            var user =  UserManager.Find("gauravgoya@gmail.com","23847109");
+            var user =  UserManager.Find("gauravgoya@gmail.com","abc123");
             var userIdentity = UserManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
             AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = true }, userIdentity);
             return RedirectToAction("Index", "Scheduler");
