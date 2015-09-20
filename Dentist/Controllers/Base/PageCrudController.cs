@@ -23,7 +23,7 @@ namespace Dentist.Controllers.Base
         public ActionResult Index()
         {
             ViewBag.ControllerName = ControllerName;
-            return View(@"~\Views\Crud\Index.cshtml");
+            return View(@"~\Views\PageCrud\Index.cshtml");
         }
 
         public ActionResult GetBrowserItems([DataSourceRequest] DataSourceRequest request)
@@ -36,7 +36,7 @@ namespace Dentist.Controllers.Base
         {
             ViewBag.ControllerName = ControllerName;
             var model = (T)Activator.CreateInstance(typeof(T));
-            return View(@"~\Views\Crud\Create.cshtml", model);
+            return View(@"~\Views\PageCrud\Create.cshtml", model);
         }
 
         [HttpPost]
@@ -54,14 +54,14 @@ namespace Dentist.Controllers.Base
                 }
             }
 
-            return View(@"~\Views\Crud\Create.cshtml", model);
+            return View(@"~\Views\PageCrud\Create.cshtml", model);
         }
 
         public ActionResult Edit(int id)
         {
             ViewBag.ControllerName = ControllerName;
             var model = ReadContext.Set<T>().Find(id);
-            return View(@"~\Views\Crud\Create.cshtml", model);
+            return View(@"~\Views\PageCrud\Create.cshtml", model);
         }
 
         [HttpPost]
@@ -80,7 +80,7 @@ namespace Dentist.Controllers.Base
                 }
             }
 
-            return View(@"~\Views\Crud\Create.cshtml", model);
+            return View(@"~\Views\PageCrud\Create.cshtml", model);
         }
 
         [HttpPost]

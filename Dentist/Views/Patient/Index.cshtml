@@ -1,12 +1,15 @@
 ﻿@using Dentist.Enums
 @using Dentist.ViewModels
 
+
 <script src="~/Scripts/gridHelper.js"></script>
 
 @{
+    ViewBag.LeftMenuSectionExist = true;
     ViewBag.Title = "Patient Browser";
     var pageSizeArray = new[] { 20, 50, 100 };
 }
+
 
 @(Html.Kendo().Grid<PatientListViewModel>().Name("grdPatient")
           .DataSource(dataSource => dataSource.Ajax().Model(model => model.Id(x => x.Id))

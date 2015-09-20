@@ -283,6 +283,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\background.jpg" />
     <Content Include="Content\Images\background2.jpg" />
+    <Content Include="Content\Images\MyDentistLogo.jpg" />
     <Content Include="Content\Images\scheduler-people.png" />
     <Content Include="Content\Images\SmilyTooth.jpg" />
     <Content Include="Content\Images\treeViewIcon.png" />
@@ -780,6 +781,7 @@
     <Content Include="Views\Doctor\_TabAward.cshtml" />
     <Content Include="Views\Patient\_TabVitalSign.cshtml" />
     <Content Include="Views\Patient\TreatmentPlan.cshtml" />
+    <Content Include="Views\Patient\LeftMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

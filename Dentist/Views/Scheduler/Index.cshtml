@@ -12,7 +12,7 @@
 }
 
 
-<div id="splitter">
+<div id="splitter" style="background-color: #c5c5c5">
     <div id="left-pane">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -290,7 +290,7 @@
     });
 
     function ResizeSchedulerAccordingToWindown() {
-        var splitterHeight = window.innerHeight - 140; //($("#scheduler").offset().top + 50);
+        var splitterHeight = window.innerHeight - 160; //($("#scheduler").offset().top + 50);
         $("#splitter").css("height", splitterHeight);
         $("#scheduler").css("height", splitterHeight - 2);
     }

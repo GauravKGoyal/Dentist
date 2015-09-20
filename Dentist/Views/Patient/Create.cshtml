@@ -1,6 +1,7 @@
 ﻿@model Dentist.ViewModels.PatientViewModel
 
 @{
+    ViewBag.LeftMenuSectionExist = true;
     var isCreate = Model == null || Model.Id == 0;
     ViewBag.Title = isCreate ? "Create Patient" : "Edit " + Model.FirstName + " " + Model.LastName;
 }
