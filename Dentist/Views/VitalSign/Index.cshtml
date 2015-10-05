@@ -1,9 +1,9 @@
-﻿@using Dentist.Helpers
-@using Dentist.ViewModels
-@model Dentist.ViewModels.PatientViewModel
+﻿@using Dentist.ViewModels
 
-<script src="~/Scripts/gridHelper.js"></script>
+<script src="~/Scripts/App_Script/gridHelper.js"></script>
+<script src="~/Scripts/App_Script/CookieNames.js"></script>
 @{
+    ViewBag.LeftMenuSectionExist = true;
     var pageSizeArray = new[] { 20, 50, 100 };
 }
 
@@ -13,23 +13,23 @@
             .Model(model =>
             {
                 model.Id(x => x.Id);
-                model.Field(x => x.PatientId).DefaultValue(Model.Id);
+                model.Field(x => x.PatientId);
                 model.Field(x => x.RecordedDate).DefaultValue(DateTime.Now);
             })
               .PageSize(pageSizeArray[0])
               .Sort(sort =>
               {
-                  sort.Add(x => x.PatientId).Descending();
+                  sort.Add(x => x.RecordedDate).Descending();
               }).Events(e =>
               {
                   e.Error("grid_OnError");
-
               })
-            .Read(read => read.Action("GetVitalSignBrowserItems", "VitalSign", new { patientId = Model.Id }))
             .Create(create => create.Action("Create", "VitalSign"))
             .Update(update => update.Action("Update", "VitalSign"))
             .Destroy(destroy => destroy.Action("Delete", "VitalSign"))
+            .Read(read => read.Action("GetVitalSignBrowserItems", "VitalSign").Data("GetPatientId()"))
           )
+          .Events(e => e.Edit("grdVitalSign_OnEdit"))
           .Columns(columns =>
           {
               columns.Bound(x => x.Id);
@@ -56,6 +56,27 @@
           .Navigatable()
           .Sortable()
           .Scrollable(s => s.Height("auto"))
-          .AutoBind(false)
+          .AutoBind(true)
 )
 
+<script>
+    function GetPatientId() {
+        var selectedPatient = GetSelectedPatient();
+        if (selectedPatient) {
+            return { PatientId: selectedPatient.Id };
+        } else {
+            return { PaitientId: null };
+        }
+
+    }
+
+    function grdVitalSign_OnEdit(e) {
+        if (e.model.isNew()) {
+            var selectedPatient = GetSelectedPatient();
+            if (selectedPatient) {
+                e.model.set("PatientId", selectedPatient.Id);
+            }
+        }
+    }
+
+</script>

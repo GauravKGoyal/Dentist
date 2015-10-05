@@ -2,7 +2,8 @@
 @using Dentist.ViewModels
 
 
-<script src="~/Scripts/gridHelper.js"></script>
+<script src="~/Scripts/App_Script/gridHelper.js"></script>
+<script src="~/Scripts/App_Script/CookieNames.js"></script>
 
 @{
     ViewBag.LeftMenuSectionExist = true;
@@ -51,7 +52,13 @@
 <script>
     function grdPatient_onEdit(e) {
         e.preventDefault();
+        AddPatientIdToCookie(e);
         EditGridRow(e, $("#grdPatient"), '@Url.Action("Edit", "Patient")');
+    }
+
+    function AddPatientIdToCookie(e) {
+        var selectedPatient = GetGridSelectedRowObject(e, $("#grdPatient"));
+        SetSelectedPatient(selectedPatient.Id, selectedPatient.FirstName, selectedPatient.LastName);
     }
 
     function grdPatient_onDelete(e) {

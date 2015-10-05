@@ -1,0 +1,84 @@
+﻿@using Dentist.ViewModels
+
+@{
+    ViewBag.LeftMenuSectionExist = true;
+    var pageSizeArray = new[] { 20, 50, 100 };
+}
+
+@(Html.Kendo().Grid<AppointmentViewModel>().Name("grdAppointment")
+          .DataSource(dataSource => dataSource
+              .Ajax()
+              .Model(model => model.Id(x => x.Id))
+              .PageSize(pageSizeArray[0])
+              .Sort(sort =>
+              {
+                  sort.Add(x => x.StartDateTime).Descending();
+              })
+              .Read(read => read.Action("GetAppointmentBrowserItems", "Appointment").Data("GetPatientId()"))
+              .Create(create => create.Action("CreateAppointment", "Appointment"))
+              .Update(update => update.Action("UpdateAppointment", "Appointment"))
+              .Destroy(destroy => destroy.Action("DeleteAppointment", "Appointment"))
+          )
+          .Columns(columns =>
+          {
+              columns.Bound(x => x.PracticeName);
+              columns.Bound(x => x.StartDateTime).Format("{0:dd/MM hh:mm}");
+              columns.Bound(x => x.EndDateTime).Format("{0:dd/MM hh:mm}");
+              columns.Bound(x => x.AppointmentStatus);
+              columns.Bound(x => x.PatientFirstName);
+              columns.Bound(x => x.PatientLastName);
+              columns.Bound(x => x.PatientPhone);
+              columns.Bound(x => x.DoctorFirstName);
+              columns.Bound(x => x.DoctorLastName);
+              columns.Bound(x => x.DoctorPhone);
+
+              columns.Command(
+                  command =>
+                  {
+                      command.Edit();
+                      command.Destroy();
+                  }).Width("16%");
+
+          })
+          .ToolBar(toolbar => toolbar.Create())
+          .Editable(editable => editable.Mode(GridEditMode.PopUp)
+        //.TemplateName("_AppointmentEditor")
+          )
+          .Events(e => e.Edit("grdAppointment_OnEdit"))
+          .Resizable(resizable => resizable.Columns(true))
+          .Pageable(pager =>
+          {
+              pager.PageSizes(pageSizeArray);
+              pager.Refresh(true);
+          })
+          .Sortable()
+          .Scrollable(s => s.Height("auto"))
+          .Groupable()
+          .Filterable()
+          .AutoBind(true)
+)
+
+<script src="~/Scripts/App_Script/CookieNames.js"></script>
+<script>
+    function GetPatientId() {
+        var selectedPatient = GetSelectedPatient();
+        if (selectedPatient) {
+            return { PersonId: selectedPatient.Id };
+        } else {
+            return { PersonId: null };
+        }
+
+    }
+
+    function grdAppointment_OnEdit(e) {
+        if (e.model.isNew()) {
+            var selectedPatient = GetSelectedPatient();
+            if (selectedPatient) {
+                e.model.set("PatientId", selectedPatient.Id);
+            }
+            e.container.kendoWindow("title", "Create Appointment");
+        } else {
+            e.container.kendoWindow("title", "Edit Appointment");
+        }
+    }
+</script>

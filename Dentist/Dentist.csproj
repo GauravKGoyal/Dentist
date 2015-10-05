@@ -678,12 +678,14 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\App_Script\CookieNames.js" />
+    <Content Include="Scripts\App_Script\jquery.cookie.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\ftp.pubxml" />
     <None Include="Properties\PublishProfiles\MyDentist.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\gridHelper.js" />
+    <Content Include="Scripts\App_Script\gridHelper.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -691,6 +693,9 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\JqueryBbq\jquery.ba-bbq.js" />
+    <Content Include="Scripts\JqueryBbq\jquery.ba-bbq.min.js" />
+    <Content Include="Scripts\JqueryBbq\MyDentist.jpg" />
     <Content Include="Scripts\kendo\jquery.min.js" />
     <None Include="Scripts\kendo\kendo.all.min.intellisense.js" />
     <Content Include="Scripts\kendo\kendo.all.min.js" />
@@ -701,7 +706,7 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Todos.txt" />
-    <Content Include="Views\Patient\EditorTemplates\VitalSignViewModel.cshtml">
+    <Content Include="Views\VitalSign\EditorTemplates\VitalSignViewModel.cshtml">
       <SubType>Code</SubType>
     </Content>
     <Content Include="Views\Patient\_TabTreatmentPlan.cshtml">
@@ -779,9 +784,10 @@
     <Content Include="Views\Shared\EditorTemplates\Year.cshtml" />
     <Content Include="Views\Doctor\_TabExperience.cshtml" />
     <Content Include="Views\Doctor\_TabAward.cshtml" />
-    <Content Include="Views\Patient\_TabVitalSign.cshtml" />
     <Content Include="Views\Patient\TreatmentPlan.cshtml" />
     <Content Include="Views\Patient\LeftMenu.cshtml" />
+    <Content Include="Views\VitalSign\Index.cshtml" />
+    <Content Include="Views\Appointment\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -791,7 +797,6 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\Appointment\EditorTemplates\" />
     <Folder Include="Views\File\" />
     <Folder Include="Views\Qualification\" />
     <Folder Include="Views\TreatmentPlant\" />

@@ -15,15 +15,23 @@ namespace Dentist.Controllers
     [Authorize]
     public class AppointmentController : BaseController
     {
-        public ActionResult GetAppointmentBrowserItems([DataSourceRequest] DataSourceRequest request, int personId)
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult GetAppointmentBrowserItems([DataSourceRequest] DataSourceRequest request, int? personId)
         {
             var query = ReadContext.Appointments
-                        .Include(x => x.Patient)
-                        .Include(x => x.Practice)
-                        .Where(x => x.DoctorId == personId || x.PatientId == personId)
-                        .ProjectTo<AppointmentViewModel>();
-
-            var result = query.ToDataSourceResult(request);
+                .Include(x => x.Patient)
+                .Include(x => x.Practice);
+            if (personId.HasValue)
+            {
+                query = query.Where(x => x.DoctorId == personId || x.PatientId == personId);
+            }
+                        
+            var projectedQuery = query.ProjectTo<AppointmentViewModel>();
+            var result = projectedQuery.ToDataSourceResult(request);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

@@ -36,7 +36,9 @@ function GetGridSelectedRowId(e, gridControl) {
     return gridControl.data("kendoGrid").dataItem($(e.currentTarget).closest("tr")).Id;
 }
 
-
+function GetGridSelectedRowObject(e, gridControl) {
+    return gridControl.data("kendoGrid").dataItem($(e.currentTarget).closest("tr"));
+}
 
 function grid_OnError(e) {
     if (e.errors) {

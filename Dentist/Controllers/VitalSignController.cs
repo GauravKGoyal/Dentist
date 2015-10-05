@@ -14,18 +14,25 @@ namespace Dentist.Controllers
 {
     public class VitalSignController : PopupPageCrudController<VitalSign, VitalSignViewModel>
     {
-        public ActionResult GetVitalSignBrowserItems([DataSourceRequest] DataSourceRequest request, int patientId)
+        public ActionResult GetVitalSignBrowserItems([DataSourceRequest] DataSourceRequest request, int? patientId)
         {
-            if (patientId == 0)
+            var query = ReadContext.Set<VitalSign>().AsQueryable();
+
+            if (patientId != null)
             {
-                throw new ArgumentException("Patient id cannot be 0", "patientId");
+                query = query.Where(x => x.PatientId == patientId);
             }
 
-            var query = ReadContext.Set<VitalSign>().Where(x => x.PatientId == patientId)
-                        .ProjectTo<VitalSignViewModel>();
-            var result = query.ToDataSourceResult(request);
+            var projectedQuery = query.ProjectTo<VitalSignViewModel>();
+            var result = projectedQuery.ToDataSourceResult(request);
             return Json(result, JsonRequestBehavior.AllowGet);
-        }     
+        }
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+
 
     }
 }
