@@ -13,12 +13,19 @@ namespace Dentist
     {
         public static void RegisterMappings()
         {
+
+            Mapper.CreateMap<PatientNote, PatientNoteViewModel>();
+            Mapper.CreateMap<PatientNoteViewModel, PatientNote>();
+
+            Mapper.CreateMap<Note, NoteViewModel>();
+            Mapper.CreateMap<NoteViewModel, Note>();
+
             Mapper.CreateMap<DailyAvailabilitySetting, DailyAvailability>();
 
             Mapper.CreateMap<CalenderSetting, CalenderSettingViewModel>();
             Mapper.CreateMap<CalenderSettingViewModel, CalenderSetting>();
 
-            Mapper.CreateMap<Paitient, PatientListViewModel>();
+            Mapper.CreateMap<Patient, PatientListViewModel>();
             Mapper.CreateMap<Doctor, DoctorListViewModel>();
 
             Mapper.CreateMap<Practice, SchedulerPracticeViewModel>();
@@ -28,9 +35,9 @@ namespace Dentist
 
             Mapper.CreateMap<Person, PersonViewModel>();
 
-            Mapper.CreateMap<Paitient, PatientViewModel>()
+            Mapper.CreateMap<Patient, PatientViewModel>()
                 .ForMember(d => d.PatientViewPracticeId, opt => opt.MapFrom(s => s.Practice.Id));
-            Mapper.CreateMap<PatientViewModel, Paitient>().ForMember(d => d.Practice, opt => opt.Ignore());
+            Mapper.CreateMap<PatientViewModel, Patient>().ForMember(d => d.Practice, opt => opt.Ignore());
 
             Mapper.CreateMap<CareService, int>().ConstructUsing(s => s.Id);
             Mapper.CreateMap<Membership, int>().ConstructUsing(s => s.Id);

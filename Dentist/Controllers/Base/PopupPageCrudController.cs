@@ -30,11 +30,12 @@ namespace Dentist.Controllers.Base
         {
             if (ModelState.IsValid)
             {
-                var model = Mapper.Map<T>(viewModel);
+               
+                var model = WriteContext.Set<T>().Create();
+                Mapper.Map(viewModel,model);
                 WriteContext.Set<T>().Add(model);
                 WriteContext.TrySaveChanges(ModelState);
-
-                viewModel.Id = model.Id;
+                Mapper.Map(model, viewModel); //update view model after saving model
             }
             return Json(new[] { viewModel }.ToDataSourceResult(request, ModelState));
         }
@@ -48,6 +49,7 @@ namespace Dentist.Controllers.Base
                 Mapper.Map(viewModel, model);
 
                 WriteContext.TrySaveChanges(ModelState);
+                Mapper.Map(model, viewModel); //update view model after saving model
             }
 
             return Json(new[] { viewModel }.ToDataSourceResult(request, ModelState));

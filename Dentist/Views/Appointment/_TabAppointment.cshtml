@@ -29,11 +29,9 @@
               columns.Bound(x => x.PatientFirstName).Visible(Model.IsDoctor);
               columns.Bound(x => x.PatientLastName).Visible(Model.IsDoctor);
               columns.Bound(x => x.PatientPhone).Visible(Model.IsDoctor);
-              
               columns.Bound(x => x.DoctorFirstName).Visible(!Model.IsDoctor);
               columns.Bound(x => x.DoctorLastName).Visible(!Model.IsDoctor);
               columns.Bound(x => x.DoctorPhone).Visible(!Model.IsDoctor);
-              
               columns.Command(
                   command =>
                   {

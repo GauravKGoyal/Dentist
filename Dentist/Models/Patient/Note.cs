@@ -1,8 +1,10 @@
+using System;
 using System.ComponentModel.DataAnnotations;
+using Dentist.Models.Tags;
 
 namespace Dentist.Models.Patient
 {
-    public class Note
+    public class Note : IModelWithId
     {
         public int Id { get; set; }
         [StringLength(100)]
@@ -11,7 +13,9 @@ namespace Dentist.Models.Patient
         public int NoteTypeId { get; set; }
         public virtual NoteType NoteType { get; set; }
         [Required]
-        public int PatientId { get; set; }
-        public virtual Paitient Patient { get; set; }
+        public int PatientNoteId { get; set; }
+        public virtual PatientNote PatientNote { get; set; }
+        public DateTime RecordedDate { get; set; }
+
     }
 }

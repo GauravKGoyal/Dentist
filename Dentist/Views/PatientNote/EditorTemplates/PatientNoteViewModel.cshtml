@@ -1,0 +1,81 @@
+﻿@using Dentist.Enums
+@using Dentist.Models
+@using Dentist.ViewModels
+@model Dentist.ViewModels.PatientNoteViewModel
+
+@*<fieldset class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+    <div class="editor-label">
+        @Html.LabelFor(model => model.PatientId, new { @class = "control-label" })
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.PatientId)
+        @Html.ValidationMessageFor(model => model.PatientId, "", new { @class = "text-danger" })
+    </div>
+
+    
+
+    
+</fieldset>*@
+
+@(Html.Kendo().Grid<NoteViewModel>()
+    .Name("grdNotes")
+    
+    .DataSource(dataSource => dataSource
+    .Ajax()
+    .Model(model =>
+    {
+    model.Id(x => x.Id);
+    model.Field(x => x.NoteTypeId).DefaultValue(5);
+    model.Field(x => x.RecordedDate).DefaultValue(DateTime.Now);
+    })
+    .ServerOperation(false) // Paging, sorting, filtering and grouping will be done client-side
+   // .Group(config => config.Add(x => x.NoteTypeDescription))
+    .Sort(sort =>
+    {
+    sort.Add(x => x.RecordedDate).Descending();
+    }).Events(e =>
+    {
+    e.Error("grid_OnError");
+    })
+    .Create(create => create.Action("Create", "PatientNote"))
+    .Update(update => update.Action("Update", "PatientNote"))
+    .Destroy(destroy => destroy.Action("Delete", "PatientNote"))
+    .Read(read => read.Action("GetPatientNotesBrowserItems", "PatientNote"))
+    )
+    .Events(e =>
+    {
+    e.Edit("grdPatientNotes_OnEdit");
+    })
+    .Columns(columns =>
+    {
+    columns.Bound(x => x.NoteTypeId);
+    columns.Bound(x => x.Description);
+
+    columns.Command(command =>
+    {
+    command.Destroy();
+    command.Edit();
+    }).Width("15%");
+    })
+
+    .ToolBar(toolbar => toolbar.Create())
+    .Editable(editable => editable.Mode(GridEditMode.InLine)
+    )
+    .Resizable(resizable => resizable.Columns(true))
+    .Navigatable()
+    
+    .Scrollable(s => s.Height("auto"))
+      .AutoBind(false)
+         // .HtmlAttributes(new { @style = "width:500px;" })
+      )
+
+    <script>
+        function GetPatientNoteId() {
+            return {
+                PatientNoteId: '@Model.Id'
+            }
+        }
+    </script>
+

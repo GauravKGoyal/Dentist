@@ -22,7 +22,7 @@ namespace Dentist.Models
         public int PatientId { get; set; }
 
         [InverseProperty("PatientAppointments")]
-        public Paitient Patient { get; set; }
+        public Patient.Patient Patient { get; set; }
 
         public int PracticeId { get; set; }
 

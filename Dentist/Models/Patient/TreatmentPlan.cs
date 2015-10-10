@@ -12,6 +12,6 @@ namespace Dentist.Models.Patient
         public virtual List<Treatment> Treatments { get; set; }
         
         public int? PatientId { get; set; }
-        public virtual Paitient Patient { get; set; }
+        public virtual Patient Patient { get; set; }
     }
 }

@@ -118,7 +118,7 @@ namespace Dentist.Models
 
         public System.Data.Entity.DbSet<Dentist.Models.Practice> Practices { get; set; }
 
-        public System.Data.Entity.DbSet<Paitient> Paitients { get; set; }
+        public System.Data.Entity.DbSet<Patient.Patient> Patients { get; set; }
         public System.Data.Entity.DbSet<Doctor.Doctor> Doctors { get; set; }
 
         public System.Data.Entity.DbSet<Dentist.Models.Address> Addresses { get; set; }
@@ -136,6 +136,7 @@ namespace Dentist.Models
         public System.Data.Entity.DbSet<Experience> Experiences { get; set; }
         public System.Data.Entity.DbSet<Award> Awards { get; set; }
         public System.Data.Entity.DbSet<VitalSign> VitalSigns { get; set; }
+        public System.Data.Entity.DbSet<PatientNote> PatientNotes { get; set; }
         public System.Data.Entity.DbSet<Note> Notes { get; set; }
         public System.Data.Entity.DbSet<NoteType> NoteTypes { get; set; }
         public System.Data.Entity.DbSet<TreatmentPlan> TreatmentPlans { get; set; }

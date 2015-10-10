@@ -72,7 +72,7 @@
             </div>
     </div>
 
-
+     
     <div class="well well-sm visible-md-block visible-lg-block" style="left:0;right:0;position:fixed; z-index:1; height: 50px; top: 50px">
         <h2 style="margin: 0px; padding-Left:15px"><strong>@ViewBag.Title</strong></h2>
     </div>
@@ -81,7 +81,7 @@
         <div class="row">
             @if (ViewBag.LeftMenuSectionExist != null)
             {
-                <div class="col-md-3">
+                <div class="col-md-3" style="border-right-style: solid">
                     @Html.Partial("~/Views/Patient/LeftMenu.cshtml")
                 </div>
                 <div class="col-md-9">

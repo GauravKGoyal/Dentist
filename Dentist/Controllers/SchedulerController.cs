@@ -109,7 +109,7 @@ namespace Dentist.Controllers
                 var isNewPatientFortheAppointment = appointment.PatientId == 0;
                 if (isNewPatientFortheAppointment)
                 {
-                    var patient = new Paitient()
+                    var patient = new Patient()
                     {
                         FirstName = view.FirstName,
                         LastName = view.LastName,
@@ -120,7 +120,7 @@ namespace Dentist.Controllers
                 }
                 else
                 {
-                    var patient = WriteContext.Paitients.Find(appointment.PatientId);
+                    var patient = WriteContext.Patients.Find(appointment.PatientId);
                     patient.FirstName = view.FirstName;
                     patient.LastName = view.LastName;
                     patient.Phone = view.Phone;
@@ -144,7 +144,7 @@ namespace Dentist.Controllers
                 // do not load patient before mapping view to the appointment 
                 // because during update process view patient may have been replaced 
                 // with new patient therefore mapping view to the appointment may have updated the appointment's paitient link
-                WriteContext.Paitients.Find(appointment.PatientId);
+                WriteContext.Patients.Find(appointment.PatientId);
                 appointment.Patient.FirstName = view.FirstName;
                 appointment.Patient.LastName = view.LastName;
                 appointment.Patient.Phone = view.Phone;

@@ -43,7 +43,7 @@
               {
                   command.Destroy();
                   command.Edit();
-              }).Width("12%");
+              }).Width("15%");
           })
           .ToolBar(toolbar => toolbar.Create())
           .Editable(editable => editable.Mode(GridEditMode.PopUp)
@@ -65,7 +65,7 @@
         if (selectedPatient) {
             return { PatientId: selectedPatient.Id };
         } else {
-            return { PaitientId: null };
+            return { PatientId: null };
         }
 
     }
