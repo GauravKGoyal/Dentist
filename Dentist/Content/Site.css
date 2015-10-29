@@ -111,3 +111,17 @@ ul li a.selected {
     color: #FFFFFF;
     font-weight: bold !important;
 }
+.d-gridHeader {
+    margin-bottom: 4px
+}
+.d-gridRow {
+    margin-bottom: 2px
+}
+
+.ng-invalid.ng-dirty {
+    border-color: red;
+}
+
+.ng-valid.ng-dirty {
+    border-color: green;
+}

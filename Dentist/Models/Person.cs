@@ -30,8 +30,6 @@ namespace Dentist.Models
         [StringLength(100)]
         public string LastName { get; set; }
 
-        public string FullName { get { return FirstName + " " + LastName; } }
-        
         [StringLength(100)]
         public string Email { get; set; }
 

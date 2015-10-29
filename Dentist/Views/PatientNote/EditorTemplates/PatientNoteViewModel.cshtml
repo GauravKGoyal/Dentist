@@ -1,81 +1,52 @@
 ﻿@using Dentist.Enums
 @using Dentist.Models
 @using Dentist.ViewModels
-@model Dentist.ViewModels.PatientNoteViewModel
 
-@*<fieldset class="form-horizontal">
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.Id)
-    <div class="editor-label">
-        @Html.LabelFor(model => model.PatientId, new { @class = "control-label" })
+<div class="modal" id="myModal" role="dialog" aria-labelledby="myModalLabel" ng-app="app" ng-controller="PatientNoteController as patientNote">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add Note</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row d-gridHeader">
+                    <form name="frmPatientNote" novalidate>
+                        <div class="col-md-12">
+                            @*<div>frmPatientNote is {{frmPatientNote.$valid}}</div>*@
+                            <div class="input-group">
+                                <input type="text" class="form-control" ng-trim="true" required ng-model="patientNote.newNote.description" placeholder="Enter Note" />
+                                <input type="hidden" class="form-control" required ng-model="patientNote.newNote.id" placeholder="Enter NoteType" />
+                                <input type="hidden" class="form-control" required ng-model="patientNote.newNote.noteTypeId" />
+                                <input type="hidden" class="form-control" required ng-model="patientNote.newNote.objectState" />
+                                <span class="input-group-btn">
+                                    <input class="btn btn-default" type="submit" ng-click="frmPatientNote.$valid && patientNote.addNote(patientNote.newNote)" value="Add Note"><span class="glyphicon glyphicon-plus"></span>/>
+                                </span>
+                            </div><!-- /input-group -->
+                        </div>
+                    </form>
+                </div>
+
+                <ul class="list-unstyled">
+                    <li ng-repeat="note in patientNote.notes | filter:{ objectState: '!delete'}">
+                        <div class="row d-gridRow">
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" ng-model="note.description" ng-change='patientNote.noteChanged(note)' />
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" ng-model="note.objectState" />
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" class="close"><span ng-click="patientNote.deleteNote(note)">&times;</span></button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="patientNote.save()">Save and Close</button>
+            </div>
+        </div>
     </div>
-    <div class="editor-field">
-        @Html.EditorFor(model => model.PatientId)
-        @Html.ValidationMessageFor(model => model.PatientId, "", new { @class = "text-danger" })
-    </div>
-
-    
-
-    
-</fieldset>*@
-
-@(Html.Kendo().Grid<NoteViewModel>()
-    .Name("grdNotes")
-    
-    .DataSource(dataSource => dataSource
-    .Ajax()
-    .Model(model =>
-    {
-    model.Id(x => x.Id);
-    model.Field(x => x.NoteTypeId).DefaultValue(5);
-    model.Field(x => x.RecordedDate).DefaultValue(DateTime.Now);
-    })
-    .ServerOperation(false) // Paging, sorting, filtering and grouping will be done client-side
-   // .Group(config => config.Add(x => x.NoteTypeDescription))
-    .Sort(sort =>
-    {
-    sort.Add(x => x.RecordedDate).Descending();
-    }).Events(e =>
-    {
-    e.Error("grid_OnError");
-    })
-    .Create(create => create.Action("Create", "PatientNote"))
-    .Update(update => update.Action("Update", "PatientNote"))
-    .Destroy(destroy => destroy.Action("Delete", "PatientNote"))
-    .Read(read => read.Action("GetPatientNotesBrowserItems", "PatientNote"))
-    )
-    .Events(e =>
-    {
-    e.Edit("grdPatientNotes_OnEdit");
-    })
-    .Columns(columns =>
-    {
-    columns.Bound(x => x.NoteTypeId);
-    columns.Bound(x => x.Description);
-
-    columns.Command(command =>
-    {
-    command.Destroy();
-    command.Edit();
-    }).Width("15%");
-    })
-
-    .ToolBar(toolbar => toolbar.Create())
-    .Editable(editable => editable.Mode(GridEditMode.InLine)
-    )
-    .Resizable(resizable => resizable.Columns(true))
-    .Navigatable()
-    
-    .Scrollable(s => s.Height("auto"))
-      .AutoBind(false)
-         // .HtmlAttributes(new { @style = "width:500px;" })
-      )
-
-    <script>
-        function GetPatientNoteId() {
-            return {
-                PatientNoteId: '@Model.Id'
-            }
-        }
-    </script>
-
+</div>

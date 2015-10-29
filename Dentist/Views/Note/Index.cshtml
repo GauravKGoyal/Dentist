@@ -1,0 +1,62 @@
+﻿@model dynamic
+
+@using Dentist.ViewModels
+
+<script src="~/Scripts/App_Script/gridHelper.js"></script>
+<script src="~/Scripts/App_Script/CookieNames.js"></script>
+@{
+    ViewBag.LeftMenuSectionExist = true;
+    var pageSizeArray = new[] { 20, 50, 100 };
+}
+
+@(Html.Kendo().Grid<NoteViewModel>().Name("grdPatientNotes")
+          .DataSource(dataSource => dataSource
+            .Ajax()
+            .Model(model =>
+            {
+                model.Id(x => x.Id);
+                model.Field(x => x.NoteTypeId).DefaultValue(5);
+                model.Field(x => x.RecordedDate).DefaultValue(DateTime.Now);
+            })
+              .PageSize(pageSizeArray[0])
+              .ServerOperation(false) // Paging, sorting, filtering and grouping will be done client-side
+             // .Group(config => config.Add(x=>x.NoteTypeDescription))
+              .Sort(sort =>
+              {
+                  sort.Add(x => x.RecordedDate).Descending();
+              }).Events(e =>
+              {
+                  e.Error("grid_OnError");
+              })
+                .Create(create => create.Action("Create", "Note"))
+                .Update(update => update.Action("Update", "Note"))
+                .Destroy(destroy => destroy.Action("Delete", "Note"))
+                .Read(read => read.Action("GetNotesBrowserItems", "Note"))
+          )             
+          .Columns(columns =>
+          {
+              columns.Bound(x => x.NoteTypeId);
+              columns.Bound(x => x.Description);
+              columns.Bound(x => x.PatientNoteId);
+              
+              columns.Command(command =>
+              {
+                  command.Destroy();
+                  command.Edit();
+              }).Width("15%");
+          })
+          
+          .ToolBar(toolbar => toolbar.Create())
+          .Editable(editable => editable.Mode(GridEditMode.InLine)
+          )
+          .Resizable(resizable => resizable.Columns(true))
+          .Pageable(pager =>
+          {
+              pager.PageSizes(pageSizeArray);
+          })
+          .Navigatable()
+          .Scrollable(s => s.Height("auto"))
+          .AutoBind(true)
+          
+)
+

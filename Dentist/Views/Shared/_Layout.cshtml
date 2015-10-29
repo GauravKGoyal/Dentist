@@ -22,6 +22,11 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/App_Script/jquery.cookie.js"></script>
     <script src="~/Scripts/JqueryBbq/jquery.ba-bbq.js"></script>
+    <script src="~/Scripts/angular.js"></script>
+    <script src="~/Scripts/angular-cookies.js"></script>
+    <script src="~/Scripts/App_Script/Controllers/PatientNoteController.js"></script>
+    <script src="~/Scripts/App_Script/app.js"></script>
+
 </head>
 <body>
     @{
@@ -34,49 +39,49 @@
         <p> userIsAuthenticated: @userIsAuthenticated</p>*@
 
     <div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-header">
-                @*<a class="navbar-brand" href="#">
-                        <img src="~/Content/Images/MyDentistLogo.jpg" style="width: 30px" />
-                    </a>*@
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    @*<li>@Html.ActionLink("Home", "Index", "Home")</li>*@
-                    <li>@Html.ActionLink("Practice", "Index", "Practice")</li>
-                    <li>@Html.ActionLink("Patient", "Index", "Patient")</li>
-                    <li>@Html.ActionLink("Doctor", "Index", "Doctor")</li>
-                    <li>@Html.ActionLink("Scheduler", "Index", "Scheduler")</li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">User Settings<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Daily Availabilities", "DailyAvailabilitySetting", "Settings")</li>
-                            <li>@Html.ActionLink("Calender", "EditCalenderSetting", "Settings")</li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">System<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Care Service", "Index", "CareServices")</li>
-                            <li>@Html.ActionLink("Specialization", "Index", "Specializations")</li>
-                            <li>@Html.ActionLink("Membership", "Index", "Memberships")</li>
-                        </ul>
-                    </li>
+        <div class="navbar-header">
+            @*<a class="navbar-brand" href="#">
+                    <img src="~/Content/Images/MyDentistLogo.jpg" style="width: 30px" />
+                </a>*@
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                @*<li>@Html.ActionLink("Home", "Index", "Home")</li>*@
+                <li>@Html.ActionLink("Practice", "Index", "Practice")</li>
+                <li>@Html.ActionLink("Patient", "Index", "Patient")</li>
+                <li>@Html.ActionLink("Doctor", "Index", "Doctor")</li>
+                <li>@Html.ActionLink("Scheduler", "Index", "Scheduler")</li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">User Settings<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>@Html.ActionLink("Daily Availabilities", "DailyAvailabilitySetting", "Settings")</li>
+                        <li>@Html.ActionLink("Calender", "EditCalenderSetting", "Settings")</li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">System<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>@Html.ActionLink("Care Service", "Index", "CareServices")</li>
+                        <li>@Html.ActionLink("Specialization", "Index", "Specializations")</li>
+                        <li>@Html.ActionLink("Membership", "Index", "Memberships")</li>
+                    </ul>
+                </li>
 
-                </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
+            </ul>
+            @Html.Partial("_LoginPartial")
+        </div>
     </div>
 
-     
+
     <div class="well well-sm visible-md-block visible-lg-block" style="left:0;right:0;position:fixed; z-index:1; height: 50px; top: 50px">
         <h2 style="margin: 0px; padding-Left:15px"><strong>@ViewBag.Title</strong></h2>
     </div>
-    
+
     <div class="container-fluid">
         <div class="row">
             @if (ViewBag.LeftMenuSectionExist != null)
@@ -92,7 +97,7 @@
             {
                 @RenderBody()
             }
-            
+
         </div>
         <div class="row">
             <div class="col-md-offset-10">

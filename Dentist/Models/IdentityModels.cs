@@ -5,6 +5,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web.Http;
 using System.Web.Mvc;
 using Dentist.Models.Doctor;
 using Dentist.Models.Patient;
@@ -50,6 +51,20 @@ namespace Dentist.Models
             return changesSaved;
         }
 
+        public bool TrySaveChanges(System.Web.Http.ModelBinding.ModelStateDictionary modelState)
+        {
+            bool hasError = GetValidationErrors().Any();
+
+            if (hasError)
+            {
+                AddModelErrors(this, modelState);
+                return false;
+            }
+
+            base.SaveChanges();
+            return true;
+        }
+
         public bool TrySaveChanges(ModelStateDictionary modelState)
         {
             bool hasError = GetValidationErrors().Any();
@@ -71,6 +86,19 @@ namespace Dentist.Models
         }
 
         private void AddModelErrors(ApplicationDbContext writeContext, ModelStateDictionary modelState)
+        {
+            var dbEntityValidationResults = writeContext.GetValidationErrors();
+            foreach (var dbEntityValidationResult in dbEntityValidationResults)
+            {
+                var validationErrors = dbEntityValidationResult.ValidationErrors;
+                foreach (var dbValidationError in validationErrors)
+                {
+                    modelState.AddModelError(string.Empty, dbValidationError.ErrorMessage);
+                }
+            }
+        }
+
+        private void AddModelErrors(ApplicationDbContext writeContext, System.Web.Http.ModelBinding.ModelStateDictionary modelState)
         {
             var dbEntityValidationResults = writeContext.GetValidationErrors();
             foreach (var dbEntityValidationResult in dbEntityValidationResults)
