@@ -1,0 +1,55 @@
+﻿<script src="~/Scripts/App_Script/CookieNames.js"></script>
+
+<ul id="ulLeftMenu" class="nav nav-pills nav-stacked" style="border-right-width:2px">
+    <p id="patientElement">All Patients</p>
+    <li id ="liLeftMenuPatient" role="presentation" class="active"><a href=@Url.Action("Index","Patient") >Patients </a></li>
+    <li id="liLeftMenuVitalSign" role="presentation"><a href=@Url.Action("Index", "VitalSign")>Vital Signs</a></li>
+    <li id="liLeftMenuAppointment" role="presentation"><a href=@Url.Action("Index", "Appointment")>Appointments</a></li>
+    <li id="liLeftMenuPatientNote" role="presentation"><a href=@Url.Action("Index", "PatientNote")>Patient Notes</a></li>
+</ul>
+
+<script>
+    $(document).ready(function () {
+        RefreshSelectePatient();
+        HighlightLeftMenu();
+    });
+
+    function HighlightLeftMenu() {
+        $('#ulLeftMenu li').removeClass('active');
+        var currentUrl = window.location.href;
+
+        if (currentUrl.indexOf("PatientNote") > -1) {
+            $("#liLeftMenuPatientNote").addClass('active');
+        }
+        else if (currentUrl.indexOf("Patient") > -1)
+        {
+            $("#liLeftMenuPatient").addClass('active');
+        }
+        else if (currentUrl.indexOf("VitalSign") > -1)
+        {
+            $("#liLeftMenuVitalSign").addClass('active');
+        }
+        else if (currentUrl.indexOf("Appointment") > -1)
+        {
+            $("#liLeftMenuAppointment").addClass('active');
+        }
+    }
+
+    function RefreshSelectePatient() {
+        var patient = GetSelectedPatient();
+        if (patient) {
+            $("#patientElement").html("Selected Patient: " + patient.FullName + "<button onclick='btnSlectedPatientClear_Click()'>X</button>");
+        } else {
+            $("#patientElement").html("All Patients");
+        }
+    }
+
+    function btnSlectedPatientClear_Click() {
+        ClearSelectedPatient();
+        RefreshSelectePatient();
+    }
+
+   
+</script>
+
+

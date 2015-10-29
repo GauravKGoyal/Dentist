@@ -357,11 +357,16 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Appointment.cs" />
-    <Compile Include="Models\Patient\PatientNote.cs" />
+    <Compile Include="Models\Patient\PatientNote.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Models\Patient\Treatment.cs" />
     <Compile Include="Models\Patient\JobState.cs" />
     <Compile Include="Models\Patient\Note.cs" />
     <Compile Include="Models\Patient\NoteType.cs" />
+    <Compile Include="Models\Patient\VitalSign.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Models\Tags\IModelWithId.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -379,7 +384,6 @@
     <Compile Include="Models\Doctor\Registration.cs" />
     <Compile Include="Models\Doctor\CareService.cs" />
     <Compile Include="Models\Patient\TreatmentPlan.cs" />
-    <Compile Include="Models\Patient\VitalSign.cs" />
     <Compile Include="Services\DoctorService.cs" />
     <Compile Include="Services\GenericService.cs" />
     <Compile Include="Services\IDoctorService.cs" />
@@ -403,9 +407,13 @@
     <Compile Include="ViewModels\DoctorListViewModel.cs" />
     <Compile Include="ViewModels\DoctorViewModel.cs" />
     <Compile Include="ViewModels\ExperienceViewModel.cs" />
-    <Compile Include="ViewModels\NoteViewModel.cs" />
+    <Compile Include="ViewModels\NoteViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ViewModels\PatientListViewModel.cs" />
-    <Compile Include="ViewModels\PatientNoteViewModel.cs" />
+    <Compile Include="ViewModels\PatientNoteViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ViewModels\PatientViewModel.cs" />
     <Compile Include="ViewModels\PersonListViewModel.cs" />
     <Compile Include="ViewModels\PersonViewModel.cs" />
@@ -415,8 +423,12 @@
     <Compile Include="ViewModels\SchedulerAppointmentViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ViewModels\TestVm.cs" />
-    <Compile Include="ViewModels\TreatmentPlanViewModel.cs" />
+    <Compile Include="ViewModels\TestVm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ViewModels\TreatmentPlanViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="ViewModels\VitalSignViewModel.cs" />
   </ItemGroup>
@@ -886,6 +898,10 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Todos.txt" />
+    <Content Include="Views\Note\EditorTemplates\NoteViewModel.cshtml" />
+    <Content Include="Views\PatientNote\Index.cshtml" />
+    <Content Include="Views\Patient\LeftMenu.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\NoteTypeSelector.cshtml" />
     <Content Include="Views\VitalSign\EditorTemplates\VitalSignViewModel.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -965,13 +981,9 @@
     <Content Include="Views\Doctor\_TabExperience.cshtml" />
     <Content Include="Views\Doctor\_TabAward.cshtml" />
     <Content Include="Views\Patient\TreatmentPlan.cshtml" />
-    <Content Include="Views\Patient\LeftMenu.cshtml" />
     <Content Include="Views\VitalSign\Index.cshtml" />
     <Content Include="Views\Appointment\Index.cshtml" />
     <Content Include="Views\Note\Index.cshtml" />
-    <Content Include="Views\Note\EditorTemplates\NoteViewModel.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\NoteTypeSelector.cshtml" />
-    <Content Include="Views\PatientNote\Index.cshtml" />
     <Content Include="Views\PatientNote\EditorTemplates\PatientNoteViewModel.cshtml" />
   </ItemGroup>
   <ItemGroup>

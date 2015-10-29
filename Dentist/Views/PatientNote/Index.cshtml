@@ -1,0 +1,95 @@
+﻿@model dynamic
+
+@using Dentist.ViewModels
+
+<script src="~/Scripts/App_Script/gridHelper.js"></script>
+<script src="~/Scripts/App_Script/CookieNames.js"></script>
+@{
+    ViewBag.LeftMenuSectionExist = true;
+    var pageSizeArray = new[] { 20, 50, 100 };
+}
+
+@(Html.Kendo().Grid<PatientNoteViewModel>().Name("grdPatientNotes")
+          .DataSource(dataSource => dataSource
+            .Ajax()
+            .Model(model =>
+            {
+                model.Id(x => x.Id);
+                model.Field(x => x.RecordedDate).DefaultValue(DateTime.Now);
+            })
+              .PageSize(pageSizeArray[0])
+              .ServerOperation(false) // Paging, sorting, filtering and grouping will be done client-side
+              .Sort(sort =>
+              {
+                  sort.Add(x => x.RecordedDate).Descending();
+              }).Events(e =>
+              {
+                  e.Error("grid_OnError");
+              })
+              //.Create(create => create.Action("Create", "PatientNote"))
+                .Update(update => update.Action("Update", "PatientNote"))
+                .Destroy(destroy => destroy.Action("Delete", "PatientNote"))
+                .Read(read => read.Action("GetPatientNotesBrowserItems", "PatientNote").Data("GetPatientId()"))
+          )
+              .Events(e =>
+              {
+                  e.Edit("grdPatientNotes_OnEdit");
+              })
+          .Columns(columns =>
+          {
+              columns.Bound(x => x.PatientId)
+                  .ClientTemplate("#= PatientFullName#");
+
+              columns.Command(command =>
+              {
+                  command.Destroy();
+                  command.Edit();
+              }).Width("15%");
+          })
+
+          .ToolBar(toolbar => toolbar.Custom().Name("AddPatientNote").HtmlAttributes(new { id = "btnAddPatientNote" }))
+          .Editable(editable => editable.Mode(GridEditMode.PopUp)
+          )
+          .Resizable(resizable => resizable.Columns(true))
+          .Pageable(pager =>
+          {
+              pager.PageSizes(pageSizeArray);
+          })
+          .Navigatable()
+          .Scrollable(s => s.Height("auto"))
+          .AutoBind(true)
+
+
+)
+
+@Html.Partial("~/Views/PatientNote/EditorTemplates/PatientNoteViewModel.cshtml")
+
+<script>
+    $().ready(function () {
+        $("#btnAddPatientNote").click(function (e) {
+            e.preventDefault();
+            $('#myModal').modal('show');
+        });
+    });
+
+    function GetPatientId() {
+        var selectedPatient = GetSelectedPatient();
+        if (selectedPatient) {
+            return { PatientId: selectedPatient.Id };
+        } else {
+            return { PatientId: null };
+        }
+
+    }
+
+    function grdPatientNotes_OnEdit(e) {
+        if (e.model.isNew()) {
+            var selectedPatient = GetSelectedPatient();
+            if (selectedPatient) {
+                e.model.set("PatientId", selectedPatient.Id);
+            }
+        }
+    }
+
+
+</script>
