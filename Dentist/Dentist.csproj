@@ -861,6 +861,7 @@
     <Content Include="Scripts\angular-route.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\App_Script\app.js" />
     <Content Include="Scripts\App_Script\Controllers\PatientNoteController.js" />
     <Content Include="Scripts\App_Script\CookieNames.js" />
@@ -869,7 +870,6 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\ftp.pubxml" />
     <None Include="Properties\PublishProfiles\MyDentist.pubxml" />
-    <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\angular-cookies.min.js.map" />
     <Content Include="Scripts\angular-route.min.js.map" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
