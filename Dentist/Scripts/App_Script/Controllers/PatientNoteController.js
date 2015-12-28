@@ -1,98 +1,81 @@
-﻿/// Patient Note is envelop of notes for a patient
-var PatientNoteController = function ($cookies, $scope, $http, $routeParams, $location) {
-    // Interface
-    var vm = this;
-    var baseLocal = "http://localhost/api";
-    vm.patientId = 0; // person who holds envelop
-    vm.id = 0; //patientNoteId or envelop Id    
-    vm.newNote = {};
-    vm.notes = [];
-    vm.addNote = addNote;
-    vm.deleteNote = deleteNote;
-    vm.resetNewNote = resetNewNote;
-    vm.noteChanged = noteChanged;
-    vm.save = saveToApi;
+﻿(function () {
+    "use strict";
 
-    // Initialization
-    resetNewNote();
-    mockNotes();
-    if ($routeParams.Id) {
-        vm.id = $routeParams.Id;
-        loadFromApi();
-    } else {
-        loadFromCookies();
-    }
+    var angularApp = angular.module("app");
+    angularApp.controller("patientNoteController", ["$scope", "$http", "$uibModal", patientNoteController]);
 
-    // Implementation
-    function resetNewNote() {
-        vm.newNote = { id: 0, description: "", noteTypeId: 5, objectState: "add" };
-    }
+    function patientNoteController($scope, $http, $uibModal) {
+        var ctrl = this;
+        ctrl.value = "test value";
+        ctrl.patientNotes = [];
+        ctrl.inAddMode = inAddMode;
+        ctrl.inEditMode = inEditMode;
+        ctrl.add = add;
+        ctrl.edit = edit;
+        ctrl.save = save;
+        ctrl.activepatientNote = {};
+        ctrl.open = open;
+        // initialization
+        retrieveAll();
 
-    function addNote(note) {
-        if (note) {
-            vm.notes.push(note);
-            vm.resetNewNote();
+        //  private
+        function open() {
+            var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: "patientNoteModal.html",
+                controller: "patientNoteModalInstance as ctrl",
+                size: "lg",
+                resolve: {
+                    patientNotes: function () {
+                        return ctrl.patientNotes;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                ctrl.activepatientNote = selectedItem;
+            }, function () {
+                alert("Modal dismissed at: " + new Date());
+            });
         }
-    }
 
-    function deleteNote(note) {
-        if (note) {
-            var index = vm.notes.indexOf(note);
-            if (note.id == 0) {
-                vm.notes.splice(index, 1);
-            } else {
-                vm.notes[index].objectState = "delete";
+        var formModifyMode = "none;"
+        function retrieveAll() {
+            $http.get("../api/PatientNotesApi").success(function (data) {
+                ctrl.patientNotes = data;
+            }).error(function () { alert("Error on loading patientNotes") });
+        }
+
+        function add() {
+            formModifyMode = "add";
+            ctrl.activepatientNote = {};
+        }
+
+        function edit(patientNoteId) {
+            formModifyMode = "edit";
+            // load single patientNote with the id and make it active
+            $http.get("../api/patientNotes/" + patientNoteId).success(function (data) {
+                ctrl.activepatientNote = data;
+            }).error(function () { alert("Error loading the patientNote") });
+        }
+
+        function save() {
+            if (inAddMode) {
+                alert("save it to db and refresh the list to maintain sort order" + ctrl.activepatientNote.Id);
+            } else if (inEditMode()) {
+                alert("update db and refresh the ui to present the updated record" + ctrl.activepatientNote.Id);
             }
+
+            ctrl.activepatientNote = {};
         }
-    }
 
-    function noteChanged(note) {
-        if (note.objectState != "add") {
-            note.objectState = "update";
+        function inAddMode() {
+            return formModifyMode === "add";
         }
-    }
 
-    function mockNotes() {
-        vm.notes = [
-            { id: 1, description: "Stop talking to honey", noteTypeId: 5, objectState:"" },
-            { id: 2, description: "Hello", noteTypeId: 5, objectState:"" },
-            { id: 3, description: "Side", noteTypeId: 5, objectState:"" }
-        ];
-    }
-
-    function loadFromCookies() {
-        var selectedPatient = GetSelectedPatient();//$cookies.get('D_SelectedPatient');
-        if (selectedPatient) {
-            vm.patientId = selectedPatient.Id;
+        function inEditMode() {
+            return formModifyMode === "edit";
         }
-    }
 
-    function loadFromApi() {
-        $http.get('/api/PatientNotesApi', { "$filter": "Id eq " + vm.Id })
-            .then(function(data) {
-                vm.patientId = data.patientId;
-                vm.id = data.id;
-                vm.notes = data.notes;
-            },
-            function (data, status, statusText) { }
-            );
     }
-
-    function getPatientNoteData() {
-        return {
-            patientId : vm.patientId, 
-            id: vm.id,
-            notes : vm.notes
-        };
-    }
-
-    function saveToApi() {
-        $http.post('/api/PatientNotesApi', getPatientNoteData())
-        .then(function(data) {
-                
-            },
-        function(data, status, statusText) {
-            
-        });
-    }
-}
+})();

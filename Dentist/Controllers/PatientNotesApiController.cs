@@ -11,15 +11,17 @@ using System.Web.Http.Description;
 using Dentist.Models;
 using Dentist.Models.Patient;
 using Dentist.ViewModels;
+using AutoMapper.QueryableExtensions;
 
 namespace Dentist.Controllers
 {
     public class PatientNotesApiController : BaseApiController
     {
         // GET: api/PatientNotesApi
-        public IQueryable<PatientNote> GetPatientNotes()
+        public IQueryable<PatientNoteDto> GetPatientNotes()
         {
-            return ReadContext.PatientNotes;
+            var query = ReadContext.Set<PatientNote>().Include(x => x.Notes).ProjectTo<PatientNoteDto>();           
+            return query;
         }
 
         // GET: api/PatientNotesApi/5

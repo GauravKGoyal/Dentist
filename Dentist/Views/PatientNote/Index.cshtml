@@ -8,88 +8,48 @@
     ViewBag.LeftMenuSectionExist = true;
     var pageSizeArray = new[] { 20, 50, 100 };
 }
-
-@(Html.Kendo().Grid<PatientNoteViewModel>().Name("grdPatientNotes")
-          .DataSource(dataSource => dataSource
-            .Ajax()
-            .Model(model =>
-            {
-                model.Id(x => x.Id);
-                model.Field(x => x.RecordedDate).DefaultValue(DateTime.Now);
-            })
-              .PageSize(pageSizeArray[0])
-              .ServerOperation(false) // Paging, sorting, filtering and grouping will be done client-side
-              .Sort(sort =>
-              {
-                  sort.Add(x => x.RecordedDate).Descending();
-              }).Events(e =>
-              {
-                  e.Error("grid_OnError");
-              })
-              //.Create(create => create.Action("Create", "PatientNote"))
-                .Update(update => update.Action("Update", "PatientNote"))
-                .Destroy(destroy => destroy.Action("Delete", "PatientNote"))
-                .Read(read => read.Action("GetPatientNotesBrowserItems", "PatientNote").Data("GetPatientId()"))
-          )
-              .Events(e =>
-              {
-                  e.Edit("grdPatientNotes_OnEdit");
-              })
-          .Columns(columns =>
-          {
-              columns.Bound(x => x.PatientId)
-                  .ClientTemplate("#= PatientFullName#");
-
-              columns.Command(command =>
-              {
-                  command.Destroy();
-                  command.Edit();
-              }).Width("15%");
-          })
-
-          .ToolBar(toolbar => toolbar.Custom().Name("AddPatientNote").HtmlAttributes(new { id = "btnAddPatientNote" }))
-          .Editable(editable => editable.Mode(GridEditMode.PopUp)
-          )
-          .Resizable(resizable => resizable.Columns(true))
-          .Pageable(pager =>
-          {
-              pager.PageSizes(pageSizeArray);
-          })
-          .Navigatable()
-          .Scrollable(s => s.Height("auto"))
-          .AutoBind(true)
-
-
-)
-
-@Html.Partial("~/Views/PatientNote/EditorTemplates/PatientNoteViewModel.cshtml")
-
+<div ng-app="app">
+    <div ng-controller="patientNoteController as ctrl">
+        <button class="btn list-toolbar">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+        </button>
+        <div class="list-panel list-panel-default" ng-repeat="patientNote in ctrl.patientNotes">
+            <div class="list-panel-heading">
+                <h3 class="list-panel-title">
+                    {{patientNote.recordedDate}}
+                    <span class="pull-right">
+                        <button class="list-panel-heading-btn">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        </button>
+                        <button class="list-panel-heading-btn">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </button>
+                    </span>
+                </h3>
+            </div>
+            <div class="list-panel-record" ng-repeat="note in patientNote.notes">
+                {{note.description}}
+            </div>
+        </div>
+    </div>
+</div>
 <script>
-    $().ready(function () {
-        $("#btnAddPatientNote").click(function (e) {
-            e.preventDefault();
-            $('#myModal').modal('show');
-        });
-    });
+    //$().ready(function () {
+    //    $("#btnAddPatientNote").click(function (e) {
+    //        e.preventDefault();
 
-    function GetPatientId() {
-        var selectedPatient = GetSelectedPatient();
-        if (selectedPatient) {
-            return { PatientId: selectedPatient.Id };
-        } else {
-            return { PatientId: null };
-        }
+    //        window.location = "http://localhost:54692/PatientNote/create";
+    //    });
+    //});
 
-    }
+    //function GetPatientId() {
+    //    var selectedPatient = GetSelectedPatient();
+    //    if (selectedPatient) {
+    //        return { PatientId: selectedPatient.Id };
+    //    } else {
+    //        return { PatientId: null };
+    //    }
 
-    function grdPatientNotes_OnEdit(e) {
-        if (e.model.isNew()) {
-            var selectedPatient = GetSelectedPatient();
-            if (selectedPatient) {
-                e.model.set("PatientId", selectedPatient.Id);
-            }
-        }
-    }
-
+    //}
 
 </script>

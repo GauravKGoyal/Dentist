@@ -32,6 +32,7 @@ namespace Dentist.ViewModels
         }
         public int Id { get; set; }
         public int PatientId { get; set; }
+        public DateTime RecordedDate { get; set; }
         public List<NoteDto> Notes { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -39,6 +40,11 @@ namespace Dentist.ViewModels
             if (PatientId == 0)
             {
                 results.Add(new ValidationResult("Patient Id cannot be 0", new List<string> {"PatientId"}));
+            }
+
+            if ((Notes == null) || ( Notes.Count == 0))
+            {
+                results.Add(new ValidationResult("Notes cannot be null"));            
             }
 
             return results;

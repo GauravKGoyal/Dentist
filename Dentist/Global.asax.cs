@@ -18,19 +18,34 @@ namespace Dentist
         protected void Application_Start()
         {
             DependencyInjectionConfig.RegisterDependencyInjection();
-            AreaRegistration.RegisterAllAreas();
+
+            // Requires for only mvc areas
+            // AreaRegistration.RegisterAllAreas();
+
+            // Register web api configuration and its related routes
             GlobalConfiguration.Configure(WebApiConfig.Register);
+
+            // Register error attribute which i believe gets overriden by the elmah
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+
+            // Register Mvc routes
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
             AutoMapperConfig.RegisterMappings();
-            
-            var formatters = GlobalConfiguration.Configuration.Formatters;
-            var jsonFormatter = formatters.JsonFormatter;
-            var settings = jsonFormatter.SerializerSettings;
+
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.UseCamelCase();
+        }
+    }
+
+    public static class JsonMediaTypeFormatterExtention
+    {
+        public static void UseCamelCase(this JsonMediaTypeFormatter jsonMediaTypeFormatter)
+        {
+            var settings = jsonMediaTypeFormatter.SerializerSettings;
             settings.Formatting = Formatting.Indented;
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            
         }
     }
 }

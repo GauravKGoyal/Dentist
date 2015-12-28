@@ -8,7 +8,7 @@
 
 @media (max-width: 978px) {
     body {
-      padding-top: 60px;
+        padding-top: 60px;
     }
 }
 
@@ -20,7 +20,6 @@
 
 [data-isBreak="true"] {
     /*opacity: 0.3;*/
-
     /*background-color: #f2f2f2*/
 }
 
@@ -45,7 +44,7 @@ textarea {
 }
 
 .k-datetimepicker, .k-datepicker, .k-dropdown, .k-textbox {
-    width: 100%
+    width: 100%;
 }
 
 .editor-field {
@@ -53,18 +52,18 @@ textarea {
 }
 
 .badge-Square {
-  display: inline-block;
-  min-width: 10px;
-  padding: 3px 7px;
-  font-size: 12px;
-  font-weight: bold;
-  color: #fff;
-  line-height: 1;
-  vertical-align: baseline;
-  white-space: nowrap;
-  text-align: center;
-  background-color: #ffdac1;
-  border: 10px;
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1;
+    vertical-align: baseline;
+    white-space: nowrap;
+    text-align: center;
+    background-color: #ffdac1;
+    border: 10px;
 }
 
 .appointment-template {
@@ -79,25 +78,27 @@ textarea {
 .k-scheduler-table .k-nonwork-hour {
     background-color: #f2f2f2;
 }
+
 .btn-file {
     position: relative;
     overflow: hidden;
 }
-.btn-file input[type=file] {
-    position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 100%;
-    min-height: 100%;
-    font-size: 100px;
-    text-align: right;
-    filter: alpha(opacity=0);
-    opacity: 0;
-    outline: none;  
-    background: white;
-    cursor: inherit;
-    display: block;
-}
+
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
 
 div.fixed {
     position: fixed;
@@ -111,11 +112,13 @@ ul li a.selected {
     color: #FFFFFF;
     font-weight: bold !important;
 }
+
 .d-gridHeader {
-    margin-bottom: 4px
+    margin-bottom: 4px;
 }
+
 .d-gridRow {
-    margin-bottom: 2px
+    margin-bottom: 2px;
 }
 
 .ng-invalid.ng-dirty {
@@ -124,4 +127,86 @@ ul li a.selected {
 
 .ng-valid.ng-dirty {
     border-color: green;
+}
+
+.list-panel {
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.list-panel-record {
+    padding: 5px;
+    border-top-style: solid;
+    border-top-width: thin;
+}
+
+.list-panel-body {
+    padding: 15px;
+}
+
+.list-panel-heading {
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    
+}
+
+.list-panel-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 16px;
+    color: inherit;
+}
+
+.list-panel-default {
+    border-color: #dddddd;
+}
+
+    .list-panel-default > .list-panel-heading {
+        color: #333333;
+        background-color: #f5f5f5;
+        border-color: #dddddd;
+    }
+
+        .list-panel-default > .list-panel-heading + .list-panel-collapse > .list-panel-body {
+            border-top-color: #dddddd;
+        }
+
+        .list-panel-default > .list-panel-heading .list-badge {
+            color: #f5f5f5;
+            background-color: #333333;
+        }
+
+    .list-panel-default > .list-panel-footer + .list-panel-collapse > .list-panel-body {
+        border-bottom-color: #dddddd;
+    }
+
+    .list-panel-heading-btn {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;  
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.list-toolbar{
+    margin-bottom :5px;
 }
