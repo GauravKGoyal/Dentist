@@ -210,3 +210,8 @@ ul li a.selected {
 .list-toolbar{
     margin-bottom :5px;
 }
+
+.width90{
+    width:90% !important;
+    float:left;
+}

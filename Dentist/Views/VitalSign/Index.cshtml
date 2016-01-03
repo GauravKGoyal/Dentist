@@ -74,7 +74,7 @@
         if (e.model.isNew()) {
             var selectedPatient = GetSelectedPatient();
             if (selectedPatient) {
-                e.model.set("PatientId", selectedPatient.Id);
+                e.model.set("PatientId", selectedPatient.id);
             }
         }
     }

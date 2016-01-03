@@ -871,6 +871,7 @@
     <Content Include="Scripts\App_Script\app.js" />
     <Content Include="Scripts\App_Script\Controllers\PatientNoteController.js" />
     <Content Include="Scripts\App_Script\Controllers\PatientNoteControllerObsolete.js" />
+    <Content Include="Scripts\App_Script\Controllers\PatientNoteModelController.js" />
     <Content Include="Scripts\App_Script\CookieNames.js" />
     <Content Include="Scripts\App_Script\jquery.cookie.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -992,6 +993,7 @@
     <Content Include="Views\Appointment\Index.cshtml" />
     <Content Include="Views\Note\Index.cshtml" />
     <Content Include="Views\PatientNote\EditorTemplates\PatientNoteViewModel.html" />
+    <None Include="Views\PatientNote\PatientNoteModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

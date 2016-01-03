@@ -1,4 +1,5 @@
-﻿/// Patient Note is envelop of notes for a patient
+﻿/// <reference path="PatientNoteModelController.js" />
+/// Patient Note is envelop of notes for a patient
 var PatientNoteControllerObsolete = function ($cookies, $scope, $http, $routeParams, $location) {
     // Interface
     var vm = this;
@@ -73,7 +74,7 @@ var PatientNoteControllerObsolete = function ($cookies, $scope, $http, $routePar
     function loadFromCookies() {
         var selectedPatient = GetSelectedPatient();//$cookies.get('D_SelectedPatient');
         if (selectedPatient) {
-            vm.patientId = selectedPatient.Id;
+            vm.patientId = selectedPatient.id;
         }
     }
 

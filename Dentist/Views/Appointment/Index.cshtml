@@ -63,7 +63,7 @@
     function GetPatientId() {
         var selectedPatient = GetSelectedPatient();
         if (selectedPatient) {
-            return { PersonId: selectedPatient.Id };
+            return { PersonId: selectedPatient.id };
         } else {
             return { PersonId: null };
         }
@@ -74,7 +74,7 @@
         if (e.model.isNew()) {
             var selectedPatient = GetSelectedPatient();
             if (selectedPatient) {
-                e.model.set("PatientId", selectedPatient.Id);
+                e.model.set("PatientId", selectedPatient.id);
             }
             e.container.kendoWindow("title", "Create Appointment");
         } else {

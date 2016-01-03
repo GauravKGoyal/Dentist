@@ -3,7 +3,7 @@
 };
 
 function SetSelectedPatient(patientId, firstName, lastName) {
-    var selectedPatient = { Id: patientId, FullName: firstName + " " + lastName };
+    var selectedPatient = { id: patientId, fullName: firstName + " " + lastName };
     var cookieValue = $.param(selectedPatient);
     $.cookie("D_SelectedPatient", cookieValue, { path: '/' });
 }
@@ -16,3 +16,12 @@ function GetSelectedPatient() {
     }
     return null;
 }
+
+function GetSelectedPatientId() {
+    var patient = GetSelectedPatient();
+    if (patient) {
+        return patient.id; 
+    }
+    return null;
+}
+

@@ -14,29 +14,24 @@
         ctrl.edit = edit;
         ctrl.save = save;
         ctrl.activepatientNote = {};
-        ctrl.open = open;
         // initialization
         retrieveAll();
 
         //  private
-        function open() {
+        function showModal(patientNote) {
             var modalInstance = $uibModal.open({
                 animation: true,
-                templateUrl: "patientNoteModal.html",
-                controller: "patientNoteModalInstance as ctrl",
+                templateUrl: "patientNoteModal.html", 
+                controller: "patientNoteModalController as ctrl",
                 size: "lg",
                 resolve: {
-                    patientNotes: function () {
-                        return ctrl.patientNotes;
+                patientNote: function () {
+                    return patientNote;
                     }
                 }
             });
 
-            modalInstance.result.then(function (selectedItem) {
-                ctrl.activepatientNote = selectedItem;
-            }, function () {
-                alert("Modal dismissed at: " + new Date());
-            });
+            return modalInstance;
         }
 
         var formModifyMode = "none;"
@@ -47,16 +42,55 @@
         }
 
         function add() {
+            var patientId = GetSelectedPatientId();
+            if (!patientId)
+            {
+                alert("Please specify the patient you wish to creates notes for");
+                return;
+            }
+
             formModifyMode = "add";
             ctrl.activepatientNote = {};
+            var addPatientNote = { id: 0, notes: [{ description: "", noteTypeId: 5 }], patientId: GetSelectedPatientId(), recordedDate: new Date() };
+            var modalInstance = showModal(addPatientNote);
+            modalInstance.result.then(function (patientNote) {                
+                $http.post("../api/PatientNotesApi", patientNote).success(function (data) {
+                    ctrl.patientNotes.push(patientNote);
+                }).error(function () { alert("Failed to add new patient note") });
+            });
         }
 
         function edit(patientNoteId) {
             formModifyMode = "edit";
             // load single patientNote with the id and make it active
-            $http.get("../api/patientNotes/" + patientNoteId).success(function (data) {
-                ctrl.activepatientNote = data;
-            }).error(function () { alert("Error loading the patientNote") });
+            var editPatientNote = null;
+            for (var i = 0; i < ctrl.patientNotes.length; i++) {
+                if (ctrl.patientNotes[i].id == patientNoteId) {
+                    editPatientNote = ctrl.patientNotes[i];
+                }
+            }
+
+            if (!editPatientNote)
+            {
+                alert("Please select the patient note to edit");
+                return;
+            }
+
+            var modalInstance = showModal(editPatientNote);
+            modalInstance.result.then(function (patientNote) {
+                $http.put("../api/PatientNotesApi", patientNote).success(function (data) {
+                }).error(
+                    //rollback the changes
+                    function () { alert("Failed to update patient note") }
+                );
+            });
+
+            
+            //$http.get("../api/patientNoteApi/" + patientNoteId).success(function (data) {
+            //    ctrl.activepatientNote = data;
+            //}).error(function () { alert("Error loading the patientNote") });
+
+
         }
 
         function save() {

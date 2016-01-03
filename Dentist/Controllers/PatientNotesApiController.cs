@@ -20,7 +20,7 @@ namespace Dentist.Controllers
         // GET: api/PatientNotesApi
         public IQueryable<PatientNoteDto> GetPatientNotes()
         {
-            var query = ReadContext.Set<PatientNote>().Include(x => x.Notes).ProjectTo<PatientNoteDto>();           
+            var query = ReadContext.Set<PatientNote>().Include(x => x.Notes).ProjectTo<PatientNoteDto>();
             return query;
         }
 
@@ -39,36 +39,48 @@ namespace Dentist.Controllers
 
         // PUT: api/PatientNotesApi/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutPatientNote(int id, PatientNote patientNote)
+        public IHttpActionResult PutPatientNote(PatientNoteDto patientNoteDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != patientNote.Id)
+            var patientNoteEnvelop = WriteContext.PatientNotes.FirstOrDefault(x => x.Id == patientNoteDto.Id);
+            if (patientNoteEnvelop == null)
             {
-                return BadRequest();
+                return NotFound();
             }
+            patientNoteEnvelop.RecordedDate = DateTime.Now;
 
-            WriteContext.Entry(patientNote).State = EntityState.Modified;
-
-            try
+            // delete notes
+            var deletedNotesDto = patientNoteDto.Notes.Where(noteDto => noteDto.ObjectState == "delete").ToList();
+            deletedNotesDto.ForEach(noteDto =>
             {
-                WriteContext.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PatientNoteExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                var note = new Note() { Id = noteDto.Id };
+                WriteContext.Notes.Attach(note);
+                WriteContext.Notes.Remove(note);
+            });
 
+            // add notes
+            var addedNotesDto = patientNoteDto.Notes.Where(noteDto => noteDto.ObjectState == "add").ToList();
+            addedNotesDto.ForEach(noteDto =>
+            {
+                var note = AutoMapper.Mapper.Map<Note>(noteDto);
+                patientNoteEnvelop.Notes.Add(note);
+                note.RecordedDate = DateTime.Today;
+            });
+
+            // update notes
+            var updatedNotesDto = patientNoteDto.Notes.Where(noteDto => noteDto.ObjectState == "update").ToList();
+            updatedNotesDto.ForEach(noteDto =>
+            {
+                var note = WriteContext.Notes.First(x => x.Id == noteDto.Id);
+                AutoMapper.Mapper.Map(noteDto, note);
+                note.RecordedDate = DateTime.Today;
+            });
+
+            WriteContext.TrySaveChanges(ModelState);
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -76,28 +88,23 @@ namespace Dentist.Controllers
         [ResponseType(typeof(PatientNoteDto))]
         public IHttpActionResult PostPatientNote(PatientNoteDto patientNoteDto)
         {
+            var isNewRecord = (patientNoteDto.Id == 0);
+            if (!isNewRecord)
+            {
+                return BadRequest("Only new patient can be created using PostPatientNote call");
+            }
+
             if (!ModelState.IsValid)
-            {                
+            {
                 return BadRequest(ModelState);
             }
 
-            var isNewRecord = (patientNoteDto.Id == 0);
-            if (isNewRecord)
-            {
-                var patientNote = AutoMapper.Mapper.Map<PatientNote>(patientNoteDto);
-                patientNote.RecordedDate = DateTime.Today;
-                patientNote.Notes.ForEach(note => note.RecordedDate = DateTime.Today);
-                WriteContext.PatientNotes.Add(patientNote);
-            }
-            else
-            {
-                var patientNoteEnvelop = WriteContext.PatientNotes.Find(patientNoteDto.Id);
-                var addedNotes = patientNoteDto.Notes.Where(noteDto => noteDto.ObjectState == "add");
-                var updatedNotes = patientNoteDto.Notes.Where(noteDto => noteDto.ObjectState == "update");
-                var deletedNotes = patientNoteDto.Notes.Where(noteDto => noteDto.ObjectState == "delete");
-                patientNoteEnvelop.Notes.RemoveAll(note => deletedNotes.Any(dn => dn.Id == note.Id));
-                //patientNoteEnvelop.Notes.Add(new Note() {});
-            }
+            var patientNote = WriteContext.PatientNotes.Create();
+            AutoMapper.Mapper.Map(patientNoteDto, patientNote);
+            patientNote.RecordedDate = DateTime.Today;
+            patientNote.Notes.ForEach(note => note.RecordedDate = DateTime.Today);
+
+            WriteContext.PatientNotes.Add(patientNote);
             WriteContext.TrySaveChanges(ModelState);
 
             return CreatedAtRoute("DefaultApi", new { id = patientNoteDto.Id }, patientNoteDto);
