@@ -105,3 +105,9 @@
 
     }//controller
 })();
+
+//todo
+//seperate data layer factory
+//address errors froms the server side and show it correctly to the user
+//do not refresh the entire grid on deleting and updating a record
+//implement paging for patient notes grid
