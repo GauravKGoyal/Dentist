@@ -41,35 +41,8 @@
             </div>
         </div>
 
-        <script type="text/ng-template" id="patientNoteModal.html">
-            @*// this will get an instance or patientNoteModelController*@
-            <div class="modal-header">
-                <h3 class="modal-title">Todays notes</h3>
-            </div>
-            <form name ="frmPatientNote" novalidate>
-                <div class="modal-body">
-                    <button class="btn list-toolbar" ng-click="ctrl.add()">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add note
-                    </button>
-                    <div class="form-group" ng-repeat="note in ctrl.patientNote.notes | filter:{objectState : '!delete'} track by $index">
-                        state = {{note.objectState}}
-                        <div class="input-group">
-                            <input type="text" class="form-control" ng-model="note.description" ng-change="ctrl.update(note)" required>
-                            <span class="input-group-btn">
-                                <button class="btn" type="button" ng-click="ctrl.delete($index); frmPatientNote.$dirty=true">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer clear-float">
-                    <button class="btn btn-primary" type="submit" ng-click="frmPatientNote.$dirty ? ctrl.ok() : ctrl.cancel()">OK</button>
-                    <button class="btn btn-warning" type="button" ng-click="ctrl.cancel()">Cancel</button>
-                </div>
-            </form>
-
-        </script>
+        @*this is the model to add and edit patient note*@
+        @Html.Partial("~/Views/PatientNote/PatientNoteModel.cshtml");
 
     </div>
 </div>
