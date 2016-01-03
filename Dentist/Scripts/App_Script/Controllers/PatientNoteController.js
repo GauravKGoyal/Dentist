@@ -6,7 +6,7 @@
 
     function patientNoteController($scope, $http, $uibModal) {
         var ctrl = this;
-        ctrl.patientNotes = [];        
+        ctrl.patientNotes = [];
         initialization();
 
         ctrl.add = function add() {
@@ -27,38 +27,64 @@
 
         ctrl.edit = function edit(patientNoteId) {
             // load single patientNote with the id and make it active
-            var editPatientNote = null;
-            for (var i = 0; i < ctrl.patientNotes.length; i++) {
-                if (ctrl.patientNotes[i].id == patientNoteId) {
-                    editPatientNote = ctrl.patientNotes[i];
-                }
-            }
 
-            if (!editPatientNote) {
+            //var url = "../api/PatientNotesApi/" + patientNoteId;
+            //$http.get(url).success(function (patientNote) {
+            //    editPatientNote = patientNote;
+            //}).error(function () { alert("Failed to load patient note for editing") });
+
+            var patientNote = getPatientNote(patientNoteId);
+            if (!patientNote) {
                 alert("Please select the patient note to edit");
                 return;
             }
 
+            var editPatientNote = null;
+            editPatientNote = angular.copy(patientNote);
+
             var modalInstance = showModal(editPatientNote);
             modalInstance.result.then(function (patientNote) {
                 $http.put("../api/PatientNotesApi", patientNote).success(function (data) {
+                    retrieveAll();
                 }).error(
                     //rollback the changes
                     function () { alert("Failed to update patient note") }
                 );
             });
+        }
 
+        ctrl.delete = function deletePatient(patientNoteId) {
+            var patientNote = getPatientNote(patientNoteId);
+            if (!patientNote) {
+                alert("Please select the patient note to delete");
+                return;
+            }
+
+            var url = "../api/PatientNotesApi/" + patientNoteId;
+            $http.delete(url).success(function (data) {
+                retrieveAll();
+            }).error(function () {
+                alert("Failed to delete patient note")
+            });
+        }
+
+        function getPatientNote(id) {
+            for (var i = 0; i < ctrl.patientNotes.length; i++) {
+                if (ctrl.patientNotes[i].id === id) {
+                    return ctrl.patientNotes[i];
+                }
+            }
         }
 
         function showModal(patientNote) {
             var modalInstance = $uibModal.open({
                 animation: true,
-                templateUrl: "patientNoteModal.html", 
+                templateUrl: "patientNoteModal.html",
                 controller: "patientNoteModalController as ctrl",
                 size: "lg",
                 resolve: {
-                patientNote: function () {
-                    return patientNote;
+                    patientNote: function () {
+                        return patientNote;
                     }
                 }
             });

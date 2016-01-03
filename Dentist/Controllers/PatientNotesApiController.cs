@@ -28,7 +28,7 @@ namespace Dentist.Controllers
         [ResponseType(typeof(PatientNote))]
         public IHttpActionResult GetPatientNote(int id)
         {
-            PatientNote patientNote = ReadContext.PatientNotes.Find(id);
+            PatientNote patientNote = ReadContext.PatientNotes.FirstOrDefault(x=>x.Id == id);
             if (patientNote == null)
             {
                 return NotFound();
@@ -46,7 +46,7 @@ namespace Dentist.Controllers
                 return BadRequest(ModelState);
             }
 
-            var patientNoteEnvelop = WriteContext.PatientNotes.FirstOrDefault(x => x.Id == patientNoteDto.Id);
+            var patientNoteEnvelop = WriteContext.PatientNotes.Find(patientNoteDto.Id);
             if (patientNoteEnvelop == null)
             {
                 return NotFound();
@@ -114,14 +114,20 @@ namespace Dentist.Controllers
         [ResponseType(typeof(PatientNote))]
         public IHttpActionResult DeletePatientNote(int id)
         {
-            PatientNote patientNote = WriteContext.PatientNotes.Find(id);
+            PatientNote patientNote = WriteContext.PatientNotes.Include(x => x.Notes).FirstOrDefault(x => x.Id == id);
             if (patientNote == null)
             {
                 return NotFound();
             }
 
+            for (int i = patientNote.Notes.Count-1; i >-1 ; i--)
+            {
+                WriteContext.Notes.Remove(patientNote.Notes.ElementAt(i));
+            }
             WriteContext.PatientNotes.Remove(patientNote);
-            WriteContext.SaveChanges();
+
+            var errorMessage = "";
+            WriteContext.TrySaveChanges(out errorMessage);
 
             return Ok(patientNote);
         }
