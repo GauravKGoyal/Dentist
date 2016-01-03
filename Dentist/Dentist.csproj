@@ -869,6 +869,7 @@
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\App_Script\app.js" />
+    <Content Include="Scripts\App_Script\constants.js" />
     <Content Include="Scripts\App_Script\Controllers\PatientNoteController.js" />
     <Content Include="Scripts\App_Script\Controllers\PatientNoteControllerObsolete.js" />
     <Content Include="Scripts\App_Script\Controllers\PatientNoteModelController.js" />
