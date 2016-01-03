@@ -1,0 +1,1 @@
+﻿var objectState = { add: "add", update: "update", delete: "delete" };
