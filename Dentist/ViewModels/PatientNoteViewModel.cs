@@ -44,7 +44,7 @@ namespace Dentist.ViewModels
 
             if ((Notes == null) || ( Notes.Count == 0))
             {
-                results.Add(new ValidationResult("Notes cannot be null"));            
+                results.Add(new ValidationResult("Notes cannot be null", new List<string> { "Notes" }));            
             }
 
             return results;

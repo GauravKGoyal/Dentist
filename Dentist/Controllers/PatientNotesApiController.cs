@@ -25,16 +25,17 @@ namespace Dentist.Controllers
         }
 
         // GET: api/PatientNotesApi/5
-        [ResponseType(typeof(PatientNote))]
+        [ResponseType(typeof(PatientNoteDto))]
         public IHttpActionResult GetPatientNote(int id)
         {
-            PatientNote patientNote = ReadContext.PatientNotes.FirstOrDefault(x=>x.Id == id);
+            PatientNote patientNote = ReadContext.PatientNotes.Include(x => x.Notes).FirstOrDefault(x => x.Id == id);
             if (patientNote == null)
             {
                 return NotFound();
             }
 
-            return Ok(patientNote);
+            var patientNoteDto = AutoMapper.Mapper.Map<PatientNoteDto>(patientNote);
+            return Ok(patientNoteDto);
         }
 
         // PUT: api/PatientNotesApi/5
@@ -68,7 +69,7 @@ namespace Dentist.Controllers
             {
                 var note = AutoMapper.Mapper.Map<Note>(noteDto);
                 patientNoteEnvelop.Notes.Add(note);
-                note.RecordedDate = DateTime.Today;
+                note.RecordedDate = DateTime.Now;
             });
 
             // update notes
@@ -77,10 +78,13 @@ namespace Dentist.Controllers
             {
                 var note = WriteContext.Notes.First(x => x.Id == noteDto.Id);
                 AutoMapper.Mapper.Map(noteDto, note);
-                note.RecordedDate = DateTime.Today;
+                note.RecordedDate = DateTime.Now;
             });
 
-            WriteContext.TrySaveChanges(ModelState);
+            if (!WriteContext.TrySaveChanges(ModelState)){
+                return BadRequest(ModelState);
+            }
+
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -101,11 +105,14 @@ namespace Dentist.Controllers
 
             var patientNote = WriteContext.PatientNotes.Create();
             AutoMapper.Mapper.Map(patientNoteDto, patientNote);
-            patientNote.RecordedDate = DateTime.Today;
-            patientNote.Notes.ForEach(note => note.RecordedDate = DateTime.Today);
+            patientNote.RecordedDate = DateTime.Now;
+            patientNote.Notes.ForEach(note => note.RecordedDate = DateTime.Now);
 
             WriteContext.PatientNotes.Add(patientNote);
-            WriteContext.TrySaveChanges(ModelState);
+            if (!WriteContext.TrySaveChanges(ModelState))
+            {
+                return BadRequest(ModelState);
+            }
 
             return CreatedAtRoute("DefaultApi", new { id = patientNoteDto.Id }, patientNoteDto);
         }
@@ -126,8 +133,10 @@ namespace Dentist.Controllers
             }
             WriteContext.PatientNotes.Remove(patientNote);
 
-            var errorMessage = "";
-            WriteContext.TrySaveChanges(out errorMessage);
+            if (!WriteContext.TrySaveChanges(ModelState))
+            {
+                return BadRequest(ModelState);
+            }
 
             return Ok(patientNote);
         }
