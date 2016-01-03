@@ -2,8 +2,16 @@
 
 @using Dentist.ViewModels
 
-<script src="~/Scripts/App_Script/gridHelper.js"></script>
 <script src="~/Scripts/App_Script/CookieNames.js"></script>
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/angular-route.js"></script>
+<script src="~/Scripts/angular-cookies.js"></script>
+<script src="~/Scripts/angular-ui/ui-bootstrap-tpls.js"></script>
+<script src="~/Scripts/App_Script/app.js"></script>
+
+<script src="~/Scripts/App_Script/Controllers/PatientNoteController.js"></script>
+<script src="~/Scripts/App_Script/Controllers/PatientNoteModelController.js"></script>
+
 @{
     ViewBag.LeftMenuSectionExist = true;
     var pageSizeArray = new[] { 20, 50, 100 };
@@ -64,24 +72,5 @@
 
     </div>
 </div>
-<script>
-    //$().ready(function () {
-    //    $("#btnAddPatientNote").click(function (e) {
-    //        e.preventDefault();
 
-    //        window.location = "http://localhost:54692/PatientNote/create";
-    //    });
-    //});
-
-    //function GetPatientId() {
-    //    var selectedPatient = GetSelectedPatient();
-    //    if (selectedPatient) {
-    //        return { PatientId: selectedPatient.Id };
-    //    } else {
-    //        return { PatientId: null };
-    //    }
-
-    //}
-
-</script>
 
