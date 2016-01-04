@@ -33,10 +33,6 @@ namespace Dentist.Controllers
             var result = projectedQuery.ToDataSourceResult(request);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-
-        public void PostPatientNote(PatientNoteDto patientNote)
-        {
-            var p = patientNote;
-        }
+      
     }
 }

@@ -15,7 +15,6 @@ namespace Dentist.Models.Patient
         [Required]
         public int PatientNoteId { get; set; }
         public virtual PatientNote PatientNote { get; set; }
-        public DateTime RecordedDate { get; set; }
 
     }
 }

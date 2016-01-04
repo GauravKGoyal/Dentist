@@ -8,27 +8,40 @@ using Dentist.Models.Patient;
 
 namespace Dentist.ViewModels
 {
-    public class TreatmentPlanViewModel
+    public class TreatmentPlanDto
     {
-            public int Id { get; set; }
-            public virtual List<TreatmentViewModel> Treatments { get; set; }
+        public int Id { get; set; }
+        public List<TreatmentDto> Treatments { get; set; }
 
-            public int? PatientId { get; set; }
-            public virtual Patient Patient { get; set; }
+        [Required]
+        public DateTime RecordedDate { get; set; }
+        public int? PatientId { get; set; }
+        public string PatientFirstName { get; set; }
+        public string PatientLastName { get; set; }
+        public string PatientFullName
+        {
+            get
+            {
+                return PatientFirstName + " " + PatientLastName;
+            }
+        }
     }
 
-    public class TreatmentViewModel
+    public class TreatmentDto
     {
         public int Id { get; set; }
         [StringLength(100)]
-        public string Name { get; set; }
-        [StringLength(100)]
-        public string Description { get; set; }
+       
         public double Quantity { get; set; }
-        public double Cost { get; set; }
-
+       
         public int? TreatmentPlanId { get; set; }
-        public TreatmentPlan TreatmentPlan { get; set; }        
+
+        public int ProcedureId { get; set; }
+
+        public string ProcedureName { get; set; }
+
+        public string ObjectState { get; set; }
     }
+
 
 }

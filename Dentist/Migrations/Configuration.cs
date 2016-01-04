@@ -57,6 +57,13 @@ namespace Dentist.Migrations
                 new NoteType() {Description = "Notes"}
                 );
 
+            context.Procedures.AddOrUpdate(x => x.Name,
+                new Procedure() { Name = "Bleaching" },
+                new Procedure() { Name = "Cephalogram" },
+                new Procedure() { Name = "Ceramic Braces" },
+                new Procedure() { Name = "Ceramic Crown" },
+                new Procedure() { Name = "Complex Amalgam Filling" }
+                );
             //context.JobStates.AddOrUpdate(x=>x.Descrition,
             //    new JobState() { Descrition = "Open"},
             //    new JobState() { Descrition = "Done"}

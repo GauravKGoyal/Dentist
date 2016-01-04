@@ -16,14 +16,12 @@
             {
                 model.Id(x => x.Id);
                 model.Field(x => x.NoteTypeId).DefaultValue(5);
-                model.Field(x => x.RecordedDate).DefaultValue(DateTime.Now);
             })
               .PageSize(pageSizeArray[0])
               .ServerOperation(false) // Paging, sorting, filtering and grouping will be done client-side
              // .Group(config => config.Add(x=>x.NoteTypeDescription))
               .Sort(sort =>
               {
-                  sort.Add(x => x.RecordedDate).Descending();
               }).Events(e =>
               {
                   e.Error("grid_OnError");

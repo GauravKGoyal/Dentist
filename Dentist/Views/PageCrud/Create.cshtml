@@ -17,12 +17,27 @@
             @*@Html.EditorFor(model => model)*@
             @foreach (var property in DefaultScaffoldingExtensions.VisibleProperties(Model))
             {
-                if ((property.PropertyType != typeof(string)) &&
-                    (typeof (IEnumerable).IsAssignableFrom(property.PropertyType)))
+
+                //// ignore list
+                //if ((property.PropertyType != typeof(string)) &&
+                //    (typeof(IEnumerable).IsAssignableFrom(property.PropertyType)))
+                //{
+                //    continue;
+                //}
+
+                //// ignore complex object
+                //if ((property.PropertyType != typeof(string)) &&
+                //    (property.PropertyType.IsClass))
+                //{
+                //    continue;
+                //}
+
+                var allow = (property.PropertyType == typeof(string)) || (property.PropertyType.IsValueType);
+                if (!allow)
                 {
                     continue;
                 }
-                
+                    
                 <div class="form-group">
                     @{ string propertyName = property.Name; }
                     <label class="control-label col-md-3" for=@propertyName>@propertyName</label>

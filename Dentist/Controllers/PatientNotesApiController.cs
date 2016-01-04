@@ -12,15 +12,17 @@ using Dentist.Models;
 using Dentist.Models.Patient;
 using Dentist.ViewModels;
 using AutoMapper.QueryableExtensions;
+using System.Web.Http.OData;
 
 namespace Dentist.Controllers
 {
     public class PatientNotesApiController : BaseApiController
     {
         // GET: api/PatientNotesApi
+        [EnableQuery]
         public IQueryable<PatientNoteDto> GetPatientNotes()
         {
-            var query = ReadContext.Set<PatientNote>().Include(x => x.Notes).ProjectTo<PatientNoteDto>();
+            var query = ReadContext.Set<PatientNote>().Include(x => x.Notes).ProjectTo<PatientNoteDto>().OrderByDescending(x=>x.RecordedDate);
             return query;
         }
 
@@ -52,7 +54,6 @@ namespace Dentist.Controllers
             {
                 return NotFound();
             }
-            patientNoteEnvelop.RecordedDate = DateTime.Now;
 
             // delete notes
             var deletedNotesDto = patientNoteDto.Notes.Where(noteDto => noteDto.ObjectState == "delete").ToList();
@@ -69,7 +70,6 @@ namespace Dentist.Controllers
             {
                 var note = AutoMapper.Mapper.Map<Note>(noteDto);
                 patientNoteEnvelop.Notes.Add(note);
-                note.RecordedDate = DateTime.Now;
             });
 
             // update notes
@@ -78,7 +78,6 @@ namespace Dentist.Controllers
             {
                 var note = WriteContext.Notes.First(x => x.Id == noteDto.Id);
                 AutoMapper.Mapper.Map(noteDto, note);
-                note.RecordedDate = DateTime.Now;
             });
 
             if (!WriteContext.TrySaveChanges(ModelState)){
@@ -106,7 +105,6 @@ namespace Dentist.Controllers
             var patientNote = WriteContext.PatientNotes.Create();
             AutoMapper.Mapper.Map(patientNoteDto, patientNote);
             patientNote.RecordedDate = DateTime.Now;
-            patientNote.Notes.ForEach(note => note.RecordedDate = DateTime.Now);
 
             WriteContext.PatientNotes.Add(patientNote);
             if (!WriteContext.TrySaveChanges(ModelState))

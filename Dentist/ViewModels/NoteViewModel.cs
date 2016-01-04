@@ -20,7 +20,6 @@ namespace Dentist.ViewModels
         [Required]
         public int PatientNoteId { get; set; }
         
-        public DateTime RecordedDate { get; set; }
     }
 
 }

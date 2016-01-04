@@ -1,10 +1,11 @@
-﻿(function () {
+﻿/// <reference path="PatientNoteController.js" />
+(function () {
     "use strict";
 
     var angularApp = angular.module("app");
-    angularApp.controller("patientNoteController", ["$scope", "$http", "$uibModal", patientNoteController]);
+    angularApp.controller("patientNoteController", ["$scope", "$http", "$uibModal", "patientNoteDataService", patientNoteController]);
 
-    function patientNoteController($scope, $http, $uibModal) {
+    function patientNoteController($scope, $http, $uibModal, patientNoteDataService) {
         var ctrl = this;
         ctrl.patientNotes = [];
         initialization();
@@ -21,17 +22,13 @@
             modalInstance.result.then(function (patientNote) {
                 $http.post("../api/PatientNotesApi", patientNote).success(function (data) {
                     ctrl.patientNotes.push(patientNote);
-                }).error(function () { alert("Failed to add new patient note") });
+                }).error(function () {
+                    alert("Failed to add new patient note")
+                });
             });
         }
 
         ctrl.edit = function edit(patientNoteId) {
-            // load single patientNote with the id and make it active
-
-            //var url = "../api/PatientNotesApi/" + patientNoteId;
-            //$http.get(url).success(function (patientNote) {
-            //    editPatientNote = patientNote;
-            //}).error(function () { alert("Failed to load patient note for editing") });
 
             var patientNote = getPatientNote(patientNoteId);
             if (!patientNote) {
@@ -46,10 +43,9 @@
             modalInstance.result.then(function (patientNote) {
                 $http.put("../api/PatientNotesApi", patientNote).success(function (data) {
                     retrieveAll();
-                }).error(
-                    //rollback the changes
-                    function () { alert("Failed to update patient note") }
-                );
+                }).error(function () {
+                    alert("Failed to update patient note")
+                });
             });
         }
 
@@ -97,12 +93,19 @@
         }
 
         function retrieveAll() {
-            $http.get("../api/PatientNotesApi").success(function (data) {
+            var url = "../api/PatientNotesApi";
+            var patientId = GetSelectedPatientId();
+            if (patientId)
+            {
+                var url = url + "?$filter=PatientId eq " + patientId;
+            }
+
+            $http.get(url).success(function (data) {
                 ctrl.patientNotes = data;
-            }).error(function () { alert("Error on loading patientNotes") });
+            }).error(function () {
+                throw "Error on loading all patientNotes";
+            });
         }
-
-
     }//controller
 })();
 

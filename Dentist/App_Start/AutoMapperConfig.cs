@@ -14,6 +14,11 @@ namespace Dentist
         public static void RegisterMappings()
         {
 
+            Mapper.CreateMap<TreatmentPlan, TreatmentPlanDto>();
+            Mapper.CreateMap<TreatmentPlanDto, TreatmentPlan>();
+            Mapper.CreateMap<TreatmentDto, Treatment>();
+            Mapper.CreateMap<Treatment, TreatmentDto>();
+
             Mapper.CreateMap<PatientNote, PatientNoteDto>();
             Mapper.CreateMap<PatientNoteDto, PatientNote>();
             Mapper.CreateMap<NoteDto, Note>();

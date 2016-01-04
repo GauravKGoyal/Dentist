@@ -1,4 +1,10 @@
 ﻿<script src="~/Scripts/App_Script/CookieNames.js"></script>
+<script src="~/Scripts/App_Script/constants.js"></script>
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/angular-route.js"></script>
+<script src="~/Scripts/angular-cookies.js"></script>
+<script src="~/Scripts/angular-ui/ui-bootstrap-tpls.js"></script>
+<script src="~/Scripts/App_Script/app.js"></script>
 
 <ul id="ulLeftMenu" class="nav nav-pills nav-stacked" style="border-right-width:2px">
     <p id="patientElement">All Patients</p>
@@ -6,6 +12,7 @@
     <li id="liLeftMenuVitalSign" role="presentation"><a href=@Url.Action("Index", "VitalSign")>Vital Signs</a></li>
     <li id="liLeftMenuAppointment" role="presentation"><a href=@Url.Action("Index", "Appointment")>Appointments</a></li>
     <li id="liLeftMenuPatientNote" role="presentation"><a href=@Url.Action("Index", "PatientNote")>Patient Notes</a></li>
+    <li id="liLeftMenuTreatmentPlan" role="presentation"><a href=@Url.Action("Index", "TreatmentPlan")>Treatment Plans</a></li>
 </ul>
 
 <script>
@@ -32,6 +39,9 @@
         else if (currentUrl.indexOf("Appointment") > -1)
         {
             $("#liLeftMenuAppointment").addClass('active');
+        }
+        else if (currentUrl.indexOf("TreatmentPlan") > -1) {
+            $("#liLeftMenuTreatmentPlan").addClass('active');
         }
     }
 

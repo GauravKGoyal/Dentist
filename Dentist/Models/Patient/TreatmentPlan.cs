@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Dentist.Models.Patient
@@ -13,5 +14,8 @@ namespace Dentist.Models.Patient
         
         public int? PatientId { get; set; }
         public virtual Patient Patient { get; set; }
+
+        [Required]
+        public DateTime RecordedDate { get; set; }
     }
 }

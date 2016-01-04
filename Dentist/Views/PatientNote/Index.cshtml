@@ -2,14 +2,7 @@
 
 @using Dentist.ViewModels
 
-<script src="~/Scripts/App_Script/CookieNames.js"></script>
-<script src="~/Scripts/App_Script/constants.js"></script>
-<script src="~/Scripts/angular.js"></script>
-<script src="~/Scripts/angular-route.js"></script>
-<script src="~/Scripts/angular-cookies.js"></script>
-<script src="~/Scripts/angular-ui/ui-bootstrap-tpls.js"></script>
-<script src="~/Scripts/App_Script/app.js"></script>
-
+<script src="~/Scripts/App_Script/Factories/PatientNoteDataService.js"></script>
 <script src="~/Scripts/App_Script/Controllers/PatientNoteController.js"></script>
 <script src="~/Scripts/App_Script/Controllers/PatientNoteModelController.js"></script>
 
@@ -25,7 +18,7 @@
         <div class="list-panel list-panel-default" ng-repeat="patientNote in ctrl.patientNotes">
             <div class="list-panel-heading">
                 <h3 class="list-panel-title">
-                    {{patientNote.recordedDate}}
+                    <strong>{{patientNote.patientFullName}}</strong> - {{patientNote.recordedDate}}
                     <span class="pull-right">
                         <button class="list-panel-heading-btn" ng-click="ctrl.edit(patientNote.id)">
                             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>

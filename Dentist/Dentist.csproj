@@ -306,6 +306,7 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\Base\PageCrudController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProceduresController.cs" />
     <Compile Include="Controllers\NoteController.cs" />
     <Compile Include="Controllers\NotesApiController.cs" />
     <Compile Include="Controllers\NoteTypeController.cs">
@@ -336,7 +337,8 @@
     <Compile Include="Controllers\SpecializationsController.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controllers\TreatmentPlantController.cs">
+    <Compile Include="Controllers\TreatmentPlansApiController.cs" />
+    <Compile Include="Controllers\TreatmentPlanController.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\TryController.cs" />
@@ -367,6 +369,7 @@
     <Compile Include="Models\Patient\VitalSign.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\Procedure.cs" />
     <Compile Include="Models\Tags\IModelWithId.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -870,10 +873,13 @@
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\App_Script\app.js" />
     <Content Include="Scripts\App_Script\constants.js" />
+    <Content Include="Scripts\App_Script\Controllers\TreatmentPlanModelController.js" />
+    <Content Include="Scripts\App_Script\Controllers\TreatmentPlanController.js" />
     <Content Include="Scripts\App_Script\Controllers\PatientNoteController.js" />
     <Content Include="Scripts\App_Script\Controllers\PatientNoteControllerObsolete.js" />
     <Content Include="Scripts\App_Script\Controllers\PatientNoteModelController.js" />
     <Content Include="Scripts\App_Script\CookieNames.js" />
+    <Content Include="Scripts\App_Script\Factories\PatientNoteDataService.js" />
     <Content Include="Scripts\App_Script\jquery.cookie.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -912,9 +918,6 @@
     <Content Include="Views\Patient\LeftMenu.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\NoteTypeSelector.cshtml" />
     <Content Include="Views\VitalSign\EditorTemplates\VitalSignViewModel.cshtml">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="Views\Patient\_TabTreatmentPlan.cshtml">
       <SubType>Code</SubType>
     </Content>
     <Content Include="Views\Shared\EditorTemplates\DoctorSelector.cshtml">
@@ -989,12 +992,13 @@
     <Content Include="Views\Shared\EditorTemplates\Year.cshtml" />
     <Content Include="Views\Doctor\_TabExperience.cshtml" />
     <Content Include="Views\Doctor\_TabAward.cshtml" />
-    <Content Include="Views\Patient\TreatmentPlan.cshtml" />
     <Content Include="Views\VitalSign\Index.cshtml" />
     <Content Include="Views\Appointment\Index.cshtml" />
     <Content Include="Views\Note\Index.cshtml" />
     <Content Include="Views\PatientNote\EditorTemplates\PatientNoteViewModel.html" />
-    <None Include="Views\PatientNote\PatientNoteModel.cshtml" />
+    <Content Include="Views\PatientNote\PatientNoteModel.cshtml" />
+    <Content Include="Views\TreatmentPlan\Index.cshtml" />
+    <Content Include="Views\TreatmentPlan\TreatmentPlanModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -1009,7 +1013,6 @@
     <Folder Include="Views\File\" />
     <Folder Include="Views\NoteType\" />
     <Folder Include="Views\Qualification\" />
-    <Folder Include="Views\TreatmentPlant\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

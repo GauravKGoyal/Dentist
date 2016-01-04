@@ -34,6 +34,16 @@ namespace Dentist.ViewModels
         public int PatientId { get; set; }
         public DateTime RecordedDate { get; set; }
         public List<NoteDto> Notes { get; set; }
+
+        public string PatientFirstName { get; set; }
+        public string PatientLastName { get; set; }
+        public string PatientFullName
+        {
+            get
+            {
+                return PatientFirstName + " " + PatientLastName;
+            }
+        }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();

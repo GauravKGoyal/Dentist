@@ -169,6 +169,8 @@ namespace Dentist.Models
         public System.Data.Entity.DbSet<NoteType> NoteTypes { get; set; }
         public System.Data.Entity.DbSet<TreatmentPlan> TreatmentPlans { get; set; }
         public System.Data.Entity.DbSet<Treatment> Treatments { get; set; }
+
+        public System.Data.Entity.DbSet<Procedure> Procedures { get; set; }
    }
 
 
