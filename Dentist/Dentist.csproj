@@ -306,7 +306,6 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\Base\PageCrudController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ProceduresController.cs" />
     <Compile Include="Controllers\NoteController.cs" />
     <Compile Include="Controllers\NotesApiController.cs" />
     <Compile Include="Controllers\NoteTypeController.cs">
@@ -329,6 +328,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\PracticeController.cs" />
+    <Compile Include="Controllers\ProceduresController.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
     <Compile Include="Controllers\AppointmentController.cs" />
     <Compile Include="Controllers\MembershipsController.cs" />
@@ -462,7 +462,6 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\background.jpg" />
     <Content Include="Content\Images\background2.jpg" />
-    <Content Include="Content\Images\MyDentistLogo.jpg" />
     <Content Include="Content\Images\scheduler-people.png" />
     <Content Include="Content\Images\SmilyTooth.jpg" />
     <Content Include="Content\Images\treeViewIcon.png" />
@@ -873,11 +872,11 @@
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\App_Script\app.js" />
     <Content Include="Scripts\App_Script\constants.js" />
-    <Content Include="Scripts\App_Script\Controllers\TreatmentPlanModelController.js" />
     <Content Include="Scripts\App_Script\Controllers\TreatmentPlanController.js" />
     <Content Include="Scripts\App_Script\Controllers\PatientNoteController.js" />
     <Content Include="Scripts\App_Script\Controllers\PatientNoteControllerObsolete.js" />
     <Content Include="Scripts\App_Script\Controllers\PatientNoteModelController.js" />
+    <Content Include="Scripts\App_Script\Controllers\TreatmentPlanModelController.js" />
     <Content Include="Scripts\App_Script\CookieNames.js" />
     <Content Include="Scripts\App_Script\Factories\PatientNoteDataService.js" />
     <Content Include="Scripts\App_Script\jquery.cookie.js" />
@@ -915,8 +914,11 @@
     <Content Include="Todos.txt" />
     <Content Include="Views\Note\EditorTemplates\NoteViewModel.cshtml" />
     <Content Include="Views\PatientNote\Index.cshtml" />
+    <Content Include="Views\PatientNote\PatientNoteModel.cshtml" />
     <Content Include="Views\Patient\LeftMenu.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\NoteTypeSelector.cshtml" />
+    <Content Include="Views\TreatmentPlan\Index.cshtml" />
+    <Content Include="Views\TreatmentPlan\TreatmentPlanModel.cshtml" />
     <Content Include="Views\VitalSign\EditorTemplates\VitalSignViewModel.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -996,9 +998,6 @@
     <Content Include="Views\Appointment\Index.cshtml" />
     <Content Include="Views\Note\Index.cshtml" />
     <Content Include="Views\PatientNote\EditorTemplates\PatientNoteViewModel.html" />
-    <Content Include="Views\PatientNote\PatientNoteModel.cshtml" />
-    <Content Include="Views\TreatmentPlan\Index.cshtml" />
-    <Content Include="Views\TreatmentPlan\TreatmentPlanModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

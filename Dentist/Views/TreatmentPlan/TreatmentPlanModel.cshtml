@@ -1,0 +1,30 @@
+﻿<script type="text/ng-template" id="treatmentPlanModal.html">
+    @*// this will get an instance or treatmentPlanModelController*@
+    <div class="modal-header">
+        <h3 class="modal-title">Treatment Plan</h3>
+    </div>
+    <form name="frmTreatmentPlan" novalidate>
+        <div class="modal-body">
+            <button class="btn list-toolbar" ng-click="ctrl.add()">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add treatment
+            </button>
+            <div class="form-group" ng-repeat="treatment in ctrl.treatmentPlan.treatments | filter:{objectState : '!delete'} track by $index">
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="treatment.procedureId" required>
+                    <input type="text" class="form-control" ng-model="treatment.procedureName" >
+                    <input type="text" class="form-control" ng-model="treatment.objectState">
+                    <span class="input-group-btn">
+                        <button class="btn" type="button" ng-click="ctrl.delete($index); frmTreatmentPlan.$dirty=true">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer clear-float">
+            <button class="btn btn-primary" type="submit" ng-click="frmTreatmentPlan.$dirty ? ctrl.ok() : ctrl.cancel()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="ctrl.cancel()">Cancel</button>
+        </div>
+    </form>
+
+</script>

@@ -1,0 +1,42 @@
+﻿@model dynamic
+
+@using Dentist.ViewModels
+
+<script src="~/Scripts/App_Script/Controllers/TreatmentPlanController.js"></script>
+<script src="~/Scripts/App_Script/Controllers/TreatmentPlanModelController.js"></script>
+
+@{
+    ViewBag.LeftMenuSectionExist = true;
+    var pageSizeArray = new[] { 20, 50, 100 };
+}
+<div ng-app="app">
+    <div ng-controller="treatmentPlanController as ctrl">
+        <button class="btn list-toolbar" ng-click="ctrl.add()">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+        </button>
+        <div class="list-panel list-panel-default" ng-repeat="treatmentPlan in ctrl.treatmentPlans">
+            <div class="list-panel-heading">
+                <h3 class="list-panel-title">
+                    <strong>{{treatmentPlan.patientFullName}}</strong> - {{treatmentPlan.recordedDate}}
+                    <span class="pull-right">
+                        <button class="list-panel-heading-btn" ng-click="ctrl.edit(treatmentPlan.id)">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        </button>
+                        <button class="list-panel-heading-btn" ng-click="ctrl.delete(treatmentPlan.id)">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </button>
+                    </span>
+                </h3>
+            </div>
+            <div class="list-panel-record" ng-repeat="treatment in treatmentPlan.treatments">
+                {{treatment.procedure.name}}
+            </div>
+        </div>
+
+        @*this is the model to add and edit record*@
+        @Html.Partial("~/Views/TreatmentPlan/TreatmentPlanModel.cshtml")
+
+    </div>
+</div>
+
+
