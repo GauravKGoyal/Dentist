@@ -49,10 +49,17 @@ namespace Dentist.Controllers
         public ActionResult Login(string returnUrl)
         {
 #if DEBUG
-            var user = UserManager.Find("divyagoya@gmail.com", "abc123");
-            var userIdentity = UserManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-            AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = true }, userIdentity);
-            return RedirectToAction("Index", "Scheduler");
+            try
+            {
+                var user = UserManager.Find("divyagoya@gmail.com", "abc123");
+                var userIdentity = UserManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+                AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = true }, userIdentity);
+                return RedirectToAction("Index", "Scheduler");
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("RegisterG", "Account");
+            }
 #endif
 
 

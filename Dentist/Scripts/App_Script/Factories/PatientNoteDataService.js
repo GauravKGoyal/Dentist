@@ -1,16 +1,28 @@
 ﻿(function () {
     "use strict";
 
-    angular.module('app').service('patientNoteDataService', function ($http) {
-        this.all = [];
+    angular.module("app").service("patientNoteDataService", function ($http) {
+        var ctrlUrl = "../api/PatientNotesApi";
+        var service = this;
+        service.patientNotes = [];
+
         this.getAll = function () {
-            $http.get("../api/PatientNotesApi").success(function (data) {
-                this.all = data;
-            }).error(function () {
-                throw "patientNoteDataService: Error on loading all patientNotes";
-            });
+            return getPatientsQueryable(url);
         }
 
+        this.getByPatientId = function (patientId) {
+            var url = ctrlUrl + "?$filter=PatientId eq " + patientId;
+            return getPatientsQueryable(url);
+        }
+       
+
+        function getPatientsQueryable(url) {
+            return $http.get(url).success(function (data) {
+                service.patientNotes = data;
+            }).error(function (data) {
+                throw data;
+            });
+        }
 
     });//Service
 

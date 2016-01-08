@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -878,6 +879,7 @@
     <Content Include="Scripts\App_Script\Controllers\PatientNoteModelController.js" />
     <Content Include="Scripts\App_Script\Controllers\TreatmentPlanModelController.js" />
     <Content Include="Scripts\App_Script\CookieNames.js" />
+    <Content Include="Scripts\App_Script\Factories\Interceptor.js" />
     <Content Include="Scripts\App_Script\Factories\PatientNoteDataService.js" />
     <Content Include="Scripts\App_Script\jquery.cookie.js" />
     <Content Include="Scripts\bootstrap.js" />

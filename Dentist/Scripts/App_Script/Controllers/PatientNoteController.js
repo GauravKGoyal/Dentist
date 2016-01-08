@@ -10,7 +10,7 @@
         ctrl.patientNotes = [];
         initialization();
 
-        ctrl.add = function add() {
+        ctrl.add = function () {
             var patientId = GetSelectedPatientId();
             if (!patientId) {
                 alert("Please specify the patient you wish to creates notes for");
@@ -20,16 +20,15 @@
             var addPatientNote = { id: 0, notes: [{ description: "", noteTypeId: 5 }], patientId: GetSelectedPatientId(), recordedDate: new Date() };
             var modalInstance = showModal(addPatientNote);
             modalInstance.result.then(function (patientNote) {
-                $http.post("../api/PatientNotesApi", patientNote).success(function (data) {
+                $http.post("../api/PatientNotesApi", patientNote).success(function (data, status, header, config) {
                     ctrl.patientNotes.push(patientNote);
-                }).error(function () {
+                }).error(function (data, status, header, config) {
                     alert("Failed to add new patient note")
                 });
             });
         }
 
-        ctrl.edit = function edit(patientNoteId) {
-
+        ctrl.edit = function (patientNoteId) {
             var patientNote = getPatientNote(patientNoteId);
             if (!patientNote) {
                 alert("Please select the patient note to edit");
@@ -41,15 +40,13 @@
 
             var modalInstance = showModal(editPatientNote);
             modalInstance.result.then(function (patientNote) {
-                $http.put("../api/PatientNotesApi", patientNote).success(function (data) {
+                $http.put("../api/PatientNotesApi", patientNote).success(function (data, status, header, config) {
                     retrieveAll();
-                }).error(function () {
-                    alert("Failed to update patient note")
                 });
             });
         }
 
-        ctrl.delete = function deletePatient(patientNoteId) {
+        ctrl.delete = function (patientNoteId) {
             var patientNote = getPatientNote(patientNoteId);
             if (!patientNote) {
                 alert("Please select the patient note to delete");
@@ -93,17 +90,16 @@
         }
 
         function retrieveAll() {
-            var url = "../api/PatientNotesApi";
             var patientId = GetSelectedPatientId();
-            if (patientId)
-            {
-                var url = url + "?$filter=PatientId eq " + patientId;
+            if (patientId) {
+                patientNoteDataService.getByPatientId(patientId).success(function (data) {
+                    ctrl.patientNotes = patientNoteDataService.patientNotes;
+                });
+                return;
             }
 
-            $http.get(url).success(function (data) {
-                ctrl.patientNotes = data;
-            }).error(function () {
-                throw "Error on loading all patientNotes";
+            patientNoteDataService.getAll.success(function (data) {
+                ctrl.patientNotes = patientNoteDataService.patientNotes;
             });
         }
     }//controller
