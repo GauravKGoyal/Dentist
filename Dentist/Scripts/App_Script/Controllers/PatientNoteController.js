@@ -8,27 +8,32 @@
     function patientNoteController($scope, $http, $uibModal, patientNoteDataService) {
         var ctrl = this;
         ctrl.patientNotes = [];
+        ctrl.add = add;
+        ctrl.edit = edit;
+        ctrl.delete = deletePatient;
+
         initialization();
 
-        ctrl.add = function () {
+        function add() {
             var patientId = GetSelectedPatientId();
             if (!patientId) {
-                alert("Please specify the patient you wish to creates notes for");
+                alert("Please select the patient you want to creates the snotes for");
                 return;
             }
 
             var addPatientNote = { id: 0, notes: [{ description: "", noteTypeId: 5 }], patientId: GetSelectedPatientId(), recordedDate: new Date() };
             var modalInstance = showModal(addPatientNote);
             modalInstance.result.then(function (patientNote) {
-                $http.post("../api/PatientNotesApi", patientNote).success(function (data, status, header, config) {
+                patientNoteDataService.add(patientNote).success(function (data, status, header, config) {
                     ctrl.patientNotes.push(patientNote);
-                }).error(function (data, status, header, config) {
-                    alert("Failed to add new patient note")
+                })
+                .error(function () {
+                    alert("Failed to add patient's note");
                 });
             });
         }
 
-        ctrl.edit = function (patientNoteId) {
+        function edit(patientNoteId) {
             var patientNote = getPatientNote(patientNoteId);
             if (!patientNote) {
                 alert("Please select the patient note to edit");
@@ -40,13 +45,15 @@
 
             var modalInstance = showModal(editPatientNote);
             modalInstance.result.then(function (patientNote) {
-                $http.put("../api/PatientNotesApi", patientNote).success(function (data, status, header, config) {
+                patientNoteDataService.update(patientNote).success(function () {
                     retrieveAll();
+                }).error(function () {
+                    alert("Failed to update patient's note");
                 });
             });
         }
 
-        ctrl.delete = function (patientNoteId) {
+        function deletePatient(patientNoteId) {
             var patientNote = getPatientNote(patientNoteId);
             if (!patientNote) {
                 alert("Please select the patient note to delete");
@@ -57,7 +64,7 @@
             $http.delete(url).success(function (data) {
                 retrieveAll();
             }).error(function () {
-                alert("Failed to delete patient note")
+                alert("Failed to delete patient's note")
             });
         }
 
@@ -90,23 +97,31 @@
         }
 
         function retrieveAll() {
+            ctrl.patientNotes = [];
+
             var patientId = GetSelectedPatientId();
             if (patientId) {
                 patientNoteDataService.getByPatientId(patientId).success(function (data) {
-                    ctrl.patientNotes = patientNoteDataService.patientNotes;
+                    ctrl.patientNotes = data;
+                }).error(function (data, status) {
+                    alert('Failed to load notes for selected patient');
                 });
-                return;
             }
-
-            patientNoteDataService.getAll.success(function (data) {
-                ctrl.patientNotes = patientNoteDataService.patientNotes;
-            });
+            else {
+                patientNoteDataService.getAll().then(function (response) {
+                    if (response.status === 200) {
+                        ctrl.patientNotes = response.data;
+                    }
+                    else {
+                        alert('Failed to load notes for all the patients');
+                    }
+                });
+            }
         }
     }//controller
 })();
 
 //todo
-//seperate data layer factory
-//address errors froms the server side and show it correctly to the user
+//address validation errors froms the server side and show it correctly to the user
 //do not refresh the entire grid on deleting and updating a record
-//implement paging for patient notes grid
+//implement paging for patient notes grid 

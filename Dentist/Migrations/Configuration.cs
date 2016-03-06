@@ -64,6 +64,22 @@ namespace Dentist.Migrations
                 new Procedure() { Name = "Ceramic Crown" },
                 new Procedure() { Name = "Complex Amalgam Filling" }
                 );
+
+            //var practice = newPractice() { Name = "My Dentist" };
+            //context.Practices.AddOrUpdate(x => x.Name,
+            //    practice,
+            //    new Practice() { Name = "My Smile" });
+
+            //var doc1 = new Doctor() { FirstName = "Vishal", LastName = "Goyal"};
+            //doc1.Practices.Add(practice);
+            //var doc2 = new Doctor() { FirstName = "Prety", LastName = "Goyal" };
+            //doc2.Practices.Add(practice);
+
+            //context.Doctors.AddOrUpdate(x => x.FirstName,
+            //    doc1,
+            //    doc2);
+
+
             //context.JobStates.AddOrUpdate(x=>x.Descrition,
             //    new JobState() { Descrition = "Open"},
             //    new JobState() { Descrition = "Done"}

@@ -9,3 +9,7 @@ when creating an new object using lazy loading you have to make sure that lists 
 5 - Ef doesnt load virtual objects during validations
 6 - Ef difference between Dbset.Create and DbSet.Add -> Dbset.Create -> creates an proxy object where as add method just adds the object to the context which it gets. https://stackoverflow.com/questions/9261890/added-code-first-entity-doesnt-lazy-load-properties/9262111#9262111
 7 - Circular reference objects cannot be serialized, therefore i failed to serialized ef objects as their parent knows about child and child knows about parent. This is one of the reason i have introduced view model objects or dtos
+8 - 400 bad request. The request could not be understood by the server due to malformed syntax.
+9 - 404 not found The server has not found anything matching the Request-URI.
+10 - Difference between success and then in angular promis. then returns the result withoud checking for call status to see if it is success or failure. whereas success is a wrapper on top of then which checks if the status is 200 and then only return the result otherwise goes to error call.
+     Note success returns the data whereas then returns response

@@ -48,7 +48,7 @@
     function RefreshSelectePatient() {
         var patient = GetSelectedPatient();
         if (patient) {
-            $("#patientElement").html("Selected Patient: " + patient.fullName + "<button onclick='btnSlectedPatientClear_Click()'>X</button>");
+            $("#patientElement").html("Selected Patient: " + patient.fullName + "<button onclick='btnSlectedPatientClear_Click()'>X</button>");            
         } else {
             $("#patientElement").html("All Patients");
         }
@@ -57,6 +57,7 @@
     function btnSlectedPatientClear_Click() {
         ClearSelectedPatient();
         RefreshSelectePatient();
+        window.location.reload();
     }
 
    

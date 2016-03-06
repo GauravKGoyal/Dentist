@@ -3,25 +3,26 @@
 
     angular.module("app").service("patientNoteDataService", function ($http) {
         var ctrlUrl = "../api/PatientNotesApi";
-        var service = this;
-        service.patientNotes = [];
 
         this.getAll = function () {
-            return getPatientsQueryable(url);
+            return getPatientsQueryable(ctrlUrl);
         }
 
         this.getByPatientId = function (patientId) {
             var url = ctrlUrl + "?$filter=PatientId eq " + patientId;
             return getPatientsQueryable(url);
         }
-       
+
+        this.update = function (patientNote) {
+            return $http.put(ctrlUrl, patientNote);
+        }
+        
+        this.add = function (patientNote) {
+           return $http.post("../api/PatientNotesApi", patientNote);
+        }
 
         function getPatientsQueryable(url) {
-            return $http.get(url).success(function (data) {
-                service.patientNotes = data;
-            }).error(function (data) {
-                throw data;
-            });
+            return $http.get(url);
         }
 
     });//Service

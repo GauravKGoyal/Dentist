@@ -9,12 +9,13 @@
 
         var myInterceptor = {
             responseError: function (rejection) {
-                alert("An error has occoured, Please check console to see it");
+                //alert("An error has occoured, Please check console to see it");
+                //alert(rejection);
                 return $q.reject(rejection);
             },
 
             requestError: function (rejection) {
-                alert("An error has occoured, Please check console to see it");
+                //alert("An error has occoured, Please check console to see it");
                 return $q.reject(rejection);
             }
         };

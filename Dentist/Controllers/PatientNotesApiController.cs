@@ -26,24 +26,26 @@ namespace Dentist.Controllers
             return query;
         }
 
-        // GET: api/PatientNotesApi/5
-        [ResponseType(typeof(PatientNoteDto))]
-        public IHttpActionResult GetPatientNote(int id)
-        {
-            PatientNote patientNote = ReadContext.PatientNotes.Include(x => x.Notes).FirstOrDefault(x => x.Id == id);
-            if (patientNote == null)
-            {
-                return NotFound();
-            }
+        //// GET: api/PatientNotesApi/5
+        //[ResponseType(typeof(PatientNoteDto))]
+        //public IHttpActionResult GetPatientNote(int id)
+        //{
+        //    return NotFound();
+        //    PatientNote patientNote = ReadContext.PatientNotes.Include(x => x.Notes).FirstOrDefault(x => x.Id == id);
+        //    if (patientNote == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var patientNoteDto = AutoMapper.Mapper.Map<PatientNoteDto>(patientNote);
-            return Ok(patientNoteDto);
-        }
+        //    var patientNoteDto = AutoMapper.Mapper.Map<PatientNoteDto>(patientNote);
+        //    return Ok(patientNoteDto);
+        //}
 
         // PUT: api/PatientNotesApi/5
         [ResponseType(typeof(void))]
         public IHttpActionResult PutPatientNote(PatientNoteDto patientNoteDto)
         {
+            //return NotFound();
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
