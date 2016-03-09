@@ -13,3 +13,4 @@ when creating an new object using lazy loading you have to make sure that lists 
 9 - 404 not found The server has not found anything matching the Request-URI.
 10 - Difference between success and then in angular promis. then returns the result withoud checking for call status to see if it is success or failure. whereas success is a wrapper on top of then which checks if the status is 200 and then only return the result otherwise goes to error call.
      Note success returns the data whereas then returns response
+	 Note sucess does not return the promise object therefore you can not chain it, this is why angular has depricated it. as lot of people just assume that the object return by success and then is same.

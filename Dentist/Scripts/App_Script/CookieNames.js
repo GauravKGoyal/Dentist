@@ -25,3 +25,7 @@ function GetSelectedPatientId() {
     return null;
 }
 
+function isPatientSelected() {
+    var patient = GetSelectedPatient();
+    return (patient != null)
+}

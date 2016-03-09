@@ -3,9 +3,9 @@
     "use strict";
 
     var angularApp = angular.module("app");
-    angularApp.controller("patientNoteController", ["$scope", "$http", "$uibModal", "patientNoteDataService", patientNoteController]);
+    angularApp.controller("patientNoteController", ["$scope", "$uibModal", "patientNoteDataService", patientNoteController]);
 
-    function patientNoteController($scope, $http, $uibModal, patientNoteDataService) {
+    function patientNoteController($scope, $uibModal, patientNoteDataService) {
         var ctrl = this;
         ctrl.patientNotes = [];
         ctrl.add = add;
@@ -21,15 +21,11 @@
                 return;
             }
 
-            var addPatientNote = { id: 0, notes: [{ description: "", noteTypeId: 5 }], patientId: GetSelectedPatientId(), recordedDate: new Date() };
-            var modalInstance = showModal(addPatientNote);
+            var newPatientNote = { id: 0, notes: [{ description: "", noteTypeId: 5 }], patientId: GetSelectedPatientId(), recordedDate: new Date() };
+            var modalInstance = showModal(newPatientNote);
             modalInstance.result.then(function (patientNote) {
-                patientNoteDataService.add(patientNote).success(function (data, status, header, config) {
-                    ctrl.patientNotes.push(patientNote);
-                })
-                .error(function () {
-                    alert("Failed to add patient's note");
-                });
+                refreshPatientNotes();
+                // or ctrl.patientNotes.push(patientNote);
             });
         }
 
@@ -45,11 +41,8 @@
 
             var modalInstance = showModal(editPatientNote);
             modalInstance.result.then(function (patientNote) {
-                patientNoteDataService.update(patientNote).success(function () {
-                    retrieveAll();
-                }).error(function () {
-                    alert("Failed to update patient's note");
-                });
+                refreshPatientNotes();
+                // or call the url to refresh page but then refreshing page will be slower than just refreshing data                
             });
         }
 
@@ -60,18 +53,27 @@
                 return;
             }
 
-            var url = "../api/PatientNotesApi/" + patientNoteId;
-            $http.delete(url).success(function (data) {
-                retrieveAll();
-            }).error(function () {
-                alert("Failed to delete patient's note")
-            });
+            patientNoteDataService.delete(patientNoteId).then(
+                function (response) {
+                    removePatientNote(patientNoteId);
+                },
+                function (response) {
+                    handleDeleteResponseError(response);
+                });
         }
 
         function getPatientNote(id) {
             for (var i = 0; i < ctrl.patientNotes.length; i++) {
                 if (ctrl.patientNotes[i].id === id) {
                     return ctrl.patientNotes[i];
+                }
+            }
+        }
+
+        function removePatientNote(id) {
+            for (var i = 0; i < ctrl.patientNotes.length; i++) {
+                if (ctrl.patientNotes[i].id === id) {
+                    ctrl.patientNotes.splice(i, 1);
                 }
             }
         }
@@ -93,35 +95,51 @@
         }
 
         function initialization() {
-            retrieveAll();
+            refreshPatientNotes();
         }
 
-        function retrieveAll() {
+        function refreshPatientNotes() {
             ctrl.patientNotes = [];
 
+            if (isPatientSelected()) {
+                getNotesForSelectedPatient();
+                return;
+            }
+
+            getAllPatientNotes();
+        }
+
+        function getAllPatientNotes() {
+            patientNoteDataService.getAll()
+            .then(
+                function (response) {
+                    ctrl.patientNotes = response.data;
+                },
+                function (response) {
+                    alert('Failed to load notes for all the patients');
+                }
+            )
+            .catch(function (data, status) {
+                console.error('error', response.status, response.data);
+            });
+        }
+
+        function getNotesForSelectedPatient() {
             var patientId = GetSelectedPatientId();
-            if (patientId) {
-                patientNoteDataService.getByPatientId(patientId).success(function (data) {
-                    ctrl.patientNotes = data;
-                }).error(function (data, status) {
-                    alert('Failed to load notes for selected patient');
-                });
-            }
-            else {
-                patientNoteDataService.getAll().then(function (response) {
-                    if (response.status === 200) {
-                        ctrl.patientNotes = response.data;
-                    }
-                    else {
-                        alert('Failed to load notes for all the patients');
-                    }
-                });
-            }
+            patientNoteDataService.getByPatientId(patientId).success(function (data) {
+                ctrl.patientNotes = data;
+            }).error(function (data, status) {
+                alert('Failed to load notes for selected patient');
+            });
         }
     }//controller
+
 })();
 
 //todo
-//address validation errors froms the server side and show it correctly to the user
+//address model state errors (400) froms the server side and show it correctly to the user
+//address text errors (400) froms the server side and show it correctly to the user
+//address text errors (404) froms the server side and show it correctly to the user
+//address exceptions from server
 //do not refresh the entire grid on deleting and updating a record
 //implement paging for patient notes grid 

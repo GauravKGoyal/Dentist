@@ -17,8 +17,13 @@
             return $http.put(ctrlUrl, patientNote);
         }
         
-        this.add = function (patientNote) {
+        this.create = function (patientNote) {
            return $http.post("../api/PatientNotesApi", patientNote);
+        }
+
+        this.delete = function (patientNoteId) {
+            var url = "../api/PatientNotesApi/" + patientNoteId;
+            return $http.delete(url);
         }
 
         function getPatientsQueryable(url) {

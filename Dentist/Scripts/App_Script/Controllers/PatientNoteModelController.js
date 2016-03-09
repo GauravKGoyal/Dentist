@@ -1,8 +1,10 @@
 ﻿(function () {
     "use strict";
 
-    angular.module('app').controller('patientNoteModalController', function ($scope, $uibModalInstance, patientNote) {
+    angular.module('app').controller('patientNoteModalController', function ($scope, $uibModalInstance, patientNote, patientNoteDataService) {
         var ctrl = this;
+        ctrl.errorMessage = null;
+        ctrl.modelState = null;
         ctrl.patientNote = patientNote;
 
         ctrl.add = function () {
@@ -29,18 +31,53 @@
 
         ctrl.ok = function () {
             removeEmptyNotes();
+
             if (ctrl.patientNote.notes.length === 0) {
                 alert('Sorry there are no notes to save');
-            }
-            else {
-                $uibModalInstance.close(ctrl.patientNote);
+                return;
             }
 
+            if (isNewPatientNote()) {
+                createPatientNote();
+                return;
+            }
+
+            updatePatientNote();
         };
 
         ctrl.cancel = function () {
             $uibModalInstance.dismiss('cancel');
         };
+
+        function isNewPatientNote() {
+            return ctrl.patientNote.id === 0;
+        }
+
+        function createPatientNote() {
+            ctrl.errorMessage = null;
+            ctrl.modelState = null;
+
+            patientNoteDataService.create(patientNote).then(
+                function (response) {
+                    $uibModalInstance.close(ctrl.patientNote);
+                },
+                function (response) {
+                    handleCreateUpdateResponseError(ctrl, response);
+                });
+        }
+
+        function updatePatientNote() {
+            ctrl.errorMessage = null;
+            ctrl.modelState = null;
+
+            patientNoteDataService.update(patientNote).then(
+                function (response) {
+                    $uibModalInstance.close(ctrl.patientNote);
+                },
+                function (response) {
+                    handleCreateUpdateResponseError(ctrl, response);
+                });
+        }
 
         function removeEmptyNotes() {
             for (var i = ctrl.patientNote.notes.length - 1; i > -1; i--) {
@@ -50,6 +87,8 @@
                 }
             }
         }
+
+
 
     });//controller
 

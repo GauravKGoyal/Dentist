@@ -57,6 +57,15 @@ namespace Dentist.ViewModels
                 results.Add(new ValidationResult("Notes cannot be null", new List<string> { "Notes" }));            
             }
 
+            //if ((Notes != null) || (Notes.Count > 0))
+            //{
+            //    var anyNoteIsEmpty = Notes.TrueForAll(note => !string.IsNullOrWhiteSpace(note.Description));
+            //    if (anyNoteIsEmpty)
+            //    {
+            //        results.Add(new ValidationResult("Any of the notes cannot be empty", new List<string> { "Notes" }));
+            //    }
+            //}
+
             return results;
         }
     }
@@ -66,6 +75,7 @@ namespace Dentist.ViewModels
         public int Id { get; set; }
         public int PatientNoteDtoId { get; set; }
         public int NoteTypeId { get; set; }
+        [Required]
         public string Description { get; set; }
         public string ObjectState { get; set; }
     }

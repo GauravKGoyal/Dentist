@@ -1,10 +1,22 @@
-﻿<script type="text/ng-template" id="patientNoteModal.html">
+﻿
+<script type="text/ng-template" id="patientNoteModal.html">
     @*// this will get an instance or patientNoteModelController*@
     <div class="modal-header">
         <h3 class="modal-title">Notes</h3>
     </div>
     <form name="frmPatientNote" novalidate>
         <div class="modal-body">
+            <div class="validation-Error" ng-show="ctrl.errorMessage !== null">
+                {{ctrl.errorMessage}}
+            </div>
+            <div class="validation-Error-list" ng-show="ctrl.modelState !== null">
+                <div ng-repeat="property in ctrl.modelState">
+                    <div ng-repeat="value in property">
+                        {{value}}
+                    </div>
+                </div>
+            </div>
+
             <button class="btn list-toolbar" ng-click="ctrl.add()">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add note
             </button>

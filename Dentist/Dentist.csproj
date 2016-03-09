@@ -879,6 +879,7 @@
     <Content Include="Scripts\App_Script\Controllers\PatientNoteModelController.js" />
     <Content Include="Scripts\App_Script\Controllers\TreatmentPlanModelController.js" />
     <Content Include="Scripts\App_Script\CookieNames.js" />
+    <Content Include="Scripts\App_Script\errorHandler.js" />
     <Content Include="Scripts\App_Script\Factories\Interceptor.js" />
     <Content Include="Scripts\App_Script\Factories\PatientNoteDataService.js" />
     <Content Include="Scripts\App_Script\jquery.cookie.js" />
