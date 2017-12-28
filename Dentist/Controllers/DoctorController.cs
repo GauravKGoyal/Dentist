@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Web.Mvc;
-using Autofac;
-using Autofac.Core;
+﻿using Autofac;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Dentist.Controllers.Base;
@@ -13,17 +6,23 @@ using Dentist.Enums;
 using Dentist.Helpers;
 using Dentist.Models;
 using Dentist.Models.Doctor;
-using Dentist.Services;
 using Dentist.ViewModels;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
-using WebGrease.Css.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Net;
+using System.Web.Mvc;
 
 namespace Dentist.Controllers
 {
     [Authorize]
     public class DoctorController : BaseController
     {
+
+
         public JsonResult GetAllIdTexts(string text = null)
         {
             var query = ReadContext.Doctors.Where(x => x.IsDeleted != true)
@@ -62,7 +61,7 @@ namespace Dentist.Controllers
             var projectedQuery = query.ProjectTo<DoctorListViewModel>();
             var result = projectedQuery.ToDataSourceResult(request);
 
-            var doctorViewModels = ((IEnumerable<DoctorListViewModel>) result.Data);
+            var doctorViewModels = ((IEnumerable<DoctorListViewModel>)result.Data);
             var doctorIds = doctorViewModels.Select(x => x.Id);
 
             foreach (var doctorListViewModel in doctorViewModels)
@@ -70,7 +69,7 @@ namespace Dentist.Controllers
                 doctorListViewModel.AvatarId = ReadContext.Files
                     .Where(f => f.FileType == FileType.Avatar)
                     .Where(f => f.Persons.Any(p => p.Id == doctorListViewModel.Id))
-                    .OrderByDescending(f=> f.Id)
+                    .OrderByDescending(f => f.Id)
                     .Select(f => f.Id)
                     .ToList()
                     .FirstOrDefault();
@@ -78,7 +77,7 @@ namespace Dentist.Controllers
             }
 
             foreach (var doctorListViewModel in doctorViewModels)
-            {                
+            {
                 var qualifications = ReadContext.Qualifications
                     .Where(f => f.DoctorId == doctorListViewModel.Id)
                     .Select(x => x.Name)
@@ -111,11 +110,35 @@ namespace Dentist.Controllers
                 WriteContext.Doctors.Add(doctor);
                 if (WriteContext.TrySaveChanges(ModelState))
                 {
-                    return Request.FormSaveAndCloseClicked() ?  RedirectToAction("Index") :  RedirectToAction("Edit", new { @id = doctor.Id });
+                    return Request.FormSaveAndCloseClicked() ? RedirectToAction("Index") : RedirectToAction("Edit", new { @id = doctor.Id });
                 }
             }
 
             return View(viewModel);
+        }
+
+        public ActionResult View(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var doctor = ReadContext.Doctors
+                            .Include(x => x.Address)
+                            .Include(x => x.Practices)
+                            .Include(x => x.Practices.Select(p => p.Address))
+                            .Include(x => x.Services)
+                            .Include(x => x.Specializations)
+                            .Include(x => x.Qualifications)
+                            .First(x => x.Id == id);
+            if (doctor.PersonRole != PersonRole.Doctor)
+            {
+                throw new Exception(string.Format("Person with id {0} is not a doctor", id));
+            }
+            var doctorView = new DoctorReportViewModel(doctor, ReadContext);
+
+            return View("DoctorReportView", doctorView);
         }
 
         public ActionResult Edit(int? id)
@@ -128,11 +151,11 @@ namespace Dentist.Controllers
             var doctor = ReadContext.Doctors
                             .Include(x => x.Address)
                             .Include(x => x.Registration)
-                            .Include(x=> x.Practices)
-                            .Include(x=> x.Services)
-                            .Include(x=> x.Memberships)
-                            .Include(x=> x.Specializations)
-                            .Include(x=> x.Files)
+                            .Include(x => x.Practices)
+                            .Include(x => x.Services)
+                            .Include(x => x.Memberships)
+                            .Include(x => x.Specializations)
+                            .Include(x => x.Files)
                             .First(x => x.Id == id);
             if (doctor.PersonRole != PersonRole.Doctor)
             {
@@ -153,7 +176,7 @@ namespace Dentist.Controllers
                 var doctor = WriteContext.Doctors.Find(viewModel.Id);
                 doctor.Context = WriteContext;
                 viewModel.CopyTo(doctor);
-              
+
                 if (WriteContext.TrySaveChanges(ModelState))
                 {
                     return Request.FormSaveAndCloseClicked() ? RedirectToAction("Index") : RedirectToAction("Edit", new { @id = doctor.Id });
@@ -172,7 +195,7 @@ namespace Dentist.Controllers
                 .First(x => x.Id == id);
             doctor.Context = WriteContext;
             doctor.IsDeleted = true;
-            var changesSaved = WriteContext.TrySaveChanges(out errorMessage);            
+            var changesSaved = WriteContext.TrySaveChanges(out errorMessage);
             return Json(new { Success = changesSaved, ErrorMessage = errorMessage });
         }
 
@@ -181,15 +204,15 @@ namespace Dentist.Controllers
         {
             if (doctorId == 0)
             {
-                throw  new ArgumentException("Doctor id cannot be 0", "doctorId");
+                throw new ArgumentException("Doctor id cannot be 0", "doctorId");
             }
 
-            var query = ReadContext.Set<Qualification>().Where(x => x.DoctorId == doctorId)                      
+            var query = ReadContext.Set<Qualification>().Where(x => x.DoctorId == doctorId)
                         .ProjectTo<QualificationViewModel>();
             var result = query.ToDataSourceResult(request);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-       
+
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateQualification([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<QualificationViewModel> viewModels, int doctorId)
         {
@@ -204,7 +227,7 @@ namespace Dentist.Controllers
                     WriteContext.Qualifications.Add(qualification);
                     WriteContext.TrySaveChanges(ModelState);
 
-                    qualificationViewModel.Id = qualification.Id; 
+                    qualificationViewModel.Id = qualification.Id;
                     results.Add(qualificationViewModel);
                 }
 
@@ -214,7 +237,7 @@ namespace Dentist.Controllers
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult UpdateQualification([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<QualificationViewModel> viewModels)
-        {            
+        {
             var qualificationViewModels = viewModels as IList<QualificationViewModel> ?? viewModels.ToList();
 
             if (viewModels != null && ModelState.IsValid)
@@ -238,7 +261,7 @@ namespace Dentist.Controllers
 
             foreach (var qualificationViewModel in qualificationViewModelList)
             {
-                var qualification = new Qualification() {Id = qualificationViewModel.Id};
+                var qualification = new Qualification() { Id = qualificationViewModel.Id };
                 WriteContext.Qualifications.Attach(qualification);
                 WriteContext.Qualifications.Remove(qualification);
             }

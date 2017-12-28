@@ -1,0 +1,121 @@
+﻿@model Dentist.ViewModels.DoctorReportViewModel
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<div class="col-md-6 col-xs-12">
+    @*Detail panel*@
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div style="float:left; margin-right:10px">
+                <img class="img-thumbnail" width="140" height="140" src="~/File/Get?id=@Model.AvatarId" alt="avatar" />
+            </div>
+            <div style="float:left;">
+                <div>
+                    @Model.Name
+                </div>
+                <div>
+                    @Model.Qualifications
+                </div>
+                <div>
+                    @Model.Specializations
+                </div>
+                <div>
+                    @Model.Experience
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @*Services panel*@
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Services
+        </div>
+        <div class="panel-body">
+            <div style="width:50%; float:left;">
+                @foreach (var Service in Model.ServicesGroup1)
+                {
+                    <div>@Service</div>
+                }
+            </div>
+            <div style="width:50%; float:left;">
+                @foreach (var Service in Model.ServicesGroup2)
+                {
+                    <div>@Service</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-6 col-xs-12">
+    @*Address panel*@
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Address
+        </div>
+        <div class="panel-body">
+            @foreach (var practice in Model.Practices)
+            {
+                <div>@practice.PracticeName</div>
+                <div>@practice.Address</div>
+                <div>@practice.Suburb</div>
+            }
+        </div>
+    </div>
+
+    @*About panel*@
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            About
+        </div>
+        <div class="panel-body">
+            @Model.About
+        </div>
+    </div>
+
+</div>
+
+
+
+@*<div class="cards">
+        <div class="card col-xs-12 col-sm-12 col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-xs-3">
+                        <img class="img-thumbnail" width="140" height="140" src="~/File/Get?id=@Model.AvatarId" alt="avatar" />
+                    </div>
+                    <div class="col-xs-9">
+                        <div>
+                            @Model.Name
+                        </div>
+                        <div>
+                            @Model.Qualifications
+                        </div>
+                        <div>
+                            @Model.Specializations
+                        </div>
+                        <div>
+                            @Model.Experience
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card col-xs-12 col-sm-12 col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    Second panel
+                </div>
+            </div>
+        </div>
+        <div class="card col-xs-12 col-sm-12 col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    third panel
+                </div>
+            </div>
+        </div>
+    </div>*@
