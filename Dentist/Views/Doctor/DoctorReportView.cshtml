@@ -51,6 +51,18 @@
 </div>
 
 <div class="col-md-6 col-xs-12">
+    
+
+    @*About panel*@
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            About
+        </div>
+        <div class="panel-body">
+            @Model.About
+        </div>
+    </div>
+
     @*Address panel*@
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -63,16 +75,6 @@
                 <div>@practice.Address</div>
                 <div>@practice.Suburb</div>
             }
-        </div>
-    </div>
-
-    @*About panel*@
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            About
-        </div>
-        <div class="panel-body">
-            @Model.About
         </div>
     </div>
 
